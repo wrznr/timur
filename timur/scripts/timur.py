@@ -32,7 +32,7 @@ def construct_any(symbol_table):
         sym_it.next()
     return ANY
 
-def num_fst():
+def num_fst(symbol_table):
     '''
     Definition of cardinal and ordinal number stems
     '''
@@ -138,16 +138,70 @@ def num_fst():
     # numbers expressed with digits
     #
     dig_card = pynini.string_map([str(x) for x in range(0, 10)]).closure(1)
+    dig_ord = pynini.concat(dig_card, ".")
 
+    #
+    # adding morphosyntactic information
+    #
+    quant_helper = pynini.transducer("<QUANT>", "", input_token_type=symbol_table)
+    quant = pynini.union(
+            pynini.concat(card_deriv, quant_helper),
+            pynini.concat(ord_base, quant_helper),
+            pynini.concat(
+                pynini.concat(dig_card, pynini.acceptor("-").closure(0,1)),
+                quant_helper),
+            pynini.concat(
+                pynini.union("beid", "mehr", "viel", "dies", "doppel", "ganz", "gegen"),
+                quant_helper)
+            )
+
+    card_features = pynini.transducer("", "<CARD> <base> <nativ> <Card>",  output_token_type=symbol_table)
+    ord_features = pynini.transducer("", "<ORD> <base> <nativ> <Ord>",  output_token_type=symbol_table)
+    #
+    # resulting base stems
+    num_base = pynini.concat(
+            pynini.transducer("", "<Initial> <Base_Stems>", output_token_type=symbol_table),
+            pynini.union(
+                pynini.concat(card_base, card_features),
+                pynini.concat(dig_card, card_features),
+                pynini.concat(ord_base, ord_features),
+                pynini.concat(dig_ord, ord_features)
+                )
+            )
     
-
-    dig_card.optimize()
-    dig_card.draw("test.dot")
-    return card_stem_2_9
+    #
+    # resulting deriv stems
+    num_deriv = pynini.concat(
+            pynini.transducer("", "<Deriv_Stems>", output_token_type=symbol_table),
+            pynini.concat(
+                pynini.union(
+                    pynini.concat(card_deriv, pynini.acceptor("<CARD>", token_type=symbol_table)),
+                    pynini.concat(dig_card, pynini.acceptor("<DIGCARD>", token_type=symbol_table)),
+                    pynini.concat(ord_base, pynini.acceptor("<ORD>", token_type=symbol_table))
+                    ),
+                pynini.transducer("", "<deriv> <nativ>", output_token_type=symbol_table)
+                )
+            )
+    
+    #
+    # resulting kompos stems
+    num_kompos = pynini.concat(
+            pynini.transducer("", "<Kompos_Stems>", output_token_type=symbol_table),
+            pynini.concat(
+                ord_base,
+                pynini.concat(
+                    pynini.acceptor("<ORD>", token_type=symbol_table),
+                    pynini.transducer("", "<deriv> <nativ>", output_token_type=symbol_table)
+                    )
+                )
+            )
+    
+    return pynini.union(num_base, num_deriv, num_kompos).optimize()
 
 syms = load_alphabet(open("syms.txt"))
 
-num_stems = num_fst()
+num_stems = num_fst(syms)
+num_stems.draw("test.dot")
 
 ANY = construct_any(syms)
 

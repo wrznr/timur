@@ -18,6 +18,12 @@
 <V>
 <ORD>
 <OTHER>
+# intermediate features
+<QUANT>
+<Initial>
+<Base_Stems>
+<Deriv_Stems>
+<Kompos_Stems>
 # stem type features
 <base>
 <deriv>

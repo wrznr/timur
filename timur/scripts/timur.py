@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*- 
 from __future__ import absolute_import
 
-import pynini
+import click, pynini
+
+from pkg_resources import resource_string, Requirement
 
 from timur import helpers
 from timur import fsts
@@ -20,17 +22,16 @@ def construct_any(symbol_table):
         sym_it.next()
     return ANY
 
-def phon_fst(symbol_table):
-    '''
-    Orthographic and phonological surface realizations rules
-    '''
-    cons_lower = pynini.string_map(["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z", "ß"], input_token_type=symbol_table, output_token_type=symbol_table)
-    cons_upper = pynini.string_map(["B", "C", "D", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "X", "Y", "Z"], input_token_type=symbol_table, output_token_type=symbol_table)
-    #return cons.optimize()
-
-
+@click.group()
 def cli():
-    syms = helpers.load_alphabet(open("syms.txt"))
+    pass
+
+
+@cli.command(name="compile")
+@click.argument('lexicon')
+def compile(lexicon):
+
+    syms = helpers.load_alphabet(resource_string(Requirement.parse("timur"), 'timur/data/syms.txt').decode("utf-8"))
 
     #phon = phon_fst(syms)
     #phon.draw("test.dot")
@@ -38,4 +39,4 @@ def cli():
 
     ANY = construct_any(syms)
 
-    print(syms.member('A'))
+    print(syms.member('<QUANT>'))

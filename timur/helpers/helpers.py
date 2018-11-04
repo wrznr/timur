@@ -29,7 +29,7 @@ def load_alphabet(source, auto_singletons=True):
             symbol = chr(i)
             if symbol.isprintable() and not symbol.isspace():
                 syms.add_symbol(symbol)
-    for symbol in source:
+    for symbol in source.split('\n'):
         if symbol.startswith('#'):
             continue
         syms.add_symbol(symbol.strip())

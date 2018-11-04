@@ -1,1 +1,2 @@
+click
 http://www.opengrm.org/twiki/pub/GRM/PyniniDownload/pynini-2.0.0.tar.gz#egg=pynini

@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*- 
+from __future__ import absolute_import
+
 import pynini
+
+from timur.helpers import union
+from timur.helpers import concat
 
 def num_fst(symbol_table):
     '''

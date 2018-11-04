@@ -4,6 +4,7 @@ from __future__ import absolute_import
 import pynini
 
 from timur import helpers
+from timur import fsts
 
 def construct_any(symbol_table):
     '''
@@ -31,9 +32,9 @@ def phon_fst(symbol_table):
 def cli():
     syms = helpers.load_alphabet(open("syms.txt"))
 
-    phon = phon_fst(syms)
-    phon.draw("test.dot")
-    num_stems = num_fst(syms)
+    #phon = phon_fst(syms)
+    #phon.draw("test.dot")
+    num_stems = fsts.num_fst(syms)
 
     ANY = construct_any(syms)
 

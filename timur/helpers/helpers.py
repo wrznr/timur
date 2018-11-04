@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*- 
-import pynini
+import pynini, re
 
 def union(*args, token_type="utf8"):
     args_mod = []
@@ -34,3 +34,15 @@ def load_alphabet(source, auto_singletons=True):
             continue
         syms.add_symbol(symbol.strip())
     return syms
+
+def load_lexicon(source, symbol_table):
+    '''
+    Load lexica entries from source interpreting them using a given symbol table.
+    '''
+    lex = pynini.Fst()
+    tokenizer = re.compile("<[^>]*>|.", re.U)
+    for line in source:
+        print(line.strip())
+        lex = pynini.acceptor(" ".join(tokenizer.findall(line.strip()), token_type=symbol_table)
+        print(tokens)
+    return lex

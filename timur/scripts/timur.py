@@ -28,10 +28,12 @@ def cli():
 
 
 @cli.command(name="compile")
-@click.argument('lexicon')
+@click.argument('lexicon', type=click.File())
 def compile(lexicon):
 
     syms = helpers.load_alphabet(resource_string(Requirement.parse("timur"), 'timur/data/syms.txt').decode("utf-8"))
+
+    lex = helpers.load_lexicon(lexicon, syms)
 
     #phon = phon_fst(syms)
     #phon.draw("test.dot")

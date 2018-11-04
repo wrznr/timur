@@ -3,7 +3,7 @@ from __future__ import absolute_import
 
 import click, pynini
 
-from pkg_resources import resource_string, Requirement
+from pkg_resources import resource_stream, Requirement
 
 from timur import helpers
 from timur import fsts
@@ -31,7 +31,7 @@ def cli():
 @click.argument('lexicon', type=click.File())
 def compile(lexicon):
 
-    syms = helpers.load_alphabet(resource_string(Requirement.parse("timur"), 'timur/data/syms.txt').decode("utf-8"))
+    syms = helpers.load_alphabet(resource_stream(Requirement.parse("timur"), 'timur/data/syms.txt'))
 
     lex = helpers.load_lexicon(lexicon, syms)
 
@@ -41,4 +41,3 @@ def compile(lexicon):
 
     ANY = construct_any(syms)
 
-    print(syms.member('<QUANT>'))

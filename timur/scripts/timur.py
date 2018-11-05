@@ -54,7 +54,7 @@ def build(lexicon):
     map1 = fsts.map_fst_map1(syms)
 
     lex = pynini.compose(map1, lex)
-    lex.draw("test.dot")
+    #lex.draw("test.dot")
 
     #phon = phon_fst(syms)
     #num_stems = fsts.num_fst(syms)

@@ -9,7 +9,7 @@ This package is basically a migration of a set of finite-state grammars for the 
 ### OpenFST
 
 The underlying FST toolkit `Pynini` is itself based on [`OpenFST`](http://www.openfst.org/twiki/bin/view/FST/WebHome) a C++ library for constructing, combining, optimizing, and searching weighted FSTs. [Get] (http://www.openfst.org/twiki/bin/view/FST/FstDownload) the latest version of OpenFST, unpack the archive, build and install via
-```shell
+```console
 $ configure --enable-grm
 $ make
 $ [sudo] make install && [sudo ldconfig]
@@ -20,13 +20,11 @@ $ [sudo] make install && [sudo ldconfig]
 
 ### virtualenv
 Using [`virtualenv`](https://virtualenv.pypa.io/en/stable/) is highly recommended, although not strictly necessary for installing `timur`. It may be installed via:
-
 ```console
 $ [sudo] pip install virtualenv
 ```
 
 Create a virtual environement in a subdirectory of your choice (e.g. `env`) using
-
 ```console
 $ virtualenv -p python3 env
 ```
@@ -39,7 +37,10 @@ $ . env/bin/activate
 
 ### Python requirements
 `timur` uses various 3rd party Python packages (including `Pynini`) which may be best installed using `pip`:
-
 ```console
 (env) $ pip install -r requirements.txt
+```
+Finally, `timur` itself can be installed via `pip`:
+```console
+(env) $ pip install .
 ```

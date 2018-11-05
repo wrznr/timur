@@ -18,12 +18,35 @@
 <V>
 <ORD>
 <OTHER>
+<PREF>
+<KSF>
+<CARD,DIGCARD,NE>
+<ADJ,CARD>
+<ADJ,NN>
+<CARD,NN>
+<CARD,NE>
+<ABK,ADJ,NE,NN>
+<ADJ,NE,NN>
+<ABK,NE,NN>
+<NE,NN>
+<ABK,CARD,NN>
+<ABK,NN>
+<ADJ,CARD,NN,V>
+<ADJ,NN,V>
+<ABK,ADJ,NE,NN,V>
+<ADJ,NE,NN,V>
+<ADV,NE,NN,V>
+<ABK,NE,NN,V>
+<NE,NN,V>
+<ABK,NN,V>
+<NN,V>
 # intermediate features
 <QUANT>
 <Initial>
 <Base_Stems>
 <Deriv_Stems>
 <Kompos_Stems>
+<Pref_Stems>
 # stem type features
 <base>
 <deriv>

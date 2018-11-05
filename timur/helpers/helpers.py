@@ -4,7 +4,7 @@ import pynini, re
 def union(*args, token_type="utf8"):
     args_mod = []
     for arg in args:
-        if type(args) == "str":
+        if isinstance(arg, str):
             args_mod.append(pynini.acceptor(arg, token_type=token_type))
         else:
             args_mod.append(arg)
@@ -13,8 +13,13 @@ def union(*args, token_type="utf8"):
 def concat(*args, token_type="utf8"):
     args_mod = []
     conc = pynini.Fst()
+    conc.set_start(conc.add_state())
+    conc.set_final(conc.start())
+    if isinstance(token_type, pynini.SymbolTable):
+        conc.set_input_symbols(token_type)
+        conc.set_output_symbols(token_type)
     for arg in args:
-        if type(args) == "str":
+        if isinstance(arg, str):
             arg = pynini.acceptor(arg, token_type=token_type)
         conc = pynini.concat(conc, arg)
     return conc
@@ -30,7 +35,8 @@ def load_alphabet(source, auto_singletons=True):
             if symbol.isprintable() and not symbol.isspace():
                 syms.add_symbol(symbol)
     for symbol in source:
-        symbol = str(symbol)
+        if isinstance(symbol, bytes):
+            symbol = symbol.decode("utf-8")
         if symbol.startswith('#'):
             continue
         syms.add_symbol(symbol.strip())

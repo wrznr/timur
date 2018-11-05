@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import sys, os, pytest
-
+import sys
+import os
+import pytest
 import pynini
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../timur')))
@@ -11,6 +12,7 @@ from timur import helpers
 sample_symbols = ["<Base_Stems>", "<NN>", "<base>", "<frei>", "<NMasc_es_e>"]
 sample_entries = ["<Base_Stems>Anüs<NN><base><frei><NMasc_es_e>"]
 
+@pytest.mark.first
 def test_load_alphabet():
     '''
     Load the sample symbol set and check for membership.
@@ -19,6 +21,7 @@ def test_load_alphabet():
     assert(syms.member("<NN>"))
     assert(syms.member("ü"))
 
+@pytest.mark.second
 def test_load_lexicon():
     '''
     Load the sample lexicon and check vor invariance.

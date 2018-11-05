@@ -36,8 +36,25 @@ def build(lexicon):
 
     lex = helpers.load_lexicon(lexicon, syms)
 
-    #phon = phon_fst(syms)
-    #phon.draw("test.dot")
-    num_stems = fsts.num_fst(syms)
+    # add repetitive prefixes
+    # TODO: move to fst function
+    print(syms.member("<Pref_Stems>"))
+    repeatable_prefs = helpers.concat(
+        "<Pref_Stems>",
+        helpers.union(
+            "u r <PREF>",
+            "v o r <PREF>",
+            token_type=syms
+            ).closure(1),
+        "<ADJ,NN> <nativ>",
+        token_type=syms
+        )
+    lex = pynini.union(lex, repeatable_prefs)
 
-    ANY = construct_any(syms)
+    map1 = fsts.map_fst_map1(syms)
+
+    lex = pynini.compose(map1, lex)
+    lex.draw("test.dot")
+
+    #phon = phon_fst(syms)
+    #num_stems = fsts.num_fst(syms)

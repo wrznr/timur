@@ -35,7 +35,7 @@ $ . env/bin/activate
 ```
 
 ### Python requirements
-`gramophone` uses various 3rd party Python packages (including `Pynini`) which may be best installed using `pip`:
+`timur` uses various 3rd party Python packages (including `Pynini`) which may be best installed using `pip`:
 
 ```console
 (env) $ pip install -r requirements.txt

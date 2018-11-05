@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*- 
 from __future__ import absolute_import
 
-import click, pynini
+import click
+import pynini
 
 from pkg_resources import resource_stream, Requirement
 
@@ -27,9 +28,9 @@ def cli():
     pass
 
 
-@cli.command(name="compile")
+@cli.command(name="build")
 @click.argument('lexicon', type=click.File())
-def compile(lexicon):
+def build(lexicon):
 
     syms = helpers.load_alphabet(resource_stream(Requirement.parse("timur"), 'timur/data/syms.txt'))
 
@@ -40,4 +41,3 @@ def compile(lexicon):
     num_stems = fsts.num_fst(syms)
 
     ANY = construct_any(syms)
-

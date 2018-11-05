@@ -8,7 +8,7 @@ This package is basically a migration of a set of finite-state grammars for the 
 
 ### OpenFST
 
-The underlying FST toolkit `Pynini` is itself based on [`OpenFST`](http://www.openfst.org/twiki/bin/view/FST/WebHome) a C++ library for constructing, combining, optimizing, and searching weighted FSTs. [Get] (http://www.openfst.org/twiki/bin/view/FST/FstDownload) the latest version of OpenFST, unpack the archive, build and install via
+The underlying FST toolkit `Pynini` is itself based on [`OpenFST`](http://www.openfst.org/twiki/bin/view/FST/WebHome) a C++ library for constructing, combining, optimizing, and searching weighted FSTs. [Get](http://www.openfst.org/twiki/bin/view/FST/FstDownload) the latest version of OpenFST, unpack the archive, build and install via
 ```console
 $ configure --enable-grm
 $ make

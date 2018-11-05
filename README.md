@@ -14,6 +14,9 @@ $ configure --enable-grm
 $ make
 $ [sudo] make install && [sudo ldconfig]
 ```
+### re2
+
+**TODO**
 
 ### virtualenv
 Using [`virtualenv`](https://virtualenv.pypa.io/en/stable/) is highly recommended, although not strictly necessary for installing `timur`. It may be installed via:

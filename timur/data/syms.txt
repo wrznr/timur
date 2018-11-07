@@ -61,6 +61,13 @@
 <komposit>
 <suffderiv>
 <prefderiv>
+# complex lexicon entry features
+<Simplex>
+<Komplex>
+<Komplex_abstrakt>
+<Komplex_semi>
+<Nominalisierung>
+<Kurzwort>
 # Herkunft features
 <nativ>
 <frei>
@@ -88,6 +95,7 @@
 <Adj+>
 <Adj&>
 <Adj+Lang>
+<Adj~+e>
 <Adj+e>
 <Adj-el/er>
 <Adj0>

@@ -18,19 +18,22 @@ def map_fst_map1(symbol_table):
 
     # delete categories
     cat_ext = pynini.string_map(["<ABK>", "<ADJ>", "<ADV>", "<CARD>", "<DIGCARD>", "<NE>", "<NN>", "<PRO>", "<V>", "<ORD>", "<OTHER>", "<CARD,DIGCARD,NE>", "<ADJ,CARD>", "<ADJ,NN>", "<CARD,NN>", "<CARD,NE>", "<ABK,ADJ,NE,NN>", "<ADJ,NE,NN>", "<ABK,NE,NN>", "<NE,NN>", "<ABK,CARD,NN>", "<ABK,NN>", "<ADJ,CARD,NN,V>", "<ADJ,NN,V>", "<ABK,ADJ,NE,NN,V>", "<ADJ,NE,NN,V>", "<ADV,NE,NN,V>", "<ABK,NE,NN,V>", "<NE,NN,V>", "<ABK,NN,V>", "<NN,V>"], input_token_type=symbol_table, output_token_type=symbol_table)
-    del_cat = pynini.transducer("", cat_ext)
+    del_cat_ext = pynini.transducer("", cat_ext)
 
     # stem types
     stem_types = pynini.string_map(["<Base_Stems>", "<Kompos_Stems>", "<Deriv_Stems>", "<Suff_Stems>", "<Pref_Stems>"], input_token_type=symbol_table, output_token_type=symbol_table)
+    del_stem_types = pynini.transducer("", stem_types)
 
     # prefix/suffix marker
     prefix_suffix_marker = pynini.string_map(["<VPART>", "<VPREF>", "<PREF>", "<SUFF>", "<CONV>", "<QUANT>"], input_token_type=symbol_table, output_token_type=symbol_table)
+    del_prefix_suffix_marker = pynini.transducer("", prefix_suffix_marker)
 
     # stem type features
     stem_type_feats = pynini.string_map(["<base>", "<deriv>", "<kompos>"], input_token_type=symbol_table, output_token_type=symbol_table)
+    del_stem_type_feats = pynini.transducer("", stem_type_feats)
 
     # origin features
-    origin_features = pynini.string_map(["<nativ>",
+    origin_feats = pynini.string_map(["<nativ>",
         "<frei>", "<gebunden>", "<kurz>", "<lang>", "<fremd>", "<klassisch>",
         "<NSNeut_es_e>",
         "<NSFem_0_n>", "<NSFem_0_en>",
@@ -83,12 +86,15 @@ def map_fst_map1(symbol_table):
         "<NGeo-ien-ier-isch>",
         "<NGeo-istan-e-isch>",
         "<NGeo-land-$er-$er>", "<NGeo-land-e-isch>", "<NGeo-land-e-nisch>"], input_token_type=symbol_table, output_token_type=symbol_table)
+    del_origin_feats = pynini.transducer("", origin_feats)
 
     # complexity agreement features
     complexity_agreement_feats = pynini.string_map(["<simplex>", "<komposit>", "<suffderiv>", "<prefderiv>"], input_token_type=symbol_table, output_token_type=symbol_table)
+    del_complexity_agreement_feats = pynini.transducer("", complexity_agreement_feats)
 
     # complex lexicon entries
     complex_lex_entries = pynini.string_map(["<Simplex>", "<Komplex>", "<Komplex_abstrakt>", "<Komplex_semi>", "<Nominalisierung>", "<Kurzwort>"], input_token_type=symbol_table, output_token_type=symbol_table)
+    del_complex_lex_entries = pynini.transducer("", complex_lex_entries)
 
     # inflection classes
     infl_classes = pynini.string_map([
@@ -150,6 +156,23 @@ def map_fst_map1(symbol_table):
       "<VVPres1>", "<VVPres2+Imp0>", "<VVPres2+Imp>", "<VVPres2>",
       "<VVPres2t>", "<VVPres>", "<VVPresPl>", "<VVPresSg>",
       "<VVReg-el/er>", "<VVReg>", "<WAdv>"], input_token_type=symbol_table, output_token_type=symbol_table)
+    del_infl_classes = pynini.transducer("", infl_classes)
+
+    # disjunctive features
+    disjunctive_feats = pynini.string_map([
+      "<CARD,DIGCARD,NE>", "<ADJ,CARD>", "<ADJ,NN>", "<CARD,NN>",
+      "<CARD,NE>", "<ABK,ADJ,NE,NN>", "<ADJ,NE,NN>", "<ABK,NE,NN>",
+      "<NE,NN>", "<ABK,CARD,NN>", "<ABK,NN>", "<ADJ,CARD,NN,V>",
+      "<ADJ,NN,V>", "<ABK,ADJ,NE,NN,V>", "<ADJ,NE,NN,V>", "<ADV,NE,NN,V>",
+      "<ABK,NE,NN,V>", "<NE,NN,V>", "<ABK,NN,V>", "<NN,V>", 
+      "<frei,fremd,gebunden>", "<frei,fremd,gebunden,kurz>", "<frei,fremd,gebunden,lang>", 
+      "<fremd,gebunden,lang>", "<frei,fremd,kurz>", "<frei,fremd,lang>", "<frei,gebunden>", 
+      "<frei,gebunden,kurz,lang>", "<frei,gebunden,lang>", "<frei,lang>", "<klassisch,nativ>", 
+      "<fremd,klassisch,nativ>", "<fremd,klassisch>", "<frei,nativ>", "<frei,fremd,nativ>", 
+      "<fremd,nativ>", "<komposit,prefderiv,simplex,suffderiv>", "<prefderiv,suffderiv>", 
+      "<komposit,prefderiv,simplex>", "<komposit,simplex,suffderiv>", "<komposit,simplex>", 
+      "<prefderiv,simplex,suffderiv>", "<prefderiv,simplex>", "<simplex,suffderiv>"], input_token_type=symbol_table, output_token_type=symbol_table)
+    del_disjunctive_feats = pynini.transducer("", disjunctive_feats)
 
     return pynini.Fst()
 

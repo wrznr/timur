@@ -30,7 +30,7 @@ def load_alphabet(source, auto_singletons=True):
     '''
     syms = pynini.SymbolTable()
     if auto_singletons:
-        for i in range(0,1000):
+        for i in range(0,256):
             symbol = chr(i)
             if symbol.isprintable() and not symbol.isspace():
                 syms.add_symbol(symbol)

@@ -33,12 +33,14 @@ def cli():
 def build(lexicon):
 
     syms = helpers.load_alphabet(resource_stream(Requirement.parse("timur"), 'timur/data/syms.txt'))
+    print(syms.member("<epsilon>"))
+    print(syms.member("!"))
+    print(syms.find("!"))
 
     lex = helpers.load_lexicon(lexicon, syms)
 
     # add repetitive prefixes
     # TODO: move to fst function
-    print(syms.member("<Pref_Stems>"))
     repeatable_prefs = helpers.concat(
         "<Pref_Stems>",
         helpers.union(
@@ -49,12 +51,14 @@ def build(lexicon):
         "<ADJ,NN> <nativ>",
         token_type=syms
         )
-    lex = pynini.union(lex, repeatable_prefs)
+    lex = pynini.union(lex, repeatable_prefs).optimize()
+    lex.draw("test1.dot")
 
-    map1 = fsts.map_fst_map1(syms)
+    map1, map2 = fsts.map_fst_map(syms)
+    map2.draw("test.dot")
 
-    lex = pynini.compose(map1, lex)
-    #lex.draw("test.dot")
+    lex = pynini.compose(map1, lex).optimize()
+    lex.draw("test2.dot")
 
     #phon = phon_fst(syms)
     #num_stems = fsts.num_fst(syms)

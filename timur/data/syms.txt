@@ -45,8 +45,14 @@
 <NE,NN,V>
 <ABK,NN,V>
 <NN,V>
-# intermediate features
+# initial features
 <Initial>
+<NoHy>
+<ge>
+<no-ge>
+<NoPref>
+<NoDef>
+# intermediate features
 <Base_Stems>
 <Deriv_Stems>
 <Kompos_Stems>

@@ -29,6 +29,7 @@ def load_alphabet(source, auto_singletons=True):
     Load symbols from source and add them to a symbol table.
     '''
     syms = pynini.SymbolTable()
+    syms.add_symbol("<epsilon>")
     if auto_singletons:
         for i in range(0,256):
             symbol = chr(i)

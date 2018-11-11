@@ -60,5 +60,8 @@ def build(lexicon):
     lex = pynini.compose(map1, lex).optimize()
     lex.draw("test2.dot")
 
+    lex = pynini.compose(lex, map2).optimize()
+    lex.draw("test3.dot")
+
     #phon = phon_fst(syms)
     #num_stems = fsts.num_fst(syms)

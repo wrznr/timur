@@ -193,96 +193,96 @@ def map_fst_map(symbol_table):
     del_disjunctive_feats = pynini.transducer("", disjunctive_feats)
 
     map_helper1 = union(
-            singletons,
-            pynini.acceptor("<FB>", token_type=symbol_table),
-            pynini.acceptor("<SS>", token_type=symbol_table),
-            pynini.acceptor("<Ge-Nom>", token_type=symbol_table),
-            pynini.transducer("n", "<n>", input_token_type=symbol_table, output_token_type=symbol_table),
-            pynini.transducer("e", "<e>", input_token_type=symbol_table, output_token_type=symbol_table),
-            pynini.transducer("d", "<d>", input_token_type=symbol_table, output_token_type=symbol_table),
-            pynini.transducer("", "<~n>", output_token_type=symbol_table),
-            pynini.transducer("", "<UL>", output_token_type=symbol_table),
-            del_stem_types,
-            prefix_suffix_marker,
-            del_stem_type_feats,
-            pynini.transducer("", "<ge>", output_token_type=symbol_table),
-            del_origin_feats,
-            del_complexity_agreement_feats,
-            del_complex_lex_entries,
-            del_infl_classes,
-            del_disjunctive_feats,
-            token_type=symbol_table
-            ).closure()
+        singletons,
+        pynini.acceptor("<FB>", token_type=symbol_table),
+        pynini.acceptor("<SS>", token_type=symbol_table),
+        pynini.acceptor("<Ge-Nom>", token_type=symbol_table),
+        pynini.transducer("n", "<n>", input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("e", "<e>", input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("d", "<d>", input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("", "<~n>", output_token_type=symbol_table),
+        pynini.transducer("", "<UL>", output_token_type=symbol_table),
+        del_stem_types,
+        prefix_suffix_marker,
+        del_stem_type_feats,
+        pynini.transducer("", "<ge>", output_token_type=symbol_table),
+        del_origin_feats,
+        del_complexity_agreement_feats,
+        del_complex_lex_entries,
+        del_infl_classes,
+        del_disjunctive_feats,
+        token_type=symbol_table
+        ).closure()
 
     map_helper2 = concat(
-            map_helper1,
-            pynini.concat(
-                singletons,
-                pynini.union(
-                    union(
-                        singletons,
-                        "<SUFF>",
-                        "<CONV>",
-                        token_type=symbol_table
-                        ),
-                    cat
-                    ).closure(),
-                ).closure(0, 1),
-            map_helper1
-            )
+        map_helper1,
+        pynini.concat(
+          singletons,
+          pynini.union(
+            union(
+              singletons,
+              "<SUFF>",
+              "<CONV>",
+              token_type=symbol_table
+              ),
+            cat
+            ).closure(),
+          ).closure(0, 1),
+        map_helper1
+        )
 
     map1 = concat(
-            del_initial_features.closure(),
-            pynini.union(
-                concat(
-                    pynini.transducer("", pynini.string_map(["<Base_Stems>", "<Pref_Stems>"], input_token_type=symbol_table, output_token_type=symbol_table)),
-                    map_helper2,
-                    del_cat_ext,
-                    token_type=symbol_table    
-                    ),
-                concat(
-                    pynini.transducer("", pynini.string_map(["<Deriv_Stems>", "<Kompos_Stems>"], input_token_type=symbol_table, output_token_type=symbol_table)),
-                    map_helper2,
-                    cat,
-                    token_type=symbol_table    
-                    ),
-                concat(
-                    pynini.transducer("", "<Pref_Stems>", output_token_type=symbol_table),
-                    map_helper1,
-                    del_cat_ext,
-                    token_type=symbol_table    
-                    ),
-                concat(
-                    pynini.transducer("", "<Suff_Stems>", output_token_type=symbol_table),
-                    map_helper1,
-                    del_cat_ext,
-                    map_helper1,
-                    cat,
-                    pynini.transducer("", "<base>", output_token_type=symbol_table),
-                    token_type=symbol_table    
-                    ),
-                concat(
-                    pynini.transducer("", "<Suff_Stems>", output_token_type=symbol_table),
-                    map_helper1,
-                    del_cat_ext,
-                    map_helper1,
-                    del_cat_ext,
-                    "<SUFF>",
-                    pynini.transducer("", "<base>", output_token_type=symbol_table),
-                    token_type=symbol_table    
-                    ),
-                concat(
-                    pynini.transducer("", "<Suff_Stems>", output_token_type=symbol_table),
-                    map_helper1,
-                    del_cat_ext,
-                    map_helper1,
-                    cat,
-                    "<SUFF>",
-                    pynini.transducer("", pynini.string_map(["<deriv>", "<kompos>"], input_token_type=symbol_table, output_token_type=symbol_table)),
-                    token_type=symbol_table  
-                    )
-                ),
+        del_initial_features.closure(),
+        pynini.union(
+          concat(
+            pynini.transducer("", pynini.string_map(["<Base_Stems>", "<Pref_Stems>"], input_token_type=symbol_table, output_token_type=symbol_table)),
+            map_helper2,
+            del_cat_ext,
+            token_type=symbol_table    
+            ),
+          concat(
+            pynini.transducer("", pynini.string_map(["<Deriv_Stems>", "<Kompos_Stems>"], input_token_type=symbol_table, output_token_type=symbol_table)),
+            map_helper2,
+            cat,
+            token_type=symbol_table    
+            ),
+          concat(
+            pynini.transducer("", "<Pref_Stems>", output_token_type=symbol_table),
             map_helper1,
+            del_cat_ext,
+            token_type=symbol_table    
+            ),
+          concat(
+            pynini.transducer("", "<Suff_Stems>", output_token_type=symbol_table),
+            map_helper1,
+            del_cat_ext,
+            map_helper1,
+            cat,
+            pynini.transducer("", "<base>", output_token_type=symbol_table),
+            token_type=symbol_table    
+            ),
+          concat(
+            pynini.transducer("", "<Suff_Stems>", output_token_type=symbol_table),
+            map_helper1,
+            del_cat_ext,
+            map_helper1,
+            del_cat_ext,
+            "<SUFF>",
+            pynini.transducer("", "<base>", output_token_type=symbol_table),
+            token_type=symbol_table    
+            ),
+          concat(
+            pynini.transducer("", "<Suff_Stems>", output_token_type=symbol_table),
+            map_helper1,
+            del_cat_ext,
+            map_helper1,
+            cat,
+            "<SUFF>",
+            pynini.transducer("", pynini.string_map(["<deriv>", "<kompos>"], input_token_type=symbol_table, output_token_type=symbol_table)),
+            token_type=symbol_table  
+            )
+          ),
+        map_helper1,
             token_type=symbol_table  
             )
 
@@ -290,18 +290,68 @@ def map_fst_map(symbol_table):
     insert_prefix_suffix_marker = pynini.transducer(prefix_suffix_marker, "", input_token_type=symbol_table)
     insert_complex_lex_entries = pynini.transducer(complex_lex_entries, "", input_token_type=symbol_table)
 
-    map_helper3 = pynini.union(
-                singletons,
-                initial_features,
-                stem_types,
-                cat,
-                insert_prefix_suffix_marker,
-                stem_type_feats,
-                origin_feats,
-                complexity_agreement_feats,
-                insert_complex_lex_entries,
-                infl_classes,
-                split_disjunctive_feats(disjunctive_feat_list, symbol_table)
-            )
+    split_origin_features = pynini.union(
+        pynini.transducer("<NGeo-0-$er-$er>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$er-Adj0-Up>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-0-$er-$isch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-0-aner-aner>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-aner-NMasc_s_0>", "<NGeo-aner-Adj0-Up>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-0-aner-anisch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-aner-NMasc_s_0>", "<NGeo-anisch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-0-e-isch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-0-er-er>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-er-Adj0-Up>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-0-0-0>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-0-NMasc_s_0>", "<NGeo-0-Adj0-Up>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-0-er-erisch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-erisch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-0-er-isch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-0-ese-esisch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-0-ianer-ianisch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-ianer-NMasc_s_0>", "<NGeo-ianisch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-0-ner-isch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-ner-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-0-ner-nisch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-ner-NMasc_s_0>", "<NGeo-nisch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-0fem-er-erisch>", pynini.string_map(["<NGeo-0-Name-Fem_0>", "<NGeo-er-NMasc_s_0>", "<NGeo-erisch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-0masc-er-isch>", pynini.string_map(["<NGeo-0-Name-Masc_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-0masc-ese-esisch>", pynini.string_map(["<NGeo-0-Name-Masc_s>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-a-er-isch>", pynini.string_map(["<NGeo-a-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-a-ese-esisch>", pynini.string_map(["<NGeo-a-Name-Neut_s>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-afem-er-isch>", pynini.string_map(["<NGeo-a-Name-Fem_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-e-er-er>", pynini.string_map(	["<NGeo-e-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-er-Adj0-Up>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-e-er-isch>", pynini.string_map(["<NGeo-e-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-efem-er-isch>", pynini.string_map(["<NGeo-e-Name-Fem_0>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-ei-e-isch>", pynini.string_map(["<NGeo-ei-Name-Fem_0>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-en-aner-anisch>", pynini.string_map(["<NGeo-en-Name-Neut_s>", "<NGeo-aner-NMasc_s_0>", "<NGeo-anisch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-en-e-$isch>", pynini.string_map(["<NGeo-en-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-$isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-en-e-isch>", pynini.string_map(["<NGeo-en-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-en-er-er>", pynini.string_map(["<NGeo-en-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-er-Adj0-Up>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-en-er-isch>", pynini.string_map(["<NGeo-en-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-ien-e-isch>", pynini.string_map(["<NGeo-ien-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-ien-er-isch>", pynini.string_map(["<NGeo-ien-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-ien-ese-esisch>", pynini.string_map(["<NGeo-ien-Name-Neut_s>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-ien-ianer-ianisch>", pynini.string_map(["<NGeo-ien-Name-Neut_s>", "<NGeo-ianer-NMasc_s_0>", "<NGeo-ianisch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-ien-ier-isch>", pynini.string_map(["<NGeo-ien-Name-Neut_s>", "<NGeo-ier-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-istan-e-isch>", pynini.string_map(["<NGeo-istan-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-land-$er-$er>", pynini.string_map(["<NGeo-land-Name-Neut_s>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$er-Adj0-Up>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-land-e-isch>", pynini.string_map(["<NGeo-land-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.transducer("<NGeo-land-e-nisch>", pynini.string_map(["<NGeo-land-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-nisch-Adj+>"], input_token_type=symbol_table, output_token_type=symbol_table), input_token_type=symbol_table, output_token_type=symbol_table)
+        )
 
-    return (map1.optimize(), map_helper3.optimize())
+    map_helper3 = pynini.union(
+        singletons,
+        initial_features,
+        stem_types,
+        cat,
+        insert_prefix_suffix_marker,
+        stem_type_feats,
+        origin_feats,
+        complexity_agreement_feats,
+        insert_complex_lex_entries,
+        infl_classes,
+        split_disjunctive_feats(disjunctive_feat_list, symbol_table),
+        split_origin_features
+        )
+
+    map2 = pynini.concat(
+        map_helper3.closure(),
+        concat(
+          pynini.transducer("e", "<e>", input_token_type=symbol_table, output_token_type=symbol_table),
+          "<VVReg-el/er>",
+          token_type=symbol_table
+          ).closure(0,1)
+        )
+
+    return (map1.optimize(), map2.optimize())

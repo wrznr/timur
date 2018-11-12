@@ -70,3 +70,99 @@ def pref_stems(lexicon, symbol_table):
         sigma_star(symbol_table)
         )
       )
+
+def verbal_pref_stems(lexicon, symbol_table):
+    '''
+    Verbal prefix stems
+    '''
+    return pynini.compose(
+      pref_stems(lexicon, symbol_table),
+      pynini.concat(
+        pynini.concat(
+            pynini.concat(
+                pynini.concat(
+                    symbol_sets.initial_features(symbol_table).closure(),
+                    pynini.acceptor("<Pref_Stems>", token_type=symbol_table)
+                    ),
+                sigma_star(symbol_table)
+                ),
+            pynini.acceptor("<V>", token_type=symbol_table)
+            ),
+        sigma_star(symbol_table)
+        )
+      )
+
+def simplex_suff_stems(lexicon, symbol_table):
+    '''
+    Derivation suffixes which combine with simplex stems
+    '''
+    return pynini.compose(
+      lexicon,
+      pynini.concat(
+        pynini.concat(
+          symbol_sets.initial_features(symbol_table).closure(),
+          pynini.concat(
+              pynini.acceptor("<Suff_Stems>", token_type=symbol_table),
+              pynini.transducer("<simplex>", "", input_token_type=symbol_table)
+              ),
+          ),
+        sigma_star(symbol_table)
+        )
+      )
+
+def suff_deriv_suff_stems(lexicon, symbol_table):
+    '''
+    Derivation suffixes which combine with suffixed stems
+    '''
+    return pynini.compose(
+      lexicon,
+      pynini.concat(
+        pynini.concat(
+          symbol_sets.initial_features(symbol_table).closure(),
+          pynini.concat(
+              pynini.acceptor("<Suff_Stems>", token_type=symbol_table),
+              pynini.transducer("<suffderiv>", "", input_token_type=symbol_table)
+              ),
+          ),
+        sigma_star(symbol_table)
+        )
+      )
+
+def pref_deriv_suff_stems(lexicon, symbol_table):
+    '''
+    Derivation suffixes which combine with prefixed stems
+    '''
+    return pynini.compose(
+      lexicon,
+      pynini.concat(
+        pynini.concat(
+          symbol_sets.initial_features(symbol_table).closure(),
+          pynini.concat(
+              pynini.acceptor("<Suff_Stems>", token_type=symbol_table),
+              pynini.transducer("<prefderiv>", "", input_token_type=symbol_table)
+              ),
+          ),
+        sigma_star(symbol_table)
+        )
+      )
+
+def quant_suff_stems(lexicon, symbol_table):
+    '''
+    Derivation suffixes which combine with a number and a simplex stem
+    '''
+    return pynini.compose(
+        lexicon,
+        pynini.concat(
+          pynini.concat(
+            pynini.concat(
+              pynini.concat(
+                pynini.transducer("<QUANT>", "", input_token_type=symbol_table),
+                symbol_sets.initial_features(symbol_table).closure()
+                ),
+              pynini.acceptor("<Suff_Stems>", token_type=symbol_table)
+              ),
+            pynini.transducer("<simplex>", "", input_token_type=symbol_table)
+            ),
+          sigma_star(symbol_table)
+          )
+        )

@@ -27,30 +27,46 @@ def nodef_to_null(symbol_table):
       ).closure()
 
 def bdk_stems(lexicon, symbol_table):
+  '''
+  Base, derivation and compound stems (without derivation suffixes)
+  '''
   return pynini.compose(
       lexicon,
       pynini.concat(
         pynini.concat(
-          pynini.union(
-            symbol_sets.initial_features(symbol_table),
-            pynini.acceptor("<NoDef>", token_type=symbol_table),
-            ),
+          symbol_sets.initial_features(symbol_table).closure(),
           pynini.string_map(["<Base_Stems>", "<Deriv_Stems>", "<Kompos_Stems>"], input_token_type=symbol_table, output_token_type=symbol_table)
           ),
-        sigma_star
+        sigma_star(symbol_table)
+        )
       )
 
-def base_stems(symbol_table):
+def base_stems(lexicon, symbol_table):
+    '''
+    Base stems
+    '''
     return pynini.compose(
-      bdk_stems(symbol_table),
+      bdk_stems(lexicon, symbol_table),
       pynini.concat(
         pynini.concat(
-          pynini.union(
-            symbol_sets.initial_features(symbol_table),
-            pynini.acceptor("<NoDef>", token_type=symbol_table),
-            ),
-          pynini.acceptor("<NoDef>", token_type=symbol_table)
+          symbol_sets.initial_features(symbol_table).closure(),
+          pynini.acceptor("<Base_Stems>", token_type=symbol_table)
           ),
-        sigma_star
+        sigma_star(symbol_table)
+        )
+      )
+
+def pref_stems(lexicon, symbol_table):
+    '''
+    Prefix stems
+    '''
+    return pynini.compose(
+      lexicon,
+      pynini.concat(
+        pynini.concat(
+          symbol_sets.initial_features(symbol_table).closure(),
+          pynini.acceptor("<Pref_Stems>", token_type=symbol_table)
+          ),
+        sigma_star(symbol_table)
         )
       )

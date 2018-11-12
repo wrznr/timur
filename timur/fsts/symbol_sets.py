@@ -3,7 +3,7 @@ from __future__ import absolute_import
 
 import pynini
 
-def chars(symbol_table):
+def characters(symbol_table):
     '''
     Union over single characters
     '''

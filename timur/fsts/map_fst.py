@@ -66,7 +66,7 @@ def map_fst_map(symbol_table):
     del_disjunctive_feats = pynini.transducer("", disjunctive_feats)
 
     map_helper1 = union(
-        symbol_sets.chars(symbol_table),
+        symbol_sets.characters(symbol_table),
         pynini.acceptor("<FB>", token_type=symbol_table),
         pynini.acceptor("<SS>", token_type=symbol_table),
         pynini.acceptor("<Ge-Nom>", token_type=symbol_table),
@@ -90,10 +90,10 @@ def map_fst_map(symbol_table):
     map_helper2 = concat(
         map_helper1,
         pynini.concat(
-          symbol_sets.chars(symbol_table),
+          symbol_sets.characters(symbol_table),
           pynini.union(
             union(
-              symbol_sets.chars(symbol_table),
+              symbol_sets.characters(symbol_table),
               "<SUFF>",
               "<CONV>",
               token_type=symbol_table
@@ -204,7 +204,7 @@ def map_fst_map(symbol_table):
         )
 
     map_helper3 = pynini.union(
-        symbol_sets.chars(symbol_table),
+        symbol_sets.characters(symbol_table),
         symbol_sets.initial_features(symbol_table),
         symbol_sets.stem_types(symbol_table),
         symbol_sets.categories(symbol_table),

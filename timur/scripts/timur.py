@@ -9,6 +9,8 @@ from pkg_resources import resource_stream, Requirement
 from timur import helpers
 from timur import fsts
 
+from timur.fsts import sublexica
+
 def construct_any(symbol_table):
     '''
     Return an FST for Sigma*.
@@ -62,6 +64,12 @@ def build(lexicon):
 
     lex = pynini.compose(lex, map2).optimize()
     lex.draw("test3.dot")
+
+    base_stems = sublexica.base_stems(lex, syms)
+    pref_stems = sublexica.pref_stems(lex, syms)
+    verbal_pref_stems = sublexica.verbal_pref_stems(lex, syms)
+    simplex_suff_stems = sublexica.simplex_suff_stems(lex, syms)
+    quant_suff_stems = sublexica.quant_suff_stems(lex, syms)
 
     #phon = phon_fst(syms)
     #num_stems = fsts.num_fst(syms)

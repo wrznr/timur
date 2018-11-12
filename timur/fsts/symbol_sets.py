@@ -187,13 +187,3 @@ def inflection_classes(symbol_table):
       "<VVPres1>", "<VVPres2+Imp0>", "<VVPres2+Imp>", "<VVPres2>",
       "<VVPres2t>", "<VVPres>", "<VVPresPl>", "<VVPresSg>",
       "<VVReg-el/er>", "<VVReg>", "<WAdv>"], input_token_type=symbol_table, output_token_type=symbol_table)
-
-def sigma_star(symbol_table):
-    return pynini.union(
-            characters(symbol_table),
-            categories(symbol_table),
-            stem_types(symbol_table),
-            origin_features(symbol_table),
-            inflection_classes(symbol_table),
-            geo_inflection_classes(symbol_table)
-            )

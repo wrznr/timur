@@ -32,9 +32,15 @@ def disjunctive_categories(symbol_table):
     '''
     return pynini.string_map(["<CARD,DIGCARD,NE>", "<ADJ,CARD>", "<ADJ,NN>", "<CARD,NN>", "<CARD,NE>", "<ABK,ADJ,NE,NN>", "<ADJ,NE,NN>", "<ABK,NE,NN>", "<NE,NN>", "<ABK,CARD,NN>", "<ABK,NN>", "<ADJ,CARD,NN,V>", "<ADJ,NN,V>", "<ABK,ADJ,NE,NN,V>", "<ADJ,NE,NN,V>", "<ADV,NE,NN,V>", "<ABK,NE,NN,V>", "<NE,NN,V>", "<ABK,NN,V>", "<NN,V>"], input_token_type=symbol_table, output_token_type=symbol_table)
 
+def base_stem_types(symbol_table):
+    '''
+    Union over the different free morpheme stem types
+    '''
+    return pynini.string_map(["<Base_Stems>", "<Kompos_Stems>", "<Deriv_Stems>"], input_token_type=symbol_table, output_token_type=symbol_table)
+
 def stem_types(symbol_table):
     '''
-    Union over the different word stem types
+    Union over the different morpheme stem types
     '''
     return pynini.string_map(["<Base_Stems>", "<Kompos_Stems>", "<Deriv_Stems>", "<Suff_Stems>", "<Pref_Stems>"], input_token_type=symbol_table, output_token_type=symbol_table)
 

@@ -53,6 +53,7 @@ def build(lexicon):
         "<ADJ,NN> <nativ>",
         token_type=syms
         )
+    '''
     lex = pynini.union(lex, repeatable_prefs).optimize()
     lex.draw("test1.dot")
 
@@ -70,6 +71,9 @@ def build(lexicon):
     verbal_pref_stems = sublexica.verbal_pref_stems(lex, syms)
     simplex_suff_stems = sublexica.simplex_suff_stems(lex, syms)
     quant_suff_stems = sublexica.quant_suff_stems(lex, syms)
+    '''
+
+    tail = fsts.tail(syms)
 
     #phon = phon_fst(syms)
     #num_stems = fsts.num_fst(syms)

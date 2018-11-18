@@ -53,25 +53,23 @@ def build(lexicon):
         "<ADJ,NN> <nativ>",
         token_type=syms
         )
-    '''
-    lex = pynini.union(lex, repeatable_prefs).optimize()
-    lex.draw("test1.dot")
-
-    map1, map2 = fsts.map_fst_map(syms)
-    map2.draw("test.dot")
-
-    lex = pynini.compose(map1, lex).optimize()
-    lex.draw("test2.dot")
-
-    lex = pynini.compose(lex, map2).optimize()
-    lex.draw("test3.dot")
-
-    base_stems = sublexica.base_stems(lex, syms)
-    pref_stems = sublexica.pref_stems(lex, syms)
-    verbal_pref_stems = sublexica.verbal_pref_stems(lex, syms)
-    simplex_suff_stems = sublexica.simplex_suff_stems(lex, syms)
-    quant_suff_stems = sublexica.quant_suff_stems(lex, syms)
-    '''
+#    lex = pynini.union(lex, repeatable_prefs).optimize()
+#    lex.draw("test1.dot")
+#
+#    map1, map2 = fsts.map_fst_map(syms)
+#    map2.draw("test.dot")
+#
+#    lex = pynini.compose(map1, lex).optimize()
+#    lex.draw("test2.dot")
+#
+#    lex = pynini.compose(lex, map2).optimize()
+#    lex.draw("test3.dot")
+#
+#    base_stems = sublexica.base_stems(lex, syms)
+#    pref_stems = sublexica.pref_stems(lex, syms)
+#    verbal_pref_stems = sublexica.verbal_pref_stems(lex, syms)
+#    simplex_suff_stems = sublexica.simplex_suff_stems(lex, syms)
+#    quant_suff_stems = sublexica.quant_suff_stems(lex, syms)
 
     tail = fsts.tail(syms)
 

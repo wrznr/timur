@@ -14,6 +14,12 @@ def characters(symbol_table):
             chars.append(symbol)
     return(pynini.string_map(chars, input_token_type=symbol_table, output_token_type=symbol_table).closure())
 
+def consonants(symbol_table):
+    '''
+    Union over conconants
+    '''
+    return pynini.string_map(["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z", "ß"], input_token_type=symbol_table, output_token_type=symbol_table)
+
 def initial_features(symbol_table):
     '''
     Union over features appearing before the morpheme class symbol

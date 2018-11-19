@@ -234,3 +234,49 @@ def suffix_filter(symbol_table):
         )
       )
   return pynini.compose(suff_filter, suff_phon(symbol_table))
+
+def prefix_filter(symbol_table):
+  '''
+  Construct the (complete) prefix filter
+  '''
+
+  alphabet = pynini.union(
+      symbol_sets.characters(symbol_table),
+      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=symbol_table, output_token_type=symbol_table),
+      symbol_sets.stem_types(symbol_table),
+      symbol_sets.categories(symbol_table),
+      ).closure()
+
+  # delete <ge> at certain suffixes like 'ver'
+  del_ge = pynini.concat(
+      pynini.transducer("<no-ge>", "", input_token_type=symbol_table),
+      pynini.concat(
+        pynini.acceptor("<Pref_Stems>", token_type=symbol_table),
+        pynini.concat(
+          pynini.union(
+            symbol_sets.characters(symbol_table),
+            pynini.string_map(["<n>", "<e>", "<d>", "<~n>"])
+            ).closure(),
+          pynini.concat(
+            pynini.transducer(
+              pynini.concat(pynini.acceptor("<V>", token_type=symbol_table), pynini.acceptor("<nativ>", token_type=symbol_table)),
+              ""
+              ),
+            pynini.concat(
+              pynini.acceptor("<NoDef>", token_type=symbol_table).closure(0, 1),
+              pynini.concat(
+                pynini.transducer("<ge>", "", input_token_type=symbol_table),
+                pynini.concat(
+                  alphabet,
+                  pynini.concat(
+                    symbol_sets.stem_type_features(symbol_table),
+                    pynini.acceptor("<nativ>", token_type=symbol_table)
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+  return del_ge

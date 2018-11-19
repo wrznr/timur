@@ -74,5 +74,8 @@ def build(lexicon):
     suff_filter = fsts.suffix_filter(syms).optimize()
     suff_filter.draw("suff_phon.dot")
 
+    pref_filter = fsts.prefix_filter(syms).optimize()
+    pref_filter.draw("pref_phon.dot")
+
     #phon = phon_fst(syms)
     #num_stems = fsts.num_fst(syms)

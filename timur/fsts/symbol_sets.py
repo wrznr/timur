@@ -16,7 +16,7 @@ def characters(symbol_table):
 
 def consonants(symbol_table):
     '''
-    Union over conconants
+    Union over consonants
     '''
     return pynini.string_map(["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z", "ß"], input_token_type=symbol_table, output_token_type=symbol_table)
 
@@ -79,6 +79,15 @@ def origin_features(symbol_table):
     Union over feature corresponding to a word's origin
     '''
     return pynini.string_map(["<nativ>", "<frei>", "<gebunden>", "<kurz>", "<lang>", "<fremd>", "<klassisch>"], input_token_type=symbol_table, output_token_type=symbol_table)
+
+def ns_features(symbol_table):
+    '''
+    Union over NS classes
+    '''
+    return pynini.string_map(["<NSNeut_es_e>",
+        "<NSFem_0_n>", "<NSFem_0_en>",
+        "<NSMasc_es_e>", "<NSMasc_es_$e>", "<NSMasc-s/$sse>"],
+        input_token_type=symbol_table, output_token_type=symbol_table)
 
 def geo_inflection_classes(symbol_table):
     '''

@@ -71,11 +71,14 @@ def build(lexicon):
 #    simplex_suff_stems = sublexica.simplex_suff_stems(lex, syms)
 #    quant_suff_stems = sublexica.quant_suff_stems(lex, syms)
 
-    suff_filter = fsts.suffix_filter(syms).optimize()
-    suff_filter.draw("suff_phon.dot")
+    #suff_filter = fsts.suffix_filter(syms).optimize()
+    #suff_filter.draw("suff_phon.dot")
 
-    pref_filter = fsts.prefix_filter(syms).optimize()
-    pref_filter.draw("pref_phon.dot")
+    #pref_filter = fsts.prefix_filter(syms).optimize()
+    #pref_filter.draw("pref_phon.dot")
+
+    compound_filter = fsts.compound_filter(syms).optimize()
+    compound_filter.draw("compound.dot")
 
     #phon = phon_fst(syms)
     #num_stems = fsts.num_fst(syms)

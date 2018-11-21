@@ -45,6 +45,7 @@
 <NE,NN,V>
 <ABK,NN,V>
 <NN,V>
+<VADJ>
 # initial features
 <Initial>
 <NoHy>

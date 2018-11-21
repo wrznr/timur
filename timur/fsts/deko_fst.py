@@ -101,7 +101,7 @@ def stem_type_filter(symbol_table):
 
   alphabet = pynini.union(
       symbol_sets.characters(symbol_table),
-      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=symbol_table, output_token_type=symbol_table),
+      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=symbol_table, output_token_type=symbol_table),
       symbol_sets.stem_types(symbol_table),
       symbol_sets.categories(symbol_table),
       ).closure()
@@ -123,7 +123,7 @@ def category_filter(symbol_table):
 
   alphabet = pynini.union(
       symbol_sets.characters(symbol_table),
-      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=symbol_table, output_token_type=symbol_table),
+      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=symbol_table, output_token_type=symbol_table),
       symbol_sets.stem_types(symbol_table),
       symbol_sets.categories(symbol_table),
       ).closure()
@@ -145,7 +145,7 @@ def umlautung(symbol_table):
 
   alphabet = pynini.union(
       symbol_sets.characters(symbol_table),
-      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=symbol_table, output_token_type=symbol_table),
+      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=symbol_table, output_token_type=symbol_table),
       symbol_sets.stem_types(symbol_table),
       symbol_sets.categories(symbol_table),
       ).closure()
@@ -195,7 +195,7 @@ def suff_phon(symbol_table):
 
   alphabet = pynini.union(
       symbol_sets.characters(symbol_table),
-      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>", "<NN>", "<ADJ>"], input_token_type=symbol_table, output_token_type=symbol_table),
+      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>", "<NN>", "<ADJ>"], input_token_type=symbol_table, output_token_type=symbol_table),
       symbol_sets.stem_types(symbol_table),
       ).closure()
 
@@ -242,7 +242,7 @@ def prefix_filter(symbol_table):
 
   alphabet = pynini.union(
       symbol_sets.characters(symbol_table),
-      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=symbol_table, output_token_type=symbol_table),
+      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=symbol_table, output_token_type=symbol_table),
       symbol_sets.stem_types(symbol_table),
       symbol_sets.categories(symbol_table),
       ).closure()
@@ -279,4 +279,64 @@ def prefix_filter(symbol_table):
           )
         )
       )
-  return del_ge
+  return pynini.concat(del_ge, symbol_sets.inflection_classes(symbol_table).closure(0, 1))
+
+def compound_filter(symbol_table):
+  '''
+  Construct the compound filter
+  '''
+
+  alphabet = pynini.union(
+      symbol_sets.characters(symbol_table),
+      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>"], input_token_type=symbol_table, output_token_type=symbol_table),
+      symbol_sets.stem_types(symbol_table),
+      pynini.transducer(symbol_sets.categories(symbol_table), ""),
+      pynini.transducer(symbol_sets.origin_features(symbol_table), ""),
+      pynini.transducer("<NoPref>", "", input_token_type=symbol_table)
+      )
+
+  return pynini.concat(
+      pynini.union(
+        pynini.transducer("<Initial>", "", input_token_type=symbol_table),
+        pynini.acceptor("<NoHy>", token_type=symbol_table),
+        pynini.acceptor("<NoDef>", token_type=symbol_table)
+        ).closure(0,1),
+      pynini.concat(
+        pynini.union(
+          pynini.concat(
+            alphabet.closure(),
+            pynini.transducer(pynini.string_map(["<ABK>", "<ADV>", "<CARD>", "<NE>", "<PRO>", "<V>", "<ORD>", "<OTHER>"], input_token_type=symbol_table, output_token_type=symbol_table), "")
+            ),
+          pynini.concat(
+            pynini.transducer("", "<VADJ>", output_token_type=symbol_table),
+            pynini.concat(
+              pynini.union(
+                alphabet,
+                pynini.transducer("<kompos>", "", input_token_type=symbol_table)
+                ).closure(),
+              pynini.concat(
+                pynini.transducer("<kompos>", "", input_token_type=symbol_table),
+                pynini.concat(
+                  alphabet.closure(),
+                  pynini.transducer("<V>", "", input_token_type=symbol_table)
+                  )
+                )
+              )
+            ),
+          pynini.concat(
+            pynini.union(
+              alphabet,
+              pynini.transducer("<kompos>", "", input_token_type=symbol_table)
+              ).closure(),
+            pynini.transducer(pynini.string_map(["<ADJ>", "<NN>"], input_token_type=symbol_table, output_token_type=symbol_table), "")
+            )
+          ),
+        pynini.concat(
+          pynini.transducer("<base>", "", input_token_type=symbol_table),
+          pynini.concat(
+            symbol_sets.origin_features(symbol_table),
+            symbol_sets.inflection_classes(symbol_table)
+            )
+          )
+        )
+      )

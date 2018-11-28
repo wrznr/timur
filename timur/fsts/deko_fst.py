@@ -667,3 +667,57 @@ def insert_ge(symbol_table):
           )
         )
       )
+
+def insert_zu(symbol_table):
+  '''
+  Inserts "zu" into infinitives with separable prefixes
+  '''
+
+  alphabet = pynini.union(
+      symbol_sets.characters(symbol_table),
+      pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=symbol_table, output_token_type=symbol_table),
+      symbol_sets.stem_types(symbol_table),
+      ).closure()
+
+  c2 = pynini.union(
+      alphabet,
+      symbol_sets.stem_types(symbol_table)
+      ).closure()
+  
+  # From deko.fst:
+  # insert "zu" after verbal prefixes if followed by infinitive marker
+  return pynini.union(
+      c2,
+      pynini.concat(
+        pynini.acceptor("<Base_Stems>", token_type=symbol_table),
+        pynini.concat(
+          alphabet,
+          pynini.concat(
+            pynini.transducer("<^zz>", "", input_token_type=symbol_table),
+            alphabet
+            )
+          )
+        ),
+      pynini.concat(
+        c2,
+        pynini.concat(
+          pynini.acceptor("<Pref_Stems>", token_type=symbol_table),
+          pynini.concat(
+            alphabet,
+            pynini.concat(
+              pynini.acceptor("<Base_Stems>", token_type=symbol_table),
+              pynini.concat(
+                pynini.transducer("", "z u", output_token_type=symbol_table),
+                pynini.concat(
+                  alphabet,
+                  pynini.concat(
+                    pynini.transducer("<^zz>", "", input_token_type=symbol_table),
+                    alphabet
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )

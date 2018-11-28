@@ -591,7 +591,7 @@ def insert_ge(symbol_table):
       symbol_sets.characters(symbol_table),
       pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^zz>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=symbol_table, output_token_type=symbol_table),
       symbol_sets.stem_types(symbol_table),
-      ).closure()
+      )
 
   c2 = pynini.union(
       alphabet,
@@ -614,10 +614,10 @@ def insert_ge(symbol_table):
             pynini.concat(
               pynini.transducer("", "g e", output_token_type=symbol_table),
               pynini.concat(
-                alphabet,
+                alphabet.closure(),
                 pynini.concat(
                   pynini.transducer("<^pp>", "", input_token_type=symbol_table),
-                  alphabet
+                  alphabet.closure()
                   )
                 )
               )
@@ -633,10 +633,10 @@ def insert_ge(symbol_table):
             pynini.concat(
               pynini.transducer("", "g e", output_token_type=symbol_table),
               pynini.concat(
-                alphabet,
+                alphabet.closure(),
                 pynini.concat(
                   pynini.transducer("<Suff_Stems> <Ge-Nom>", "e", input_token_type=symbol_table, output_token_type=symbol_table),
-                  alphabet
+                  alphabet.closure()
                   )
                 )
               )
@@ -649,7 +649,7 @@ def insert_ge(symbol_table):
           pynini.transducer("<ge>", "", input_token_type=symbol_table),
           pynini.concat(
             pynini.acceptor("<Base_Stems>", token_type=symbol_table).closure(0, 1),
-            alphabet
+            alphabet.closure()
             )
           )
         ),
@@ -658,10 +658,10 @@ def insert_ge(symbol_table):
         pynini.concat(
           pynini.acceptor("<Base_Stems>", token_type=symbol_table).closure(0, 1),
           pynini.concat(
-            alphabet,
+            alphabet.closure(),
             pynini.concat(
               pynini.transducer("<^pp>", "", input_token_type=symbol_table),
-              alphabet
+              alphabet.closure()
               )
             )
           )
@@ -677,7 +677,7 @@ def insert_zu(symbol_table):
       symbol_sets.characters(symbol_table),
       pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=symbol_table, output_token_type=symbol_table),
       symbol_sets.stem_types(symbol_table),
-      ).closure()
+      )
 
   c2 = pynini.union(
       alphabet,
@@ -691,10 +691,10 @@ def insert_zu(symbol_table):
       pynini.concat(
         pynini.acceptor("<Base_Stems>", token_type=symbol_table),
         pynini.concat(
-          alphabet,
+          alphabet.closure(),
           pynini.concat(
             pynini.transducer("<^zz>", "", input_token_type=symbol_table),
-            alphabet
+            alphabet.closure()
             )
           )
         ),
@@ -703,16 +703,16 @@ def insert_zu(symbol_table):
         pynini.concat(
           pynini.acceptor("<Pref_Stems>", token_type=symbol_table),
           pynini.concat(
-            alphabet,
+            alphabet.closure(),
             pynini.concat(
               pynini.acceptor("<Base_Stems>", token_type=symbol_table),
               pynini.concat(
                 pynini.transducer("", "z u", output_token_type=symbol_table),
                 pynini.concat(
-                  alphabet,
+                  alphabet.closure(),
                   pynini.concat(
                     pynini.transducer("<^zz>", "", input_token_type=symbol_table),
-                    alphabet
+                    alphabet.closure()
                     )
                   )
                 )
@@ -721,3 +721,22 @@ def insert_zu(symbol_table):
           )
         )
       )
+
+def imperative_filter(symbol_table):
+  '''
+  Imperatives have no separable prefixes
+  '''
+
+  alphabet = pynini.union(
+      symbol_sets.characters(symbol_table),
+      pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=symbol_table, output_token_type=symbol_table),
+      symbol_sets.stem_types(symbol_table),
+      )
+
+  c2 = pynini.union(
+      alphabet,
+      pynini.transducer(),
+      pynini.transducer()
+      ).closure()
+
+  return c2

@@ -591,15 +591,79 @@ def insert_ge(symbol_table):
       symbol_sets.characters(symbol_table),
       pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^zz>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=symbol_table, output_token_type=symbol_table),
       symbol_sets.stem_types(symbol_table),
-      )
+      ).closure()
 
   c2 = pynini.union(
       alphabet,
       symbol_sets.stem_types(symbol_table)
-      )
+      ).closure()
   
   # From deko.fst:
   # replace <ge> with "ge" if followed by perfect participle marker
   # or ge-nominalisation otherwise delete <ge>
   # in complex lexicon entries as for "haushalten" <ge> is not followed
   # by <Base_Stems>
+  return pynini.union(
+      c2,
+      pynini.concat(
+        c2,
+        pynini.concat(
+          pynini.transducer("<ge>", "", input_token_type=symbol_table),
+          pynini.concat(
+            pynini.acceptor("<Base_Stems>", token_type=symbol_table).closure(0, 1),
+            pynini.concat(
+              pynini.transducer("", "g e", output_token_type=symbol_table),
+              pynini.concat(
+                alphabet,
+                pynini.concat(
+                  pynini.transducer("<^pp>", "", input_token_type=symbol_table),
+                  alphabet
+                  )
+                )
+              )
+            )
+          )
+        ),
+      pynini.concat(
+        c2,
+        pynini.concat(
+          pynini.transducer("<ge>", "", input_token_type=symbol_table),
+          pynini.concat(
+            pynini.acceptor("<Deriv_Stems>", token_type=symbol_table).closure(0, 1),
+            pynini.concat(
+              pynini.transducer("", "g e", output_token_type=symbol_table),
+              pynini.concat(
+                alphabet,
+                pynini.concat(
+                  pynini.transducer("<Suff_Stems> <Ge-Nom>", "e", input_token_type=symbol_table, output_token_type=symbol_table),
+                  alphabet
+                  )
+                )
+              )
+            )
+          )
+        ),
+      pynini.concat(
+        c2,
+        pynini.concat(
+          pynini.transducer("<ge>", "", input_token_type=symbol_table),
+          pynini.concat(
+            pynini.acceptor("<Base_Stems>", token_type=symbol_table).closure(0, 1),
+            alphabet
+            )
+          )
+        ),
+      pynini.concat(
+        c2,
+        pynini.concat(
+          pynini.acceptor("<Base_Stems>", token_type=symbol_table).closure(0, 1),
+          pynini.concat(
+            alphabet,
+            pynini.concat(
+              pynini.transducer("<^pp>", "", input_token_type=symbol_table),
+              alphabet
+              )
+            )
+          )
+        )
+      )

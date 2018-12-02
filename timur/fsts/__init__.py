@@ -6,3 +6,4 @@ from .deko_fst import prefix_filter
 from .deko_fst import compound_filter
 from .deko_fst import infix_filter
 from .deko_fst import uplow
+from .flexion_fst import Flexion

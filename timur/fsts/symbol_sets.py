@@ -14,6 +14,34 @@ def characters(symbol_table):
             chars.append(symbol)
     return(pynini.string_map(chars, input_token_type=symbol_table, output_token_type=symbol_table).closure())
 
+def characters_upper(symbol_table):
+    '''
+    Union over single uppercase characters
+    '''
+    chars = []
+    for i in range(0,256):
+        symbol = chr(i)
+        if symbol.isprintable() and symbol.isupper() and not symbol.isspace():
+            chars.append(symbol)
+    return(pynini.string_map(chars, input_token_type=symbol_table, output_token_type=symbol_table).closure())
+
+def characters_lower(symbol_table):
+    '''
+    Union over single lowercase characters
+    '''
+    chars = []
+    for i in range(0,256):
+        symbol = chr(i)
+        if symbol.isprintable() and symbol.islower() and not symbol.isspace():
+            chars.append(symbol)
+    return(pynini.string_map(chars, input_token_type=symbol_table, output_token_type=symbol_table).closure())
+
+def consonants(symbol_table):
+    '''
+    Union over consonants
+    '''
+    return pynini.string_map(["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z", "ß"], input_token_type=symbol_table, output_token_type=symbol_table)
+
 def initial_features(symbol_table):
     '''
     Union over features appearing before the morpheme class symbol
@@ -32,9 +60,15 @@ def disjunctive_categories(symbol_table):
     '''
     return pynini.string_map(["<CARD,DIGCARD,NE>", "<ADJ,CARD>", "<ADJ,NN>", "<CARD,NN>", "<CARD,NE>", "<ABK,ADJ,NE,NN>", "<ADJ,NE,NN>", "<ABK,NE,NN>", "<NE,NN>", "<ABK,CARD,NN>", "<ABK,NN>", "<ADJ,CARD,NN,V>", "<ADJ,NN,V>", "<ABK,ADJ,NE,NN,V>", "<ADJ,NE,NN,V>", "<ADV,NE,NN,V>", "<ABK,NE,NN,V>", "<NE,NN,V>", "<ABK,NN,V>", "<NN,V>"], input_token_type=symbol_table, output_token_type=symbol_table)
 
+def base_stem_types(symbol_table):
+    '''
+    Union over the different free morpheme stem types
+    '''
+    return pynini.string_map(["<Base_Stems>", "<Kompos_Stems>", "<Deriv_Stems>"], input_token_type=symbol_table, output_token_type=symbol_table)
+
 def stem_types(symbol_table):
     '''
-    Union over the different word stem types
+    Union over the different morpheme stem types
     '''
     return pynini.string_map(["<Base_Stems>", "<Kompos_Stems>", "<Deriv_Stems>", "<Suff_Stems>", "<Pref_Stems>"], input_token_type=symbol_table, output_token_type=symbol_table)
 
@@ -67,6 +101,15 @@ def origin_features(symbol_table):
     Union over feature corresponding to a word's origin
     '''
     return pynini.string_map(["<nativ>", "<frei>", "<gebunden>", "<kurz>", "<lang>", "<fremd>", "<klassisch>"], input_token_type=symbol_table, output_token_type=symbol_table)
+
+def ns_features(symbol_table):
+    '''
+    Union over NS classes
+    '''
+    return pynini.string_map(["<NSNeut_es_e>",
+        "<NSFem_0_n>", "<NSFem_0_en>",
+        "<NSMasc_es_e>", "<NSMasc_es_$e>", "<NSMasc-s/$sse>"],
+        input_token_type=symbol_table, output_token_type=symbol_table)
 
 def geo_inflection_classes(symbol_table):
     '''

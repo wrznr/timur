@@ -1,3 +1,4 @@
+<CB>
 <FB>
 <SS>
 <n>
@@ -6,6 +7,7 @@
 <d>
 <Ge-Nom>
 <UL>
+<DEL-S>
 # category features
 <ABK>
 <ADJ>
@@ -45,6 +47,7 @@
 <NE,NN,V>
 <ABK,NN,V>
 <NN,V>
+<VADJ>
 # initial features
 <Initial>
 <NoHy>
@@ -392,3 +395,15 @@
 <VVReg-el/er>
 <VVReg>
 <WAdv>
+# internal process marker
+<Low#>
+<Up#>
+<Fix#>
+<^imp>
+<^zz>
+<^UC>
+<^Ax>
+<^pl>
+<^Gen>
+<^Del>
+<^pp>

@@ -730,13 +730,110 @@ def imperative_filter(symbol_table):
   alphabet = pynini.union(
       symbol_sets.characters(symbol_table),
       pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=symbol_table, output_token_type=symbol_table),
-      symbol_sets.stem_types(symbol_table),
+      symbol_sets.stem_types(symbol_table)
       )
 
   c2 = pynini.union(
       alphabet,
-      pynini.transducer(),
-      pynini.transducer()
+      pynini.transducer(symbol_sets.stem_types(symbol_table), "<CB>", input_token_type=symbol_table, output_token_type=symbol_table)
       ).closure()
 
-  return c2
+  return pynini.union(
+      c2,
+      pynini.concat(
+        pynini.transducer("<Base_Stems>", "<CB>", input_token_type=symbol_table, output_token_type=symbol_table),
+        pynini.concat(
+          alphabet.closure(),
+          pynini.concat(
+            pynini.transducer("<^imp>", "", input_token_type=symbol_table),
+            alphabet.closure()
+            )
+          )
+        )
+      )
+
+def infix_filter(symbol_table):
+  '''
+  Combination of the different infix filter
+  '''
+  return pynini.compose(
+      insert_ge(symbol_table),
+      pynini.compose(
+        insert_zu(symbol_table),
+        imperative_filter(symbol_table)
+        )
+      )
+
+def uplow(symbol_table):
+  '''
+  Upper/Lower case markers
+  '''
+
+  alphabet = pynini.union(
+      symbol_sets.characters(symbol_table),
+      pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoDef>", "<FB>", "<UL>", "<SS>", "<DEL-S>",  "<^Ax>", "<^pl>", "<^Gen>", "<^Del>", "<^imp>", "<ge>", "<^zz>"], input_token_type=symbol_table, output_token_type=symbol_table)
+      )
+  
+  s = pynini.concat(
+      alphabet,
+      pynini.union(
+        alphabet,
+        pynini.acceptor("<CB>", token_type=symbol_table)
+        ).closure()
+      )
+
+  s2 = pynini.concat(
+      pynini.union(
+        pynini.concat(
+          pynini.transducer("<CB>", "", input_token_type=symbol_table),
+          symbol_sets.characters_upper(symbol_table)
+          ),
+        pynini.concat(
+          pynini.transducer("<CB>", "", input_token_type=symbol_table).closure(0, 1),
+          symbol_sets.characters_lower(symbol_table)
+          )
+        ),
+      s
+      )
+
+  return pynini.union(
+      pynini.concat(
+          pynini.transducer("<^UC>", "", input_token_type=symbol_table),
+          pynini.concat(
+            pynini.string_map(["<NoDef>", "<NoHy>"], input_token_type=symbol_table, output_token_type=symbol_table).closure(0, 1),
+            pynini.concat(
+              pynini.transducer("", "<^UC>", output_token_type=symbol_table),
+              pynini.concat(
+                s2,
+                pynini.transducer("<Low#>", "", input_token_type=symbol_table)
+                )
+              )
+            )
+        ),
+      pynini.concat(
+        pynini.acceptor("<NoHy>", token_type=symbol_table).closure(0, 1),
+        pynini.union(
+          pynini.concat(
+            pynini.transducer("<CB>", "", input_token_type=symbol_table),
+            pynini.concat(
+              s,
+              pynini.transducer("<Fix#>", "", input_token_type=symbol_table)
+              )
+            ),
+          pynini.concat(
+            pynini.transducer(pynini.string_map(["<CB>", "<epsilon>"], input_token_type=symbol_table, output_token_type=symbol_table), "<^UC>", output_token_type=symbol_table),
+            pynini.concat(
+              s,
+              pynini.transducer("<Up#>", "", input_token_type=symbol_table)
+              )
+            ),
+          pynini.concat(
+            pynini.transducer(pynini.string_map(["<CB>", "<epsilon>"], input_token_type=symbol_table, output_token_type=symbol_table), "<CB>", output_token_type=symbol_table),
+            pynini.concat(
+              s,
+              pynini.transducer("<Low#>", "", input_token_type=symbol_table)
+              )
+            )
+          )
+        )
+      )

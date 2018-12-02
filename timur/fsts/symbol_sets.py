@@ -14,6 +14,28 @@ def characters(symbol_table):
             chars.append(symbol)
     return(pynini.string_map(chars, input_token_type=symbol_table, output_token_type=symbol_table).closure())
 
+def characters_upper(symbol_table):
+    '''
+    Union over single uppercase characters
+    '''
+    chars = []
+    for i in range(0,256):
+        symbol = chr(i)
+        if symbol.isprintable() and symbol.isupper() and not symbol.isspace():
+            chars.append(symbol)
+    return(pynini.string_map(chars, input_token_type=symbol_table, output_token_type=symbol_table).closure())
+
+def characters_lower(symbol_table):
+    '''
+    Union over single lowercase characters
+    '''
+    chars = []
+    for i in range(0,256):
+        symbol = chr(i)
+        if symbol.isprintable() and symbol.islower() and not symbol.isspace():
+            chars.append(symbol)
+    return(pynini.string_map(chars, input_token_type=symbol_table, output_token_type=symbol_table).closure())
+
 def consonants(symbol_table):
     '''
     Union over consonants

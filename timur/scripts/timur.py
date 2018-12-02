@@ -80,11 +80,8 @@ def build(lexicon):
     compound_filter = fsts.compound_filter(syms).optimize()
     compound_filter.draw("compound.dot")
 
-    insert_ge = fsts.insert_ge(syms).optimize()
-    insert_ge.draw("insert_ge.dot")
+    #infix_filter = fsts.infix_filter(syms).optimize()
+    #infix_filter.draw("infix.dot")
 
-    insert_zu = fsts.insert_zu(syms).optimize()
-    insert_zu.draw("insert_zu.dot")
-
-    #phon = phon_fst(syms)
-    #num_stems = fsts.num_fst(syms)
+    uplow = fsts.uplow(syms)
+    uplow.draw("uplow.dot")

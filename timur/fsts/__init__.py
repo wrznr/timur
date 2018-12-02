@@ -4,5 +4,5 @@ from .map_fst import map_fst_map
 from .deko_fst import suffix_filter
 from .deko_fst import prefix_filter
 from .deko_fst import compound_filter
-from .deko_fst import insert_ge
-from .deko_fst import insert_zu
+from .deko_fst import infix_filter
+from .deko_fst import uplow

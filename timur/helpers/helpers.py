@@ -1,28 +1,6 @@
 # -*- coding: utf-8 -*- 
-import pynini, re
-#
-#def union(*args, token_type="utf8"):
-#    args_mod = []
-#    for arg in args:
-#        if isinstance(arg, str):
-#            args_mod.append(pynini.acceptor(arg, token_type=token_type))
-#        else:
-#            args_mod.append(arg)
-#    return pynini.union(*(args_mod))
-#
-#def concat(*args, token_type="utf8"):
-#    args_mod = []
-#    conc = pynini.Fst()
-#    conc.set_start(conc.add_state())
-#    conc.set_final(conc.start())
-#    if isinstance(token_type, pynini.SymbolTable):
-#        conc.set_input_symbols(token_type)
-#        conc.set_output_symbols(token_type)
-#    for arg in args:
-#        if isinstance(arg, str):
-#            arg = pynini.acceptor(arg, token_type=token_type)
-#        conc = pynini.concat(conc, arg)
-#    return conc
+import pynini
+import re
 
 def load_alphabet(source, auto_singletons=True):
     '''

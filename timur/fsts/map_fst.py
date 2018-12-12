@@ -180,7 +180,7 @@ class MapFst:
           ),
         map_helper1,
       )
-    ).optimize()
+    )#.optimize()
 
     split_origin_features = pynini.union(
       pynini.transducer("<NGeo-0-$er-$er>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$er-Adj0-Up>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),

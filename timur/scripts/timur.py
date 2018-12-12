@@ -71,7 +71,7 @@ def build(lexicon):
 #    simplex_suff_stems = sublexica.simplex_suff_stems(lex, syms)
 #    quant_suff_stems = sublexica.quant_suff_stems(lex, syms)
 
-    #suff_filter = fsts.suffix_filter(syms).optimize()
+    deko_filter = fsts.DekoFst(syms)
     #suff_filter.draw("suff_phon.dot")
 
     #pref_filter = fsts.prefix_filter(syms).optimize()

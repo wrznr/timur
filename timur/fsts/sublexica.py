@@ -3,11 +3,6 @@ from __future__ import absolute_import
 
 import pynini
 
-from timur.helpers import union
-from timur.helpers import concat
-
-from timur.fsts import symbol_sets
-
 def sigma_star(symbol_table):
   return pynini.union(
       symbol_sets.characters(symbol_table),

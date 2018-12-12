@@ -3,10 +3,7 @@ from __future__ import absolute_import
 
 import pynini
 
-from timur.helpers import union
-from timur.helpers import concat
-
-from timur.fsts import symbol_sets
+from timur import symbols
 
 def suff_stems_filter(features, symbol_table):
   '''

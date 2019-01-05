@@ -15,17 +15,33 @@ class DekoFst:
     # store alphabet
     self.__syms = syms
 
+    # TAIL
+    self.__tail = self.__construct_tail()
+
+    # origin filter
+    self.__origin_filter = self.__construct_origin_filter()
+
+    # stem_type filter
+    self.__stem_type_filter = self.__construct_stem_type_filter()
+
+    # category filter
+    self.__category_filter = self.__construct_category_filter()
+
+    # umlautung
+    self.__umlautung = self.__construct_umlautung()
+
     suff_filter_helper = pynini.compose(
-      self.__origin_filter(),
+      self.__origin_filter,
       pynini.compose(
-        stem_type_filter(symbol_table),
+        self.__stem_type_filter,
         pynini.compose(
-          category_filter(symbol_table),
-          umlautung(symbol_table)
+          self.__category_filter,
+          self.__umlautung
           )
         )
-      )
-    self.__suff_filter = pynini.compose(suff_filter_helper, suff_phon(symbol_table))
+      ).optimize()
+    suff_phon = self.__construct_suff_phon()
+    self.__suff_filter = pynini.compose(suff_filter_helper, suff_phon).optimize()
 
   @property
   def suff_filter(self):
@@ -34,7 +50,7 @@ class DekoFst:
     '''
     return self.__suff_filter
 
-  def __tail(self):
+  def __construct_tail(self):
     '''
     Define possible final sequences of a derivation
     '''
@@ -73,9 +89,9 @@ class DekoFst:
         final_stuff,
         self.__syms.inflection_classes.closure(0,1)
         )
-      )
+      ).optimize()
 
-  def __origin_filter(self):
+  def __construct_origin_filter(self):
     '''
     Filter-out non-matching origin feature sequences
     '''
@@ -88,161 +104,161 @@ class DekoFst:
         self.__syms.stem_type_features
         ).closure()
 
-    filtering = suff_stems_filter(["<nativ>", "<frei>", "<gebunden>", "<kurz>", "<lang>", "<fremd>", "<klassisch>", "<NSNeut_es_e>", "<NSFem_0_n>", "<NSFem_0_en>", "<NSMasc_es_e>", "<NSMasc_es_$e>", "<NSMasc-s/$sse>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$er-Adj0-Up>", "<NGeo-$isch-Adj+>", "<NGeo-0-Name-Fem_0>", "<NGeo-0-Name-Masc_s>", "<NGeo-0-Name-Neut_s>", "<NGeo-a-Name-Fem_s>", "<NGeo-a-Name-Neut_s>", "<NGeo-aner-NMasc_s_0>", "<NGeo-aner-Adj0-Up>", "<NGeo-anisch-Adj+>", "<NGeo-e-NMasc_n_n>", "<NGeo-e-Name-Fem_0>", "<NGeo-e-Name-Neut_s>", "<NGeo-ei-Name-Fem_0>", "<NGeo-en-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-er-Adj0-Up>", "<NGeo-0-NMasc_s_0>", "<NGeo-0-Adj0-Up>", "<NGeo-erisch-Adj+>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>", "<NGeo-ianer-NMasc_s_0>", "<NGeo-ianisch-Adj+>", "<NGeo-ien-Name-Neut_s>", "<NGeo-ier-NMasc_s_0>", "<NGeo-isch-Adj+>", "<NGeo-istan-Name-Neut_s>", "<NGeo-land-Name-Neut_s>", "<NGeo-ner-NMasc_s_0>", "<NGeo-ner-Adj0-Up>", "<NGeo-nisch-Adj+>"], self.__syms.alphabet).optimize()
+    filtering = self.__suff_stems_filter(["<nativ>", "<frei>", "<gebunden>", "<kurz>", "<lang>", "<fremd>", "<klassisch>", "<NSNeut_es_e>", "<NSFem_0_n>", "<NSFem_0_en>", "<NSMasc_es_e>", "<NSMasc_es_$e>", "<NSMasc-s/$sse>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$er-Adj0-Up>", "<NGeo-$isch-Adj+>", "<NGeo-0-Name-Fem_0>", "<NGeo-0-Name-Masc_s>", "<NGeo-0-Name-Neut_s>", "<NGeo-a-Name-Fem_s>", "<NGeo-a-Name-Neut_s>", "<NGeo-aner-NMasc_s_0>", "<NGeo-aner-Adj0-Up>", "<NGeo-anisch-Adj+>", "<NGeo-e-NMasc_n_n>", "<NGeo-e-Name-Fem_0>", "<NGeo-e-Name-Neut_s>", "<NGeo-ei-Name-Fem_0>", "<NGeo-en-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-er-Adj0-Up>", "<NGeo-0-NMasc_s_0>", "<NGeo-0-Adj0-Up>", "<NGeo-erisch-Adj+>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>", "<NGeo-ianer-NMasc_s_0>", "<NGeo-ianisch-Adj+>", "<NGeo-ien-Name-Neut_s>", "<NGeo-ier-NMasc_s_0>", "<NGeo-isch-Adj+>", "<NGeo-istan-Name-Neut_s>", "<NGeo-land-Name-Neut_s>", "<NGeo-ner-NMasc_s_0>", "<NGeo-ner-Adj0-Up>", "<NGeo-nisch-Adj+>"])
 
     return pynini.concat(
         pynini.concat(
           alphabet,
           filtering
           ).closure(),
-        self.__tail()
-        )
+        self.__tail
+        ).optimize()
 
-def suff_stems_filter(features, symbol_table):
-  '''
-  Return a union over filters for each feature given
-  '''
-  filtering = pynini.Fst()
-  filtering.set_input_symbols(symbol_table)
-  filtering.set_output_symbols(symbol_table)
-  suff_stems = pynini.acceptor("<Suff_Stems>", token_type=symbol_table)
-  for feature in features:
-    to_eps = pynini.transducer(feature, "", input_token_type=symbol_table)
-    filtering = pynini.union(
-        filtering,
-        pynini.concat(
+  def __suff_stems_filter(self, features):
+    '''
+    Return a union over filters for each feature given
+    '''
+    filtering = pynini.Fst()
+    filtering.set_input_symbols(self.__syms.alphabet)
+    filtering.set_output_symbols(self.__syms.alphabet)
+    suff_stems = pynini.acceptor("<Suff_Stems>", token_type=self.__syms.alphabet)
+    for feature in features:
+      to_eps = pynini.transducer(feature, "", input_token_type=self.__syms.alphabet)
+      filtering = pynini.union(
+          filtering,
           pynini.concat(
-            to_eps,
-            suff_stems
-            ),
-          to_eps
+            pynini.concat(
+              to_eps,
+              suff_stems
+              ),
+            to_eps
+            )
           )
-        )
-  return filtering
+    return filtering.optimize()
 
-def stem_type_filter(symbol_table):
-  '''
-  Filter-out non-matching stem type sequences
-  '''
+  def __construct_stem_type_filter(self):
+    '''
+    Filter-out non-matching stem type sequences
+    '''
 
-  alphabet = pynini.union(
-      symbol_sets.characters(symbol_table),
-      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=symbol_table, output_token_type=symbol_table),
-      symbol_sets.stem_types(symbol_table),
-      symbol_sets.categories(symbol_table),
-      ).closure()
+    alphabet = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+        self.__syms.stem_types,
+        self.__syms.categories,
+        ).closure()
 
-  filtering = suff_stems_filter(["<deriv>", "<kompos>"], symbol_table).optimize()
+    filtering = self.__suff_stems_filter(["<deriv>", "<kompos>"])
 
-  return pynini.concat(
-      pynini.concat(
-        alphabet,
-        filtering
-        ).closure(),
-      tail(symbol_table)
-      )
-
-def category_filter(symbol_table):
-  '''
-  Filter-out non-matching category sequences
-  '''
-
-  alphabet = pynini.union(
-      symbol_sets.characters(symbol_table),
-      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=symbol_table, output_token_type=symbol_table),
-      symbol_sets.stem_types(symbol_table),
-      symbol_sets.categories(symbol_table),
-      ).closure()
-
-  filtering = suff_stems_filter(["<ABK>", "<ADJ>", "<ADV>", "<CARD>", "<DIGCARD>", "<NE>", "<NN>", "<PRO>", "<V>", "<ORD>"], symbol_table).optimize()
-
-  return pynini.concat(
-      pynini.concat(
-        alphabet,
-        filtering
-        ).closure(),
-      tail(symbol_table)
-      )
-
-def umlautung(symbol_table):
-  '''
-  Map "a", "o" and "u" onto "ä", "ö" and "ü", corresp., if the umlaut marker "<UL>" is present.
-  '''
-
-  alphabet = pynini.union(
-      symbol_sets.characters(symbol_table),
-      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=symbol_table, output_token_type=symbol_table),
-      symbol_sets.stem_types(symbol_table),
-      symbol_sets.categories(symbol_table),
-      ).closure()
-
-  return pynini.concat(
-      pynini.concat(
-        alphabet,
+    return pynini.concat(
         pynini.concat(
-          symbol_sets.consonants(symbol_table),
+          alphabet,
+          filtering
+          ).closure(),
+        self.__tail
+        ).optimize()
+
+  def __construct_category_filter(self):
+    '''
+    Filter-out non-matching category sequences
+    '''
+
+    alphabet = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+        self.__syms.stem_types,
+        self.__syms.categories,
+        ).closure()
+
+    filtering = self.__suff_stems_filter(["<ABK>", "<ADJ>", "<ADV>", "<CARD>", "<DIGCARD>", "<NE>", "<NN>", "<PRO>", "<V>", "<ORD>"])
+
+    return pynini.concat(
+        pynini.concat(
+          alphabet,
+          filtering
+          ).closure(),
+        self.__tail
+        ).optimize()
+
+  def __construct_umlautung(self):
+    '''
+    Map "a", "o" and "u" onto "ä", "ö" and "ü", corresp., if the umlaut marker "<UL>" is present.
+    '''
+
+    alphabet = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+        self.__syms.stem_types,
+        self.__syms.categories,
+        ).closure()
+
+    return pynini.concat(
+        pynini.concat(
+          alphabet,
           pynini.concat(
-            pynini.union(
+            self.__syms.consonants,
+            pynini.concat(
               pynini.union(
-                pynini.transducer("a", "ä", input_token_type=symbol_table, output_token_type=symbol_table),
-                pynini.transducer("o", "ö", input_token_type=symbol_table, output_token_type=symbol_table),
-                pynini.transducer("u", "ü", input_token_type=symbol_table, output_token_type=symbol_table)
+                pynini.union(
+                  pynini.transducer("a", "ä", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+                  pynini.transducer("o", "ö", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+                  pynini.transducer("u", "ü", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet)
+                  ),
+                pynini.concat(
+                  pynini.transducer("a", "ä", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+                  pynini.union(
+                    pynini.transducer("a", "", input_token_type=self.__syms.alphabet),
+                    pynini.acceptor("u", token_type=self.__syms.alphabet)
+                    )
+                  )
                 ),
               pynini.concat(
-                pynini.transducer("a", "ä", input_token_type=symbol_table, output_token_type=symbol_table),
-                pynini.union(
-                  pynini.transducer("a", "", input_token_type=symbol_table),
-                  pynini.acceptor("u", token_type=symbol_table)
+                self.__syms.consonants.closure(),
+                pynini.concat(
+                  pynini.concat(
+                    pynini.acceptor("e", token_type=self.__syms.alphabet),
+                    pynini.string_map(["l", "r"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet)
+                    ).closure(0, 1),
+                  pynini.concat(
+                    pynini.acceptor("<Suff_Stems>", token_type=self.__syms.alphabet),
+                    pynini.transducer("<UL>", "", input_token_type=self.__syms.alphabet)
+                    )
                   )
+                )
+              )
+            ).closure(0, 1)
+          ),
+        self.__tail
+        ).optimize()
+
+  def __construct_suff_phon(self):
+    '''
+    '''
+
+    alphabet = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>", "<NN>", "<ADJ>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+        self.__syms.stem_types,
+        ).closure()
+
+    return pynini.concat(
+        pynini.cdrewrite(
+          pynini.transducer("i", "", input_token_type=self.__syms.alphabet),
+          pynini.concat(
+            pynini.union(
+              pynini.acceptor("i", token_type=self.__syms.alphabet),
+              pynini.concat(
+                self.__syms.consonants,
+                pynini.acceptor("y", token_type=self.__syms.alphabet)
                 )
               ),
-            pynini.concat(
-              symbol_sets.consonants(symbol_table).closure(),
-              pynini.concat(
-                pynini.concat(
-                  pynini.acceptor("e", token_type=symbol_table),
-                  pynini.string_map(["l", "r"], input_token_type=symbol_table, output_token_type=symbol_table)
-                  ).closure(0, 1),
-                pynini.concat(
-                  pynini.acceptor("<Suff_Stems>", token_type=symbol_table),
-                  pynini.transducer("<UL>", "", input_token_type=symbol_table)
-                  )
-                )
-              )
-            )
-          ).closure(0, 1)
-        ),
-      tail(symbol_table)
-      )
-
-def suff_phon(symbol_table):
-  '''
-  '''
-
-  alphabet = pynini.union(
-      symbol_sets.characters(symbol_table),
-      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>", "<NN>", "<ADJ>"], input_token_type=symbol_table, output_token_type=symbol_table),
-      symbol_sets.stem_types(symbol_table),
-      ).closure()
-
-  return pynini.concat(
-      pynini.cdrewrite(
-        pynini.transducer("i", "", input_token_type=symbol_table),
-        pynini.concat(
-          pynini.union(
-            pynini.acceptor("i", token_type=symbol_table),
-            pynini.concat(
-              symbol_sets.consonants(symbol_table),
-              pynini.acceptor("y", token_type=symbol_table)
-              )
+            pynini.acceptor("<Suff_Stems>", token_type=self.__syms.alphabet)
             ),
-          pynini.acceptor("<Suff_Stems>", token_type=symbol_table)
+          "",
+          alphabet
           ),
-        "",
-        alphabet
-        ),
-      tail(symbol_table)
-      )
+        self.__tail
+        ).optimize()
 
 def prefix_filter(symbol_table):
   '''
@@ -250,10 +266,10 @@ def prefix_filter(symbol_table):
   '''
 
   alphabet = pynini.union(
-      symbol_sets.characters(symbol_table),
+      self.__syms.characters,
       pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=symbol_table, output_token_type=symbol_table),
-      symbol_sets.stem_types(symbol_table),
-      symbol_sets.categories(symbol_table),
+      self.__syms.stem_types,
+      self.__syms.categories,
       ).closure()
 
   # delete <ge> at certain suffixes like 'ver'
@@ -263,7 +279,7 @@ def prefix_filter(symbol_table):
         pynini.acceptor("<Pref_Stems>", token_type=symbol_table),
         pynini.concat(
           pynini.union(
-            symbol_sets.characters(symbol_table),
+            self.__syms.characters,
             pynini.string_map(["<n>", "<e>", "<d>", "<~n>"])
             ).closure(),
           pynini.concat(
@@ -278,7 +294,7 @@ def prefix_filter(symbol_table):
                 pynini.concat(
                   alphabet,
                   pynini.concat(
-                    symbol_sets.stem_type_features(symbol_table),
+                    self.__syms.stem_type_features,
                     pynini.acceptor("<nativ>", token_type=symbol_table)
                     )
                   )
@@ -293,7 +309,7 @@ def prefix_filter(symbol_table):
       pynini.acceptor("<Pref_Stems>", token_type=symbol_table),
       pynini.concat(
         pynini.union(
-          symbol_sets.characters(symbol_table),
+          self.__syms.characters,
           pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>"], input_token_type=symbol_table, output_token_type=symbol_table)
           ).closure(),
         pynini.union(
@@ -310,7 +326,7 @@ def prefix_filter(symbol_table):
               pynini.concat(
                 pynini.acceptor("<ADJ>", token_type=symbol_table),
                 pynini.concat(
-                  symbol_sets.stem_type_features(symbol_table),
+                  self.__syms.stem_type_features,
                   pynini.acceptor("<nativ>", token_type=symbol_table)
                   )
                 )
@@ -329,7 +345,7 @@ def prefix_filter(symbol_table):
               pynini.concat(
                 pynini.acceptor("<ABK>", token_type=symbol_table),
                 pynini.concat(
-                  symbol_sets.stem_type_features(symbol_table),
+                  self.__syms.stem_type_features,
                   pynini.acceptor("<nativ>", token_type=symbol_table)
                   )
                 )
@@ -348,7 +364,7 @@ def prefix_filter(symbol_table):
               pynini.concat(
                 pynini.acceptor("<NN>", token_type=symbol_table),
                 pynini.concat(
-                  symbol_sets.stem_type_features(symbol_table),
+                  self.__syms.stem_type_features,
                   pynini.acceptor("<nativ>", token_type=symbol_table)
                   )
                 )
@@ -367,7 +383,7 @@ def prefix_filter(symbol_table):
               pynini.concat(
                 pynini.acceptor("<NN>", token_type=symbol_table),
                 pynini.concat(
-                  symbol_sets.stem_type_features(symbol_table),
+                  self.__syms.stem_type_features,
                   pynini.acceptor("<fremd>", token_type=symbol_table)
                   )
                 )
@@ -386,7 +402,7 @@ def prefix_filter(symbol_table):
               pynini.concat(
                 pynini.acceptor("<NE>", token_type=symbol_table),
                 pynini.concat(
-                  symbol_sets.stem_type_features(symbol_table),
+                  self.__syms.stem_type_features,
                   pynini.acceptor("<nativ>", token_type=symbol_table)
                   )
                 )
@@ -405,7 +421,7 @@ def prefix_filter(symbol_table):
               pynini.concat(
                 pynini.acceptor("<NE>", token_type=symbol_table),
                 pynini.concat(
-                  symbol_sets.stem_type_features(symbol_table),
+                  self.__syms.stem_type_features,
                   pynini.acceptor("<fremd>", token_type=symbol_table)
                   )
                 )
@@ -424,7 +440,7 @@ def prefix_filter(symbol_table):
               pynini.concat(
                 pynini.acceptor("<ADJ>", token_type=symbol_table),
                 pynini.concat(
-                  symbol_sets.stem_type_features(symbol_table),
+                  self.__syms.stem_type_features,
                   pynini.acceptor("<fremd>", token_type=symbol_table)
                   )
                 )
@@ -443,7 +459,7 @@ def prefix_filter(symbol_table):
               pynini.concat(
                 pynini.acceptor("<V>", token_type=symbol_table),
                 pynini.concat(
-                  symbol_sets.stem_type_features(symbol_table),
+                  self.__syms.stem_type_features,
                   pynini.acceptor("<nativ>", token_type=symbol_table)
                   )
                 )
@@ -462,8 +478,8 @@ def prefix_filter(symbol_table):
               pynini.concat(
                 pynini.acceptor("<V>", token_type=symbol_table),
                 pynini.concat(
-                  symbol_sets.stem_type_features(symbol_table),
-                  symbol_sets.ns_features(symbol_table)
+                  self.__syms.stem_type_features,
+                  self.__syms.ns_features
                   )
                 )
               )
@@ -481,7 +497,7 @@ def prefix_filter(symbol_table):
               pynini.concat(
                 pynini.acceptor("<ADJ>", token_type=symbol_table),
                 pynini.concat(
-                  symbol_sets.stem_type_features(symbol_table),
+                  self.__syms.stem_type_features,
                   pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"], input_token_type=symbol_table, output_token_type=symbol_table)
                   )
                 )
@@ -500,7 +516,7 @@ def prefix_filter(symbol_table):
               pynini.concat(
                 pynini.acceptor("<NN>", token_type=symbol_table),
                 pynini.concat(
-                  symbol_sets.stem_type_features(symbol_table),
+                  self.__syms.stem_type_features,
                   pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"], input_token_type=symbol_table, output_token_type=symbol_table)
                   )
                 )
@@ -519,7 +535,7 @@ def prefix_filter(symbol_table):
               pynini.concat(
                 pynini.acceptor("<V>", token_type=symbol_table),
                 pynini.concat(
-                  symbol_sets.stem_type_features(symbol_table),
+                  self.__syms.stem_type_features,
                   pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"], input_token_type=symbol_table, output_token_type=symbol_table)
                   )
                 )
@@ -529,7 +545,7 @@ def prefix_filter(symbol_table):
         )
       )
 
-  return pynini.concat(pynini.union(del_ge, prefix_origin_filter), symbol_sets.inflection_classes(symbol_table).closure(0, 1))
+  return pynini.concat(pynini.union(del_ge, prefix_origin_filter), self.__syms.inflection_classes.closure(0, 1))
 
 def compound_filter(symbol_table):
   '''
@@ -537,11 +553,11 @@ def compound_filter(symbol_table):
   '''
 
   alphabet = pynini.union(
-      symbol_sets.characters(symbol_table),
+      self.__syms.characters,
       pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>"], input_token_type=symbol_table, output_token_type=symbol_table),
-      symbol_sets.stem_types(symbol_table),
-      pynini.transducer(symbol_sets.categories(symbol_table), ""),
-      pynini.transducer(symbol_sets.origin_features(symbol_table), ""),
+      self.__syms.stem_types,
+      pynini.transducer(self.__syms.categories, ""),
+      pynini.transducer(self.__syms.origin_features, ""),
       pynini.transducer("<NoPref>", "", input_token_type=symbol_table)
       )
 
@@ -584,8 +600,8 @@ def compound_filter(symbol_table):
         pynini.concat(
           pynini.transducer("<base>", "", input_token_type=symbol_table),
           pynini.concat(
-            symbol_sets.origin_features(symbol_table),
-            symbol_sets.inflection_classes(symbol_table)
+            self.__syms.origin_features,
+            self.__syms.inflection_classes
             )
           )
         )
@@ -597,14 +613,14 @@ def insert_ge(symbol_table):
   '''
 
   alphabet = pynini.union(
-      symbol_sets.characters(symbol_table),
+      self.__syms.characters,
       pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^zz>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=symbol_table, output_token_type=symbol_table),
-      symbol_sets.stem_types(symbol_table),
+      self.__syms.stem_types,
       )
 
   c2 = pynini.union(
       alphabet,
-      symbol_sets.stem_types(symbol_table)
+      self.__syms.stem_types
       ).closure()
   
   # From deko.fst:
@@ -683,14 +699,14 @@ def insert_zu(symbol_table):
   '''
 
   alphabet = pynini.union(
-      symbol_sets.characters(symbol_table),
+      self.__syms.characters,
       pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=symbol_table, output_token_type=symbol_table),
-      symbol_sets.stem_types(symbol_table),
+      self.__syms.stem_types,
       )
 
   c2 = pynini.union(
       alphabet,
-      symbol_sets.stem_types(symbol_table)
+      self.__syms.stem_types
       ).closure()
   
   # From deko.fst:
@@ -737,14 +753,14 @@ def imperative_filter(symbol_table):
   '''
 
   alphabet = pynini.union(
-      symbol_sets.characters(symbol_table),
+      self.__syms.characters,
       pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=symbol_table, output_token_type=symbol_table),
-      symbol_sets.stem_types(symbol_table)
+      self.__syms.stem_types
       )
 
   c2 = pynini.union(
       alphabet,
-      pynini.transducer(symbol_sets.stem_types(symbol_table), "<CB>", input_token_type=symbol_table, output_token_type=symbol_table)
+      pynini.transducer(self.__syms.stem_types, "<CB>", input_token_type=symbol_table, output_token_type=symbol_table)
       ).closure()
 
   return pynini.union(
@@ -779,7 +795,7 @@ def uplow(symbol_table):
   '''
 
   alphabet = pynini.union(
-      symbol_sets.characters(symbol_table),
+      self.__syms.characters,
       pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoDef>", "<FB>", "<UL>", "<SS>", "<DEL-S>",  "<^Ax>", "<^pl>", "<^Gen>", "<^Del>", "<^imp>", "<ge>", "<^zz>"], input_token_type=symbol_table, output_token_type=symbol_table)
       )
   
@@ -795,11 +811,11 @@ def uplow(symbol_table):
       pynini.union(
         pynini.concat(
           pynini.transducer("<CB>", "", input_token_type=symbol_table),
-          symbol_sets.characters_upper(symbol_table)
+          self.__syms.characters_upper
           ),
         pynini.concat(
           pynini.transducer("<CB>", "", input_token_type=symbol_table).closure(0, 1),
-          symbol_sets.characters_lower(symbol_table)
+          self.__syms.characters_lower
           )
         ),
       s

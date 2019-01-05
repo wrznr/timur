@@ -61,7 +61,7 @@ class MapFst:
     "<fremd,nativ>", "<komposit,prefderiv,simplex,suffderiv>", "<prefderiv,suffderiv>", 
     "<komposit,prefderiv,simplex>", "<komposit,simplex,suffderiv>", "<komposit,simplex>", 
     "<prefderiv,simplex,suffderiv>", "<prefderiv,simplex>", "<simplex,suffderiv>"]
-    disjunctive_feats = pynini.string_map(disjunctive_feat_list, input_token_type=syms.alphabet, output_token_type=syms.alphabet)
+    disjunctive_feats = pynini.string_map(disjunctive_feat_list, input_token_type=syms.alphabet, output_token_type=syms.alphabet).optimize()
     del_disjunctive_feats = pynini.transducer("", disjunctive_feats)
 
     # short cut: map_helper1
@@ -84,7 +84,7 @@ class MapFst:
       del_complex_lex_entries,
       del_infl_classes,
       del_disjunctive_feats,
-      ).closure()
+      ).closure().optimize()
 
     # short cut: map_helper2
     map_helper2 = pynini.concat(
@@ -104,7 +104,7 @@ class MapFst:
           ).closure(0, 1),
         map_helper1
         )
-      )
+      ).optimize()
 
     # 
     self.__map1 = pynini.concat(
@@ -180,7 +180,7 @@ class MapFst:
           ),
         map_helper1,
       )
-    )#.optimize()
+    ).optimize()
 
     split_origin_features = pynini.union(
       pynini.transducer("<NGeo-0-$er-$er>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$er-Adj0-Up>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
@@ -220,7 +220,7 @@ class MapFst:
       pynini.transducer("<NGeo-land-$er-$er>", pynini.string_map(["<NGeo-land-Name-Neut_s>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$er-Adj0-Up>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
       pynini.transducer("<NGeo-land-e-isch>", pynini.string_map(["<NGeo-land-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
       pynini.transducer("<NGeo-land-e-nisch>", pynini.string_map(["<NGeo-land-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-nisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet)
-      )
+      ).optimize()
 
     map_helper3 = pynini.union(
       syms.characters,
@@ -235,7 +235,7 @@ class MapFst:
       syms.inflection_classes,
       self.__split_disjunctive_feats(disjunctive_feat_list),
       split_origin_features
-      )
+      ).optimize()
 
     self.__map2 = pynini.concat(
       map_helper3.closure(),
@@ -279,4 +279,4 @@ class MapFst:
       for cat in disjunctive_feat[1:-1].split(","):
         splitted.append("<" + cat + ">")
         single_splits.append(pynini.transducer(disjunctive_feat, pynini.string_map(splitted, input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet), input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet))
-    return pynini.union(*(single_splits))
+    return pynini.union(*(single_splits)).optimize()

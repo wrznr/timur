@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*- 
 from __future__ import absolute_import
 
+from cProfile import Profile
+from pstats import Stats
+
 import click
 import pynini
 
@@ -34,6 +37,9 @@ def cli():
 @cli.command(name="build")
 @click.argument('lexicon', type=click.File())
 def build(lexicon):
+
+    prof = Profile()
+    prof.disable()
 
     syms = symbols.Symbols(helpers.load_alphabet(resource_stream(Requirement.parse("timur"), 'timur/data/syms.txt')))
     print(syms.member("<epsilon>"))
@@ -71,8 +77,15 @@ def build(lexicon):
 #    simplex_suff_stems = sublexica.simplex_suff_stems(lex, syms)
 #    quant_suff_stems = sublexica.quant_suff_stems(lex, syms)
 
+    prof.enable()
     deko_filter = fsts.DekoFst(syms)
-    #suff_filter.draw("suff_phon.dot")
+    prof.disable()
+    prof.dump_stats("deko.stats")
+    with open('deko_output.txt', 'wt') as output:
+        stats = Stats('deko.stats', stream=output)
+        stats.sort_stats('cumulative', 'time')
+        stats.print_stats()
+    deko_filter.suff_filter.draw("suff_phon.dot")
 
     #pref_filter = fsts.prefix_filter(syms).optimize()
     #pref_filter.draw("pref_phon.dot")

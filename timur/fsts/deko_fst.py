@@ -12,8 +12,12 @@ class DekoFst:
 
   def __init__(self, syms):
 
+    #
     # store alphabet
     self.__syms = syms
+
+    #
+    # suffix filter
 
     # TAIL
     self.__tail = self.__construct_tail()
@@ -43,12 +47,33 @@ class DekoFst:
     suff_phon = self.__construct_suff_phon()
     self.__suff_filter = pynini.compose(suff_filter_helper, suff_phon).optimize()
 
+    #
+    # prefix filter
+
+    # prefix filter helper
+    self.__prefix_filter_helper = self.__construct_prefix_filter_helper()
+
+    # del ge
+    self.__del_ge = self.__construct_del_ge()
+
+    # prefix origin filter
+    self.__prefix_origin_filter = self.__construct_prefix_origin_filter()
+
+    self.__pref_filter = pynini.concat(pynini.union(self.__del_ge, self.__prefix_origin_filter), self.__syms.inflection_classes.closure(0, 1)).optimize()
+
   @property
   def suff_filter(self):
     '''
     Return the complete suffix filter 
     '''
     return self.__suff_filter
+
+  @property
+  def pref_filter(self):
+    '''
+    Return the complete prefix filter 
+    '''
+    return self.__pref_filter
 
   def __construct_tail(self):
     '''
@@ -260,292 +285,301 @@ class DekoFst:
         self.__tail
         ).optimize()
 
-def prefix_filter(symbol_table):
-  '''
-  Construct the (complete) prefix filter
-  '''
+  def __construct_prefix_filter_helper(self):
+    '''
+    Alphabet for the prefix filter
+    '''
 
-  alphabet = pynini.union(
-      self.__syms.characters,
-      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=symbol_table, output_token_type=symbol_table),
-      self.__syms.stem_types,
-      self.__syms.categories,
-      ).closure()
+    return pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+        self.__syms.stem_types,
+        self.__syms.categories,
+        ).closure().optimize()
 
-  # delete <ge> at certain suffixes like 'ver'
-  del_ge = pynini.concat(
-      pynini.transducer("<no-ge>", "", input_token_type=symbol_table),
-      pynini.concat(
-        pynini.acceptor("<Pref_Stems>", token_type=symbol_table),
+
+  def __construct_del_ge(self):
+    '''
+    Case-dependent deletion or realization of the ge marker
+    '''
+
+    # delete <ge> at certain suffixes like 'ver'
+    return pynini.concat(
+        pynini.transducer("<no-ge>", "", input_token_type=self.__syms.alphabet),
         pynini.concat(
-          pynini.union(
-            self.__syms.characters,
-            pynini.string_map(["<n>", "<e>", "<d>", "<~n>"])
-            ).closure(),
+          pynini.acceptor("<Pref_Stems>", token_type=self.__syms.alphabet),
           pynini.concat(
-            pynini.transducer(
-              pynini.concat(pynini.acceptor("<V>", token_type=symbol_table), pynini.acceptor("<nativ>", token_type=symbol_table)),
-              ""
-              ),
+            pynini.union(
+              self.__syms.characters,
+              pynini.string_map(["<n>", "<e>", "<d>", "<~n>"])
+              ).closure(),
             pynini.concat(
-              pynini.acceptor("<NoDef>", token_type=symbol_table).closure(0, 1),
+              pynini.transducer(
+                pynini.concat(pynini.acceptor("<V>", token_type=self.__syms.alphabet), pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)),
+                ""
+                ),
               pynini.concat(
-                pynini.transducer("<ge>", "", input_token_type=symbol_table),
+                pynini.acceptor("<NoDef>", token_type=self.__syms.alphabet).closure(0, 1),
                 pynini.concat(
-                  alphabet,
+                  pynini.transducer("<ge>", "", input_token_type=self.__syms.alphabet),
                   pynini.concat(
-                    self.__syms.stem_type_features,
-                    pynini.acceptor("<nativ>", token_type=symbol_table)
+                    self.__prefix_filter_helper,
+                    pynini.concat(
+                      self.__syms.stem_type_features,
+                      pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
+                      )
                     )
                   )
                 )
               )
             )
           )
-        )
-      )
-  # match origin of prefix and stem
-  prefix_origin_filter = pynini.concat(
-      pynini.acceptor("<Pref_Stems>", token_type=symbol_table),
-      pynini.concat(
-        pynini.union(
-          self.__syms.characters,
-          pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>"], input_token_type=symbol_table, output_token_type=symbol_table)
-          ).closure(),
-        pynini.union(
-          pynini.concat(
-            pynini.transducer(
-              pynini.concat(
-                pynini.acceptor("<ADJ>", token_type=symbol_table),
-                pynini.acceptor("<nativ>", token_type=symbol_table)
-                ),
-              ""
-              ),
+        ).optimize()
+
+  def __construct_prefix_origin_filter(self):
+    '''
+    Match origin of prefix and stem
+    '''
+
+    return pynini.concat(
+        pynini.acceptor("<Pref_Stems>", token_type=self.__syms.alphabet),
+        pynini.concat(
+          pynini.union(
+            self.__syms.characters,
+            pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet)
+            ).closure(),
+          pynini.union(
             pynini.concat(
-              alphabet,
-              pynini.concat(
-                pynini.acceptor("<ADJ>", token_type=symbol_table),
+              pynini.transducer(
                 pynini.concat(
-                  self.__syms.stem_type_features,
-                  pynini.acceptor("<nativ>", token_type=symbol_table)
+                  pynini.acceptor("<ADJ>", token_type=self.__syms.alphabet),
+                  pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
+                  ),
+                ""
+                ),
+              pynini.concat(
+                self.__prefix_filter_helper,
+                pynini.concat(
+                  pynini.acceptor("<ADJ>", token_type=self.__syms.alphabet),
+                  pynini.concat(
+                    self.__syms.stem_type_features,
+                    pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
+                    )
                   )
                 )
-              )
-            ),
-          pynini.concat(
-            pynini.transducer(
-              pynini.concat(
-                pynini.acceptor("<ABK>", token_type=symbol_table),
-                pynini.acceptor("<nativ>", token_type=symbol_table)
-                ),
-              ""
               ),
             pynini.concat(
-              alphabet,
-              pynini.concat(
-                pynini.acceptor("<ABK>", token_type=symbol_table),
+              pynini.transducer(
                 pynini.concat(
-                  self.__syms.stem_type_features,
-                  pynini.acceptor("<nativ>", token_type=symbol_table)
+                  pynini.acceptor("<ABK>", token_type=self.__syms.alphabet),
+                  pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
+                  ),
+                ""
+                ),
+              pynini.concat(
+                self.__prefix_filter_helper,
+                pynini.concat(
+                  pynini.acceptor("<ABK>", token_type=self.__syms.alphabet),
+                  pynini.concat(
+                    self.__syms.stem_type_features,
+                    pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
+                    )
                   )
                 )
-              )
-            ),
-          pynini.concat(
-            pynini.transducer(
-              pynini.concat(
-                pynini.acceptor("<NN>", token_type=symbol_table),
-                pynini.acceptor("<nativ>", token_type=symbol_table)
-                ),
-              ""
               ),
             pynini.concat(
-              alphabet,
-              pynini.concat(
-                pynini.acceptor("<NN>", token_type=symbol_table),
+              pynini.transducer(
                 pynini.concat(
-                  self.__syms.stem_type_features,
-                  pynini.acceptor("<nativ>", token_type=symbol_table)
+                  pynini.acceptor("<NN>", token_type=self.__syms.alphabet),
+                  pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
+                  ),
+                ""
+                ),
+              pynini.concat(
+                self.__prefix_filter_helper,
+                pynini.concat(
+                  pynini.acceptor("<NN>", token_type=self.__syms.alphabet),
+                  pynini.concat(
+                    self.__syms.stem_type_features,
+                    pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
+                    )
                   )
                 )
-              )
-            ),
-          pynini.concat(
-            pynini.transducer(
-              pynini.concat(
-                pynini.acceptor("<NN>", token_type=symbol_table),
-                pynini.acceptor("<fremd>", token_type=symbol_table)
-                ),
-              ""
               ),
             pynini.concat(
-              alphabet,
-              pynini.concat(
-                pynini.acceptor("<NN>", token_type=symbol_table),
+              pynini.transducer(
                 pynini.concat(
-                  self.__syms.stem_type_features,
-                  pynini.acceptor("<fremd>", token_type=symbol_table)
+                  pynini.acceptor("<NN>", token_type=self.__syms.alphabet),
+                  pynini.acceptor("<fremd>", token_type=self.__syms.alphabet)
+                  ),
+                ""
+                ),
+              pynini.concat(
+                self.__prefix_filter_helper,
+                pynini.concat(
+                  pynini.acceptor("<NN>", token_type=self.__syms.alphabet),
+                  pynini.concat(
+                    self.__syms.stem_type_features,
+                    pynini.acceptor("<fremd>", token_type=self.__syms.alphabet)
+                    )
                   )
                 )
-              )
-            ),
-          pynini.concat(
-            pynini.transducer(
-              pynini.concat(
-                pynini.acceptor("<NE>", token_type=symbol_table),
-                pynini.acceptor("<nativ>", token_type=symbol_table)
-                ),
-              ""
               ),
             pynini.concat(
-              alphabet,
-              pynini.concat(
-                pynini.acceptor("<NE>", token_type=symbol_table),
+              pynini.transducer(
                 pynini.concat(
-                  self.__syms.stem_type_features,
-                  pynini.acceptor("<nativ>", token_type=symbol_table)
+                  pynini.acceptor("<NE>", token_type=self.__syms.alphabet),
+                  pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
+                  ),
+                ""
+                ),
+              pynini.concat(
+                self.__prefix_filter_helper,
+                pynini.concat(
+                  pynini.acceptor("<NE>", token_type=self.__syms.alphabet),
+                  pynini.concat(
+                    self.__syms.stem_type_features,
+                    pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
+                    )
                   )
                 )
-              )
-            ),
-          pynini.concat(
-            pynini.transducer(
-              pynini.concat(
-                pynini.acceptor("<NE>", token_type=symbol_table),
-                pynini.acceptor("<fremd>", token_type=symbol_table)
-                ),
-              ""
               ),
             pynini.concat(
-              alphabet,
-              pynini.concat(
-                pynini.acceptor("<NE>", token_type=symbol_table),
+              pynini.transducer(
                 pynini.concat(
-                  self.__syms.stem_type_features,
-                  pynini.acceptor("<fremd>", token_type=symbol_table)
+                  pynini.acceptor("<NE>", token_type=self.__syms.alphabet),
+                  pynini.acceptor("<fremd>", token_type=self.__syms.alphabet)
+                  ),
+                ""
+                ),
+              pynini.concat(
+                self.__prefix_filter_helper,
+                pynini.concat(
+                  pynini.acceptor("<NE>", token_type=self.__syms.alphabet),
+                  pynini.concat(
+                    self.__syms.stem_type_features,
+                    pynini.acceptor("<fremd>", token_type=self.__syms.alphabet)
+                    )
                   )
                 )
-              )
-            ),
-          pynini.concat(
-            pynini.transducer(
-              pynini.concat(
-                pynini.acceptor("<ADJ>", token_type=symbol_table),
-                pynini.acceptor("<fremd>", token_type=symbol_table)
-                ),
-              ""
               ),
             pynini.concat(
-              alphabet,
-              pynini.concat(
-                pynini.acceptor("<ADJ>", token_type=symbol_table),
+              pynini.transducer(
                 pynini.concat(
-                  self.__syms.stem_type_features,
-                  pynini.acceptor("<fremd>", token_type=symbol_table)
+                  pynini.acceptor("<ADJ>", token_type=self.__syms.alphabet),
+                  pynini.acceptor("<fremd>", token_type=self.__syms.alphabet)
+                  ),
+                ""
+                ),
+              pynini.concat(
+                self.__prefix_filter_helper,
+                pynini.concat(
+                  pynini.acceptor("<ADJ>", token_type=self.__syms.alphabet),
+                  pynini.concat(
+                    self.__syms.stem_type_features,
+                    pynini.acceptor("<fremd>", token_type=self.__syms.alphabet)
+                    )
                   )
                 )
-              )
-            ),
-          pynini.concat(
-            pynini.transducer(
-              pynini.concat(
-                pynini.acceptor("<V>", token_type=symbol_table),
-                pynini.acceptor("<nativ>", token_type=symbol_table)
-                ),
-              ""
               ),
             pynini.concat(
-              alphabet,
-              pynini.concat(
-                pynini.acceptor("<V>", token_type=symbol_table),
+              pynini.transducer(
                 pynini.concat(
-                  self.__syms.stem_type_features,
-                  pynini.acceptor("<nativ>", token_type=symbol_table)
+                  pynini.acceptor("<V>", token_type=self.__syms.alphabet),
+                  pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
+                  ),
+                ""
+                ),
+              pynini.concat(
+                self.__prefix_filter_helper,
+                pynini.concat(
+                  pynini.acceptor("<V>", token_type=self.__syms.alphabet),
+                  pynini.concat(
+                    self.__syms.stem_type_features,
+                    pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
+                    )
                   )
                 )
-              )
-            ),
-          pynini.concat(
-            pynini.transducer(
-              pynini.concat(
-                pynini.acceptor("<V>", token_type=symbol_table),
-                pynini.acceptor("<nativ>", token_type=symbol_table)
-                ),
-              ""
               ),
             pynini.concat(
-              alphabet,
-              pynini.concat(
-                pynini.acceptor("<V>", token_type=symbol_table),
+              pynini.transducer(
                 pynini.concat(
-                  self.__syms.stem_type_features,
-                  self.__syms.ns_features
+                  pynini.acceptor("<V>", token_type=self.__syms.alphabet),
+                  pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
+                  ),
+                ""
+                ),
+              pynini.concat(
+                self.__prefix_filter_helper,
+                pynini.concat(
+                  pynini.acceptor("<V>", token_type=self.__syms.alphabet),
+                  pynini.concat(
+                    self.__syms.stem_type_features,
+                    self.__syms.ns_features
+                    )
                   )
                 )
-              )
-            ),
-          pynini.concat(
-            pynini.transducer(
-              pynini.concat(
-                pynini.acceptor("<ADJ>", token_type=symbol_table),
-                pynini.acceptor("<klassisch>", token_type=symbol_table)
-                ),
-              ""
               ),
             pynini.concat(
-              alphabet,
-              pynini.concat(
-                pynini.acceptor("<ADJ>", token_type=symbol_table),
+              pynini.transducer(
                 pynini.concat(
-                  self.__syms.stem_type_features,
-                  pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"], input_token_type=symbol_table, output_token_type=symbol_table)
+                  pynini.acceptor("<ADJ>", token_type=self.__syms.alphabet),
+                  pynini.acceptor("<klassisch>", token_type=self.__syms.alphabet)
+                  ),
+                ""
+                ),
+              pynini.concat(
+                self.__prefix_filter_helper,
+                pynini.concat(
+                  pynini.acceptor("<ADJ>", token_type=self.__syms.alphabet),
+                  pynini.concat(
+                    self.__syms.stem_type_features,
+                    pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet)
+                    )
                   )
                 )
-              )
-            ),
-          pynini.concat(
-            pynini.transducer(
-              pynini.concat(
-                pynini.acceptor("<NN>", token_type=symbol_table),
-                pynini.acceptor("<klassisch>", token_type=symbol_table)
-                ),
-              ""
               ),
             pynini.concat(
-              alphabet,
-              pynini.concat(
-                pynini.acceptor("<NN>", token_type=symbol_table),
+              pynini.transducer(
                 pynini.concat(
-                  self.__syms.stem_type_features,
-                  pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"], input_token_type=symbol_table, output_token_type=symbol_table)
+                  pynini.acceptor("<NN>", token_type=self.__syms.alphabet),
+                  pynini.acceptor("<klassisch>", token_type=self.__syms.alphabet)
+                  ),
+                ""
+                ),
+              pynini.concat(
+                self.__prefix_filter_helper,
+                pynini.concat(
+                  pynini.acceptor("<NN>", token_type=self.__syms.alphabet),
+                  pynini.concat(
+                    self.__syms.stem_type_features,
+                    pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet)
+                    )
                   )
                 )
-              )
-            ),
-          pynini.concat(
-            pynini.transducer(
-              pynini.concat(
-                pynini.acceptor("<V>", token_type=symbol_table),
-                pynini.acceptor("<klassisch>", token_type=symbol_table)
-                ),
-              ""
               ),
             pynini.concat(
-              alphabet,
-              pynini.concat(
-                pynini.acceptor("<V>", token_type=symbol_table),
+              pynini.transducer(
                 pynini.concat(
-                  self.__syms.stem_type_features,
-                  pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"], input_token_type=symbol_table, output_token_type=symbol_table)
+                  pynini.acceptor("<V>", token_type=self.__syms.alphabet),
+                  pynini.acceptor("<klassisch>", token_type=self.__syms.alphabet)
+                  ),
+                ""
+                ),
+              pynini.concat(
+                self.__prefix_filter_helper,
+                pynini.concat(
+                  pynini.acceptor("<V>", token_type=self.__syms.alphabet),
+                  pynini.concat(
+                    self.__syms.stem_type_features,
+                    pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet)
+                    )
                   )
                 )
               )
             )
           )
-        )
-      )
-
-  return pynini.concat(pynini.union(del_ge, prefix_origin_filter), self.__syms.inflection_classes.closure(0, 1))
+        ).optimize()
 
 def compound_filter(symbol_table):
   '''

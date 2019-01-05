@@ -85,7 +85,6 @@ def build(lexicon):
         stats = Stats('deko.stats', stream=output)
         stats.sort_stats('cumulative', 'time')
         stats.print_stats()
-    deko_filter.suff_filter.draw("suff_phon.dot")
 
     #pref_filter = fsts.prefix_filter(syms).optimize()
     #pref_filter.draw("pref_phon.dot")

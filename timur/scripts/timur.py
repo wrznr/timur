@@ -48,6 +48,7 @@ def build(lexicon):
 
     lex = helpers.load_lexicon(lexicon, syms.alphabet)
     mappings = fsts.MapFst(syms)
+    deko_filter = fsts.DekoFst(syms)
 
     # add repetitive prefixes
     # TODO: move to fst function
@@ -78,22 +79,10 @@ def build(lexicon):
 #    quant_suff_stems = sublexica.quant_suff_stems(lex, syms)
 
     prof.enable()
-    deko_filter = fsts.DekoFst(syms)
+    inflection = fsts.InflectionFst(syms)
     prof.disable()
-    prof.dump_stats("deko.stats")
-    with open('deko_output.txt', 'wt') as output:
-        stats = Stats('deko.stats', stream=output)
+    prof.dump_stats("flex.stats")
+    with open('flex_output.txt', 'wt') as output:
+        stats = Stats('flex.stats', stream=output)
         stats.sort_stats('cumulative', 'time')
         stats.print_stats()
-
-    #pref_filter = fsts.prefix_filter(syms).optimize()
-    #pref_filter.draw("pref_phon.dot")
-
-    #compound_filter = fsts.compound_filter(syms).optimize()
-    #compound_filter.draw("compound.dot")
-
-    #infix_filter = fsts.infix_filter(syms).optimize()
-    #infix_filter.draw("infix.dot")
-
-    #uplow = fsts.uplow(syms)
-    #uplow.draw("uplow.dot")

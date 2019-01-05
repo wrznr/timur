@@ -3,9 +3,6 @@ from __future__ import absolute_import
 
 import pynini
 
-from timur.helpers import union
-from timur.helpers import concat
-
 def phon_fst(symbol_table):
     '''
     Orthographic and phonological surface realizations rules

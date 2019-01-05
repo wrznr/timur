@@ -61,6 +61,10 @@ class DekoFst:
 
     self.__pref_filter = pynini.concat(pynini.union(self.__del_ge, self.__prefix_origin_filter), self.__syms.inflection_classes.closure(0, 1)).optimize()
 
+    #
+    # compound filter
+    self.__compound_filter = self.__construct_compound_filter()
+
   @property
   def suff_filter(self):
     '''
@@ -74,6 +78,20 @@ class DekoFst:
     Return the complete prefix filter 
     '''
     return self.__pref_filter
+
+  @property
+  def compound_filter(self):
+    '''
+    Return the complete compound filter 
+    '''
+    return self.__compound_filter
+
+  @property
+  def infix_filter(self):
+    '''
+    Return the complete infix filter 
+    '''
+    return self.__infix_filter
 
   def __construct_tail(self):
     '''
@@ -300,7 +318,7 @@ class DekoFst:
 
   def __construct_del_ge(self):
     '''
-    Case-dependent deletion or realization of the ge marker
+    Case-dependent deletion of the ge marker
     '''
 
     # delete <ge> at certain suffixes like 'ver'
@@ -581,65 +599,65 @@ class DekoFst:
           )
         ).optimize()
 
-def compound_filter(symbol_table):
-  '''
-  Construct the compound filter
-  '''
+  def __construct_compound_filter(self):
+    '''
+    Construct the compound filter
+    '''
 
-  alphabet = pynini.union(
-      self.__syms.characters,
-      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>"], input_token_type=symbol_table, output_token_type=symbol_table),
-      self.__syms.stem_types,
-      pynini.transducer(self.__syms.categories, ""),
-      pynini.transducer(self.__syms.origin_features, ""),
-      pynini.transducer("<NoPref>", "", input_token_type=symbol_table)
-      )
+    alphabet = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+        self.__syms.stem_types,
+        pynini.transducer(self.__syms.categories, ""),
+        pynini.transducer(self.__syms.origin_features, ""),
+        pynini.transducer("<NoPref>", "", input_token_type=self.__syms.alphabet)
+        )
 
-  return pynini.concat(
-      pynini.union(
-        pynini.transducer("<Initial>", "", input_token_type=symbol_table),
-        pynini.acceptor("<NoHy>", token_type=symbol_table),
-        pynini.acceptor("<NoDef>", token_type=symbol_table)
-        ).closure(0,1),
-      pynini.concat(
+    return pynini.concat(
         pynini.union(
-          pynini.concat(
-            alphabet.closure(),
-            pynini.transducer(pynini.string_map(["<ABK>", "<ADV>", "<CARD>", "<NE>", "<PRO>", "<V>", "<ORD>", "<OTHER>"], input_token_type=symbol_table, output_token_type=symbol_table), "")
-            ),
-          pynini.concat(
-            pynini.transducer("", "<VADJ>", output_token_type=symbol_table),
+          pynini.transducer("<Initial>", "", input_token_type=self.__syms.alphabet),
+          pynini.acceptor("<NoHy>", token_type=self.__syms.alphabet),
+          pynini.acceptor("<NoDef>", token_type=self.__syms.alphabet)
+          ).closure(0,1),
+        pynini.concat(
+          pynini.union(
+            pynini.concat(
+              alphabet.closure(),
+              pynini.transducer(pynini.string_map(["<ABK>", "<ADV>", "<CARD>", "<NE>", "<PRO>", "<V>", "<ORD>", "<OTHER>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet), "")
+              ),
+            pynini.concat(
+              pynini.transducer("", "<VADJ>", output_token_type=self.__syms.alphabet),
+              pynini.concat(
+                pynini.union(
+                  alphabet,
+                  pynini.transducer("<kompos>", "", input_token_type=self.__syms.alphabet)
+                  ).closure(),
+                pynini.concat(
+                  pynini.transducer("<kompos>", "", input_token_type=self.__syms.alphabet),
+                  pynini.concat(
+                    alphabet.closure(),
+                    pynini.transducer("<V>", "", input_token_type=self.__syms.alphabet)
+                    )
+                  )
+                )
+              ),
             pynini.concat(
               pynini.union(
                 alphabet,
-                pynini.transducer("<kompos>", "", input_token_type=symbol_table)
+                pynini.transducer("<kompos>", "", input_token_type=self.__syms.alphabet)
                 ).closure(),
-              pynini.concat(
-                pynini.transducer("<kompos>", "", input_token_type=symbol_table),
-                pynini.concat(
-                  alphabet.closure(),
-                  pynini.transducer("<V>", "", input_token_type=symbol_table)
-                  )
-                )
+              pynini.transducer(pynini.string_map(["<ADJ>", "<NN>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet), "")
               )
             ),
           pynini.concat(
-            pynini.union(
-              alphabet,
-              pynini.transducer("<kompos>", "", input_token_type=symbol_table)
-              ).closure(),
-            pynini.transducer(pynini.string_map(["<ADJ>", "<NN>"], input_token_type=symbol_table, output_token_type=symbol_table), "")
-            )
-          ),
-        pynini.concat(
-          pynini.transducer("<base>", "", input_token_type=symbol_table),
-          pynini.concat(
-            self.__syms.origin_features,
-            self.__syms.inflection_classes
+            pynini.transducer("<base>", "", input_token_type=self.__syms.alphabet),
+            pynini.concat(
+              self.__syms.origin_features,
+              self.__syms.inflection_classes
+              )
             )
           )
-        )
-      )
+        ).optimize()
 
 def insert_ge(symbol_table):
   '''

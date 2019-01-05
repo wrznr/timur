@@ -65,6 +65,30 @@ class DekoFst:
     # compound filter
     self.__compound_filter = self.__construct_compound_filter()
 
+    #
+    # infix filter
+
+    # insert ge
+    self.__insert_ge = self.__construct_insert_ge()
+
+    # insert zu
+    self.__insert_zu = self.__construct_insert_zu()
+
+    # imperative filter
+    self.__imperative_filter = self.__construct_imperative_filter()
+
+    self.__infix_filter = pynini.compose(
+        self.__insert_ge,
+        pynini.compose(
+          self.__insert_zu,
+          self.__imperative_filter
+          )
+        ).optimize()
+
+    #
+    # uplow
+    self.__uplow = self.__construct_uplow()
+
   @property
   def suff_filter(self):
     '''
@@ -92,6 +116,13 @@ class DekoFst:
     Return the complete infix filter 
     '''
     return self.__infix_filter
+
+  @property
+  def uplow(self):
+    '''
+    Return the upper/lower case realizer
+    '''
+    return self.__uplow
 
   def __construct_tail(self):
     '''
@@ -659,258 +690,246 @@ class DekoFst:
           )
         ).optimize()
 
-def insert_ge(symbol_table):
-  '''
-  Inserts the prefix "ge" controlled by the symbol "<ge>"
-  '''
+  def __construct_insert_ge(self):
+    '''
+    Inserts the prefix "ge" controlled by the symbol "<ge>"
+    '''
 
-  alphabet = pynini.union(
-      self.__syms.characters,
-      pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^zz>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=symbol_table, output_token_type=symbol_table),
-      self.__syms.stem_types,
-      )
+    alphabet = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^zz>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+        self.__syms.stem_types,
+        ).optimize()
 
-  c2 = pynini.union(
-      alphabet,
-      self.__syms.stem_types
-      ).closure()
-  
-  # From deko.fst:
-  # replace <ge> with "ge" if followed by perfect participle marker
-  # or ge-nominalisation otherwise delete <ge>
-  # in complex lexicon entries as for "haushalten" <ge> is not followed
-  # by <Base_Stems>
-  return pynini.union(
-      c2,
-      pynini.concat(
+    c2 = pynini.union(
+        alphabet,
+        self.__syms.stem_types
+        ).closure().optimize()
+    
+    # From deko.fst:
+    # replace <ge> with "ge" if followed by perfect participle marker
+    # or ge-nominalisation otherwise delete <ge>
+    # in complex lexicon entries as for "haushalten" <ge> is not followed
+    # by <Base_Stems>
+    return pynini.union(
         c2,
         pynini.concat(
-          pynini.transducer("<ge>", "", input_token_type=symbol_table),
+          c2,
           pynini.concat(
-            pynini.acceptor("<Base_Stems>", token_type=symbol_table).closure(0, 1),
+            pynini.transducer("<ge>", "", input_token_type=self.__syms.alphabet),
             pynini.concat(
-              pynini.transducer("", "g e", output_token_type=symbol_table),
+              pynini.acceptor("<Base_Stems>", token_type=self.__syms.alphabet).closure(0, 1),
               pynini.concat(
-                alphabet.closure(),
-                pynini.concat(
-                  pynini.transducer("<^pp>", "", input_token_type=symbol_table),
-                  alphabet.closure()
-                  )
-                )
-              )
-            )
-          )
-        ),
-      pynini.concat(
-        c2,
-        pynini.concat(
-          pynini.transducer("<ge>", "", input_token_type=symbol_table),
-          pynini.concat(
-            pynini.acceptor("<Deriv_Stems>", token_type=symbol_table).closure(0, 1),
-            pynini.concat(
-              pynini.transducer("", "g e", output_token_type=symbol_table),
-              pynini.concat(
-                alphabet.closure(),
-                pynini.concat(
-                  pynini.transducer("<Suff_Stems> <Ge-Nom>", "e", input_token_type=symbol_table, output_token_type=symbol_table),
-                  alphabet.closure()
-                  )
-                )
-              )
-            )
-          )
-        ),
-      pynini.concat(
-        c2,
-        pynini.concat(
-          pynini.transducer("<ge>", "", input_token_type=symbol_table),
-          pynini.concat(
-            pynini.acceptor("<Base_Stems>", token_type=symbol_table).closure(0, 1),
-            alphabet.closure()
-            )
-          )
-        ),
-      pynini.concat(
-        c2,
-        pynini.concat(
-          pynini.acceptor("<Base_Stems>", token_type=symbol_table).closure(0, 1),
-          pynini.concat(
-            alphabet.closure(),
-            pynini.concat(
-              pynini.transducer("<^pp>", "", input_token_type=symbol_table),
-              alphabet.closure()
-              )
-            )
-          )
-        )
-      )
-
-def insert_zu(symbol_table):
-  '''
-  Inserts "zu" into infinitives with separable prefixes
-  '''
-
-  alphabet = pynini.union(
-      self.__syms.characters,
-      pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=symbol_table, output_token_type=symbol_table),
-      self.__syms.stem_types,
-      )
-
-  c2 = pynini.union(
-      alphabet,
-      self.__syms.stem_types
-      ).closure()
-  
-  # From deko.fst:
-  # insert "zu" after verbal prefixes if followed by infinitive marker
-  return pynini.union(
-      c2,
-      pynini.concat(
-        pynini.acceptor("<Base_Stems>", token_type=symbol_table),
-        pynini.concat(
-          alphabet.closure(),
-          pynini.concat(
-            pynini.transducer("<^zz>", "", input_token_type=symbol_table),
-            alphabet.closure()
-            )
-          )
-        ),
-      pynini.concat(
-        c2,
-        pynini.concat(
-          pynini.acceptor("<Pref_Stems>", token_type=symbol_table),
-          pynini.concat(
-            alphabet.closure(),
-            pynini.concat(
-              pynini.acceptor("<Base_Stems>", token_type=symbol_table),
-              pynini.concat(
-                pynini.transducer("", "z u", output_token_type=symbol_table),
+                pynini.transducer("", "g e", output_token_type=self.__syms.alphabet),
                 pynini.concat(
                   alphabet.closure(),
                   pynini.concat(
-                    pynini.transducer("<^zz>", "", input_token_type=symbol_table),
+                    pynini.transducer("<^pp>", "", input_token_type=self.__syms.alphabet),
                     alphabet.closure()
                     )
                   )
                 )
               )
             )
-          )
-        )
-      )
-
-def imperative_filter(symbol_table):
-  '''
-  Imperatives have no separable prefixes
-  '''
-
-  alphabet = pynini.union(
-      self.__syms.characters,
-      pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=symbol_table, output_token_type=symbol_table),
-      self.__syms.stem_types
-      )
-
-  c2 = pynini.union(
-      alphabet,
-      pynini.transducer(self.__syms.stem_types, "<CB>", input_token_type=symbol_table, output_token_type=symbol_table)
-      ).closure()
-
-  return pynini.union(
-      c2,
-      pynini.concat(
-        pynini.transducer("<Base_Stems>", "<CB>", input_token_type=symbol_table, output_token_type=symbol_table),
-        pynini.concat(
-          alphabet.closure(),
-          pynini.concat(
-            pynini.transducer("<^imp>", "", input_token_type=symbol_table),
-            alphabet.closure()
-            )
-          )
-        )
-      )
-
-def infix_filter(symbol_table):
-  '''
-  Combination of the different infix filter
-  '''
-  return pynini.compose(
-      insert_ge(symbol_table),
-      pynini.compose(
-        insert_zu(symbol_table),
-        imperative_filter(symbol_table)
-        )
-      )
-
-def uplow(symbol_table):
-  '''
-  Upper/Lower case markers
-  '''
-
-  alphabet = pynini.union(
-      self.__syms.characters,
-      pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoDef>", "<FB>", "<UL>", "<SS>", "<DEL-S>",  "<^Ax>", "<^pl>", "<^Gen>", "<^Del>", "<^imp>", "<ge>", "<^zz>"], input_token_type=symbol_table, output_token_type=symbol_table)
-      )
-  
-  s = pynini.concat(
-      alphabet,
-      pynini.union(
-        alphabet,
-        pynini.acceptor("<CB>", token_type=symbol_table)
-        ).closure()
-      )
-
-  s2 = pynini.concat(
-      pynini.union(
-        pynini.concat(
-          pynini.transducer("<CB>", "", input_token_type=symbol_table),
-          self.__syms.characters_upper
           ),
         pynini.concat(
-          pynini.transducer("<CB>", "", input_token_type=symbol_table).closure(0, 1),
-          self.__syms.characters_lower
-          )
-        ),
-      s
-      )
-
-  return pynini.union(
-      pynini.concat(
-          pynini.transducer("<^UC>", "", input_token_type=symbol_table),
+          c2,
           pynini.concat(
-            pynini.string_map(["<NoDef>", "<NoHy>"], input_token_type=symbol_table, output_token_type=symbol_table).closure(0, 1),
+            pynini.transducer("<ge>", "", input_token_type=self.__syms.alphabet),
             pynini.concat(
-              pynini.transducer("", "<^UC>", output_token_type=symbol_table),
+              pynini.acceptor("<Deriv_Stems>", token_type=self.__syms.alphabet).closure(0, 1),
               pynini.concat(
-                s2,
-                pynini.transducer("<Low#>", "", input_token_type=symbol_table)
+                pynini.transducer("", "g e", output_token_type=self.__syms.alphabet),
+                pynini.concat(
+                  alphabet.closure(),
+                  pynini.concat(
+                    pynini.transducer("<Suff_Stems> <Ge-Nom>", "e", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+                    alphabet.closure()
+                    )
+                  )
                 )
               )
             )
-        ),
-      pynini.concat(
-        pynini.acceptor("<NoHy>", token_type=symbol_table).closure(0, 1),
-        pynini.union(
+          ),
+        pynini.concat(
+          c2,
           pynini.concat(
-            pynini.transducer("<CB>", "", input_token_type=symbol_table),
+            pynini.transducer("<ge>", "", input_token_type=self.__syms.alphabet),
             pynini.concat(
-              s,
-              pynini.transducer("<Fix#>", "", input_token_type=symbol_table)
+              pynini.acceptor("<Base_Stems>", token_type=self.__syms.alphabet).closure(0, 1),
+              alphabet.closure()
               )
-            ),
+            )
+          ),
+        pynini.concat(
+          c2,
           pynini.concat(
-            pynini.transducer(pynini.string_map(["<CB>", "<epsilon>"], input_token_type=symbol_table, output_token_type=symbol_table), "<^UC>", output_token_type=symbol_table),
+            pynini.acceptor("<Base_Stems>", token_type=self.__syms.alphabet).closure(0, 1),
             pynini.concat(
-              s,
-              pynini.transducer("<Up#>", "", input_token_type=symbol_table)
-              )
-            ),
-          pynini.concat(
-            pynini.transducer(pynini.string_map(["<CB>", "<epsilon>"], input_token_type=symbol_table, output_token_type=symbol_table), "<CB>", output_token_type=symbol_table),
-            pynini.concat(
-              s,
-              pynini.transducer("<Low#>", "", input_token_type=symbol_table)
+              alphabet.closure(),
+              pynini.concat(
+                pynini.transducer("<^pp>", "", input_token_type=self.__syms.alphabet),
+                alphabet.closure()
+                )
               )
             )
           )
-        )
-      )
+        ).optimize()
+
+  def __construct_insert_zu(self):
+    '''
+    Inserts "zu" into infinitives with separable prefixes
+    '''
+
+    alphabet = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+        self.__syms.stem_types,
+        ).optimize()
+
+    c2 = pynini.union(
+        alphabet,
+        self.__syms.stem_types
+        ).closure().optimize()
+    
+    # From deko.fst:
+    # insert "zu" after verbal prefixes if followed by infinitive marker
+    return pynini.union(
+        c2,
+        pynini.concat(
+          pynini.acceptor("<Base_Stems>", token_type=self.__syms.alphabet),
+          pynini.concat(
+            alphabet.closure(),
+            pynini.concat(
+              pynini.transducer("<^zz>", "", input_token_type=self.__syms.alphabet),
+              alphabet.closure()
+              )
+            )
+          ),
+        pynini.concat(
+          c2,
+          pynini.concat(
+            pynini.acceptor("<Pref_Stems>", token_type=self.__syms.alphabet),
+            pynini.concat(
+              alphabet.closure(),
+              pynini.concat(
+                pynini.acceptor("<Base_Stems>", token_type=self.__syms.alphabet),
+                pynini.concat(
+                  pynini.transducer("", "z u", output_token_type=self.__syms.alphabet),
+                  pynini.concat(
+                    alphabet.closure(),
+                    pynini.concat(
+                      pynini.transducer("<^zz>", "", input_token_type=self.__syms.alphabet),
+                      alphabet.closure()
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        ).optimize()
+
+  def __construct_imperative_filter(self):
+    '''
+    Imperatives have no separable prefixes
+    '''
+
+    alphabet = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+        self.__syms.stem_types
+        ).optimize()
+
+    c2 = pynini.union(
+        alphabet,
+        pynini.transducer(self.__syms.stem_types, "<CB>", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet)
+        ).closure().optimize()
+
+    return pynini.union(
+        c2,
+        pynini.concat(
+          pynini.transducer("<Base_Stems>", "<CB>", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+          pynini.concat(
+            alphabet.closure(),
+            pynini.concat(
+              pynini.transducer("<^imp>", "", input_token_type=self.__syms.alphabet),
+              alphabet.closure()
+              )
+            )
+          )
+        ).optimize()
+
+  def __construct_uplow(self):
+    '''
+    Upper/Lower case markers
+    '''
+
+    alphabet = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoDef>", "<FB>", "<UL>", "<SS>", "<DEL-S>",  "<^Ax>", "<^pl>", "<^Gen>", "<^Del>", "<^imp>", "<ge>", "<^zz>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet)
+        ).optimize()
+    
+    s = pynini.concat(
+        alphabet,
+        pynini.union(
+          alphabet,
+          pynini.acceptor("<CB>", token_type=self.__syms.alphabet)
+          ).closure()
+        ).optimize()
+
+    s2 = pynini.concat(
+        pynini.union(
+          pynini.concat(
+            pynini.transducer("<CB>", "", input_token_type=self.__syms.alphabet),
+            self.__syms.characters_upper
+            ),
+          pynini.concat(
+            pynini.transducer("<CB>", "", input_token_type=self.__syms.alphabet).closure(0, 1),
+            self.__syms.characters_lower
+            )
+          ),
+        s
+        ).optimize()
+
+    return pynini.union(
+        pynini.concat(
+            pynini.transducer("<^UC>", "", input_token_type=self.__syms.alphabet),
+            pynini.concat(
+              pynini.string_map(["<NoDef>", "<NoHy>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).closure(0, 1),
+              pynini.concat(
+                pynini.transducer("", "<^UC>", output_token_type=self.__syms.alphabet),
+                pynini.concat(
+                  s2,
+                  pynini.transducer("<Low#>", "", input_token_type=self.__syms.alphabet)
+                  )
+                )
+              )
+          ),
+        pynini.concat(
+          pynini.acceptor("<NoHy>", token_type=self.__syms.alphabet).closure(0, 1),
+          pynini.union(
+            pynini.concat(
+              pynini.transducer("<CB>", "", input_token_type=self.__syms.alphabet),
+              pynini.concat(
+                s,
+                pynini.transducer("<Fix#>", "", input_token_type=self.__syms.alphabet)
+                )
+              ),
+            pynini.concat(
+              pynini.transducer(pynini.string_map(["<CB>", "<epsilon>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet), "<^UC>", output_token_type=self.__syms.alphabet),
+              pynini.concat(
+                s,
+                pynini.transducer("<Up#>", "", input_token_type=self.__syms.alphabet)
+                )
+              ),
+            pynini.concat(
+              pynini.transducer(pynini.string_map(["<CB>", "<epsilon>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet), "<CB>", output_token_type=self.__syms.alphabet),
+              pynini.concat(
+                s,
+                pynini.transducer("<Low#>", "", input_token_type=self.__syms.alphabet)
+                )
+              )
+            )
+          )
+        ).optimize()

@@ -88,11 +88,11 @@ class InflectionFst:
     # adjectives
 
     # invariant adjectives
-    adj0 = pynini.concat(
+    self.__adj0 = pynini.concat(
         pynini.transducer("<+ADJ> <Invar>", "", input_token_type=syms.alphabet),
         adj
         )
-    adj0_up = pynini.concat(
+    self.__adj0_up = pynini.concat(
         pynini.transducer("<+ADJ> <Invar>", "", input_token_type=syms.alphabet),
         adj_up
         )
@@ -373,4 +373,125 @@ class InflectionFst:
           pynini.transducer("<+ADJ> <Comp>", "e r", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
           adj_flex_suff
           ),
+        ).optimize()
+
+    # inflection classes (?)
+    adj_nn = adj_pos_pred
+
+    adj_pos_sup = pynini.union(
+        pynini.concat(
+          pynini.transducer("", "<FB>", output_token_type=syms.alphabet),
+          adj_pos_attr
+          ),
+        pynini.concat(
+          pynini.transducer("", "<FB>", output_token_type=syms.alphabet),
+          adj_sup
+          )
+        ).optimize()
+
+    adj_umlaut = pynini.union(
+        pynini.concat(
+          pynini.transducer("", "<FB>", output_token_type=syms.alphabet),
+          adj_pos
+          ),
+        pynini.concat(
+          pynini.transducer("", "<UL>", output_token_type=syms.alphabet),
+          adj_comp
+          ),
+        pynini.concat(
+          pynini.transducer("", "<UL>", output_token_type=syms.alphabet),
+          adj_sup
+          )
+        ).optimize()
+
+    adj_umlaut_e = pynini.union(
+        pynini.concat(
+          pynini.transducer("", "<FB>", output_token_type=syms.alphabet),
+          adj_pos
+          ),
+        pynini.concat(
+          pynini.transducer("", "<UL>", output_token_type=syms.alphabet),
+          adj_comp
+          ),
+        pynini.concat(
+          pynini.transducer("", "<UL> e", output_token_type=syms.alphabet),
+          adj_sup
+          )
+        ).optimize()
+
+    adj_ss_e = pynini.union(
+        pynini.concat(
+          pynini.transducer("", "<SS> <FB>", output_token_type=syms.alphabet),
+          adj_pos
+          ),
+        pynini.concat(
+          pynini.transducer("", "<SS> <FB>", output_token_type=syms.alphabet),
+          adj_comp
+          ),
+        pynini.concat(
+          pynini.transducer("", "<SS> <FB> e", output_token_type=syms.alphabet),
+          adj_sup
+          )
+        ).optimize()
+
+    #
+    # building the inflection transducer
+    #
+    self.__inflection = self.__construct_inflection()
+
+    #
+    # definition of a filter which enforces the correct inflection
+    #
+    self.__inflection_filter = self.__construct_inflection_filter()
+
+  @property
+  def inflection(self):
+    '''
+    Return the inflection transducer 
+    '''
+    return self.__inflection
+
+  @property
+  def inflection_filter(self):
+    '''
+    Return the complete inflection filter 
+    '''
+    return self.__inflection_filter
+
+  def __construct_inflection(self):
+    '''
+    Build the inflection transducer
+    '''
+    return pynini.union(
+        pynini.concat(
+          pynini.transducer("", "<Adj0>", output_token_type=self.__syms.alphabet),
+          self.__adj0
+          ),
+        pynini.concat(
+          pynini.transducer("", "<Adj0-Up>", output_token_type=self.__syms.alphabet),
+          self.__adj0_up
+          )
+        ).optimize()
+
+  def __construct_inflection_filter(self):
+    '''
+    Define a filter which enforces the correct inflection
+    '''
+    alphabet = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<^imp>", "<^zz>", "<^pp>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>", "<Fix#>", "<Low#>", "<Up#>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet)
+        ).closure()
+
+    return pynini.concat(
+        pynini.union(
+          pynini.concat(
+            pynini.transducer("<Adj0>", "", input_token_type=self.__syms.alphabet),
+            pynini.transducer("<Adj0>", "", input_token_type=self.__syms.alphabet)
+            ),
+          pynini.concat(
+            pynini.transducer("<Adj0-Up>", "", input_token_type=self.__syms.alphabet),
+            pynini.transducer("<Adj0-Up>", "", input_token_type=self.__syms.alphabet)
+            )
+          ),
+        alphabet
         ).optimize()

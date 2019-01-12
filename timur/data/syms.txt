@@ -407,3 +407,37 @@
 <^Gen>
 <^Del>
 <^pp>
+<^ABK>
+<^ADJ>
+<^VPPAST>
+<^VPPRES>
+# final tags
+<+ADJ>
+<+ADV>
+<+ART>
+<+DEMPRO>
+<+KONJ>
+<+NE>
+<+NN>
+<+PREP>
+# morphosyntactic features
+<Invar>
+<Masc>
+<Fem>
+<Neut>
+<NoGend>
+<Nom>
+<Gen>
+<Dat>
+<Akk>
+<Sg>
+<Pl>
+<St>
+<St/Mix>
+<Sw>
+<Sw/Mix>
+<Pos>
+<Comp>
+<Sup>
+<Pred>
+<Adv>

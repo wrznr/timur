@@ -41,7 +41,7 @@ class TimurFst:
     result = []
     if self.__verify():
       string_acceptor = pynini.acceptor(" ".join(c for c in string), token_type=self.__syms.alphabet)
-      result = list((string_acceptor * self.__timur).paths(input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet))
+      result = list((string_acceptor * self.__timur).paths(input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).items())
     return result
 
   def load(self, fst):
@@ -97,6 +97,9 @@ class TimurFst:
 
     #
     # sublexica
+
+    # sublexica.fst
+    sublexica = fsts.Sublexica(self.__syms)
 
     # deko.fst
     #deko_filter = fsts.DekoFst(self.__syms)

@@ -1,4 +1,4 @@
 click
 pytest
 pytest-ordering
-http://www.opengrm.org/twiki/pub/GRM/PyniniDownload/pynini-2.0.0.tar.gz#egg=pynini
+http://www.opengrm.org/twiki/pub/GRM/PyniniDownload/pynini-2.0.4.tar.gz#egg=pynini

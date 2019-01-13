@@ -30,10 +30,10 @@ def cli():
     pass
 
 
-@cli.command(name="apply")
+@cli.command(name="lookup")
 @click.argument('strings', nargs=-1)
 @click.option('--fst', '-f', required=True)
-def apply(strings, fst):
+def lookup(strings, fst):
 
     #
     # load a previously built morphological analyser
@@ -59,7 +59,7 @@ def apply(strings, fst):
 
     # convert
     for string in in_strings:
-        click.echo(timur.apply(string))
+        click.echo(timur.lookup(string))
 
 @cli.command(name="build")
 @click.argument('lexicon', type=click.File())

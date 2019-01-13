@@ -61,7 +61,7 @@ class MapFst:
     "<fremd,nativ>", "<komposit,prefderiv,simplex,suffderiv>", "<prefderiv,suffderiv>", 
     "<komposit,prefderiv,simplex>", "<komposit,simplex,suffderiv>", "<komposit,simplex>", 
     "<prefderiv,simplex,suffderiv>", "<prefderiv,simplex>", "<simplex,suffderiv>"]
-    disjunctive_feats = pynini.string_map(disjunctive_feat_list, input_token_type=syms.alphabet, output_token_type=syms.alphabet).optimize()
+    disjunctive_feats = pynini.string_map(disjunctive_feat_list, input_token_type=syms.alphabet, output_token_type=syms.alphabet).project().optimize()
     del_disjunctive_feats = pynini.transducer("", disjunctive_feats)
 
     # short cut: map_helper1
@@ -112,11 +112,11 @@ class MapFst:
       pynini.concat(
         pynini.union(
           pynini.concat(
-            pynini.transducer("", pynini.string_map(["<Base_Stems>", "<Pref_Stems>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet)),
+            pynini.transducer("", pynini.string_map(["<Base_Stems>", "<Pref_Stems>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project()),
             pynini.concat(map_helper2, del_cat_ext)
             ),
           pynini.concat(
-            pynini.transducer("", pynini.string_map(["<Deriv_Stems>", "<Kompos_Stems>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet)),
+            pynini.transducer("", pynini.string_map(["<Deriv_Stems>", "<Kompos_Stems>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project()),
             pynini.concat(map_helper2, syms.categories)
             ),
           pynini.concat(
@@ -170,7 +170,7 @@ class MapFst:
                     syms.categories,
                     pynini.concat(
                       pynini.acceptor("<SUFF>", token_type=syms.alphabet),
-                      pynini.transducer("", pynini.string_map(["<deriv>", "<kompos>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet))
+                      pynini.transducer("", pynini.string_map(["<deriv>", "<kompos>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project())
                       )
                     )
                   )
@@ -183,43 +183,43 @@ class MapFst:
     ).optimize()
 
     split_origin_features = pynini.union(
-      pynini.transducer("<NGeo-0-$er-$er>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$er-Adj0-Up>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-0-$er-$isch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-0-aner-aner>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-aner-NMasc_s_0>", "<NGeo-aner-Adj0-Up>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-0-aner-anisch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-aner-NMasc_s_0>", "<NGeo-anisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-0-e-isch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-0-er-er>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-er-Adj0-Up>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-0-0-0>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-0-NMasc_s_0>", "<NGeo-0-Adj0-Up>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-0-er-erisch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-erisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-0-er-isch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-0-ese-esisch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-0-ianer-ianisch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-ianer-NMasc_s_0>", "<NGeo-ianisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-0-ner-isch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-ner-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-0-ner-nisch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-ner-NMasc_s_0>", "<NGeo-nisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-0fem-er-erisch>", pynini.string_map(["<NGeo-0-Name-Fem_0>", "<NGeo-er-NMasc_s_0>", "<NGeo-erisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-0masc-er-isch>", pynini.string_map(["<NGeo-0-Name-Masc_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-0masc-ese-esisch>", pynini.string_map(["<NGeo-0-Name-Masc_s>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-a-er-isch>", pynini.string_map(["<NGeo-a-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-a-ese-esisch>", pynini.string_map(["<NGeo-a-Name-Neut_s>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-afem-er-isch>", pynini.string_map(["<NGeo-a-Name-Fem_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-e-er-er>", pynini.string_map(	["<NGeo-e-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-er-Adj0-Up>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-e-er-isch>", pynini.string_map(["<NGeo-e-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-efem-er-isch>", pynini.string_map(["<NGeo-e-Name-Fem_0>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-ei-e-isch>", pynini.string_map(["<NGeo-ei-Name-Fem_0>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-en-aner-anisch>", pynini.string_map(["<NGeo-en-Name-Neut_s>", "<NGeo-aner-NMasc_s_0>", "<NGeo-anisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-en-e-$isch>", pynini.string_map(["<NGeo-en-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-$isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-en-e-isch>", pynini.string_map(["<NGeo-en-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-en-er-er>", pynini.string_map(["<NGeo-en-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-er-Adj0-Up>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-en-er-isch>", pynini.string_map(["<NGeo-en-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-ien-e-isch>", pynini.string_map(["<NGeo-ien-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-ien-er-isch>", pynini.string_map(["<NGeo-ien-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-ien-ese-esisch>", pynini.string_map(["<NGeo-ien-Name-Neut_s>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-ien-ianer-ianisch>", pynini.string_map(["<NGeo-ien-Name-Neut_s>", "<NGeo-ianer-NMasc_s_0>", "<NGeo-ianisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-ien-ier-isch>", pynini.string_map(["<NGeo-ien-Name-Neut_s>", "<NGeo-ier-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-istan-e-isch>", pynini.string_map(["<NGeo-istan-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-land-$er-$er>", pynini.string_map(["<NGeo-land-Name-Neut_s>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$er-Adj0-Up>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-land-e-isch>", pynini.string_map(["<NGeo-land-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
-      pynini.transducer("<NGeo-land-e-nisch>", pynini.string_map(["<NGeo-land-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-nisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet), input_token_type=syms.alphabet, output_token_type=syms.alphabet)
+      pynini.transducer("<NGeo-0-$er-$er>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$er-Adj0-Up>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-0-$er-$isch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-0-aner-aner>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-aner-NMasc_s_0>", "<NGeo-aner-Adj0-Up>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-0-aner-anisch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-aner-NMasc_s_0>", "<NGeo-anisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-0-e-isch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-0-er-er>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-er-Adj0-Up>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-0-0-0>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-0-NMasc_s_0>", "<NGeo-0-Adj0-Up>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-0-er-erisch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-erisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-0-er-isch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-0-ese-esisch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-0-ianer-ianisch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-ianer-NMasc_s_0>", "<NGeo-ianisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-0-ner-isch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-ner-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-0-ner-nisch>", pynini.string_map(["<NGeo-0-Name-Neut_s>", "<NGeo-ner-NMasc_s_0>", "<NGeo-nisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-0fem-er-erisch>", pynini.string_map(["<NGeo-0-Name-Fem_0>", "<NGeo-er-NMasc_s_0>", "<NGeo-erisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-0masc-er-isch>", pynini.string_map(["<NGeo-0-Name-Masc_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-0masc-ese-esisch>", pynini.string_map(["<NGeo-0-Name-Masc_s>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-a-er-isch>", pynini.string_map(["<NGeo-a-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-a-ese-esisch>", pynini.string_map(["<NGeo-a-Name-Neut_s>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-afem-er-isch>", pynini.string_map(["<NGeo-a-Name-Fem_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-e-er-er>", pynini.string_map(	["<NGeo-e-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-er-Adj0-Up>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-e-er-isch>", pynini.string_map(["<NGeo-e-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-efem-er-isch>", pynini.string_map(["<NGeo-e-Name-Fem_0>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-ei-e-isch>", pynini.string_map(["<NGeo-ei-Name-Fem_0>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-en-aner-anisch>", pynini.string_map(["<NGeo-en-Name-Neut_s>", "<NGeo-aner-NMasc_s_0>", "<NGeo-anisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-en-e-$isch>", pynini.string_map(["<NGeo-en-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-$isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-en-e-isch>", pynini.string_map(["<NGeo-en-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-en-er-er>", pynini.string_map(["<NGeo-en-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-er-Adj0-Up>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-en-er-isch>", pynini.string_map(["<NGeo-en-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-ien-e-isch>", pynini.string_map(["<NGeo-ien-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-ien-er-isch>", pynini.string_map(["<NGeo-ien-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-ien-ese-esisch>", pynini.string_map(["<NGeo-ien-Name-Neut_s>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-ien-ianer-ianisch>", pynini.string_map(["<NGeo-ien-Name-Neut_s>", "<NGeo-ianer-NMasc_s_0>", "<NGeo-ianisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-ien-ier-isch>", pynini.string_map(["<NGeo-ien-Name-Neut_s>", "<NGeo-ier-NMasc_s_0>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-istan-e-isch>", pynini.string_map(["<NGeo-istan-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-land-$er-$er>", pynini.string_map(["<NGeo-land-Name-Neut_s>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$er-Adj0-Up>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-land-e-isch>", pynini.string_map(["<NGeo-land-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-isch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+      pynini.transducer("<NGeo-land-e-nisch>", pynini.string_map(["<NGeo-land-Name-Neut_s>", "<NGeo-e-NMasc_n_n>", "<NGeo-nisch-Adj+>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(), input_token_type=syms.alphabet, output_token_type=syms.alphabet)
       ).optimize()
 
     map_helper3 = pynini.union(
@@ -242,13 +242,13 @@ class MapFst:
       pynini.concat(
         pynini.transducer("e", "<e>", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
         pynini.concat(
-          pynini.string_map(["l", "r"], input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+          pynini.string_map(["l", "r"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(),
           pynini.concat(
-            pynini.string_map(["<ADJ>", "<NE>", "<NN>", "<V>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).closure(0,1),
+            pynini.string_map(["<ADJ>", "<NE>", "<NN>", "<V>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project().closure(0,1),
             pynini.concat(
               pynini.acceptor("<V>", token_type=syms.alphabet),
               pynini.concat(
-                pynini.string_map(["<SUFF>", "<CONV>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).closure(0,1),
+                pynini.string_map(["<SUFF>", "<CONV>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project().closure(0,1),
                 pynini.concat(
                   pynini.acceptor("<base> <nativ>", token_type=syms.alphabet),
                   pynini.concat(

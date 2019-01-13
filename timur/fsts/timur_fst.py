@@ -34,15 +34,15 @@ class TimurFst:
     '''
     return self.__timur is not None
 
-  def apply(self, string):
+  def lookup(self, string):
     '''
     Analyse a string
     '''
+    result = []
     if self.__verify():
       string_acceptor = pynini.acceptor(" ".join(c for c in string), token_type=self.__syms.alphabet)
-      return list((string_acceptor * self.__timur).paths(input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet))
-    else:
-      return []
+      result = list((string_acceptor * self.__timur).paths(input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet))
+    return result
 
   def load(self, fst):
     '''

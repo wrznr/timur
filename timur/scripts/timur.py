@@ -82,8 +82,8 @@ def build(lexicon, output):
     
     prof.disable()
     prof.dump_stats("timur.stats")
-    with open('timur_output.txt', 'wt') as output:
-        stats = Stats('timur.stats', stream=output)
+    with open('timur_output.txt', 'wt') as profile:
+        stats = Stats('timur.stats', stream=profile)
         stats.sort_stats('cumulative', 'time')
         stats.print_stats()
 

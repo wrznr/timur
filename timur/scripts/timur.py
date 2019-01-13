@@ -1,19 +1,15 @@
 # -*- coding: utf-8 -*- 
 from __future__ import absolute_import
 
+import sys
+
 from cProfile import Profile
 from pstats import Stats
 
 import click
 import pynini
 
-from pkg_resources import resource_stream, Requirement
-
-from timur import helpers
 from timur import fsts
-from timur import symbols
-
-from timur.fsts import sublexica
 
 def construct_any(symbol_table):
     '''
@@ -34,21 +30,63 @@ def cli():
     pass
 
 
+@cli.command(name="apply")
+@click.argument('strings', nargs=-1)
+@click.option('--fst', '-f', required=True)
+def apply(strings, fst):
+
+    #
+    # load a previously built morphological analyser
+    #
+    timur = fsts.TimurFst()
+    loaded = timur.load(fst)
+
+
+    #
+    # analysis
+    #
+
+    # read input
+    in_strings = []
+    if strings and strings[0] == u"-":
+        for line in sys.stdin:
+            in_strings.append(line.strip())
+    elif strings:
+        for datum in strings:
+            in_strings.append(datum)
+    else:
+        pass
+
+    # convert
+    for string in in_strings:
+        click.echo(timur.apply(string))
+
 @cli.command(name="build")
 @click.argument('lexicon', type=click.File())
-def build(lexicon):
+@click.option('--output', '-o')
+def build(lexicon, output):
 
     prof = Profile()
+    prof.enable()
+
+    timur = fsts.TimurFst()
+
+    if timur.build(lexicon):
+        click.echo("Successfully built the timur fst from the given lexicon.", err=True)
+        if output:
+            timur.dump(output)
+        else:
+            sys.stdout.write(timur.dumps())
+    else:
+        click.echo("Could not build the timur fst from the given lexicon.", err=True)
+    
     prof.disable()
+    prof.dump_stats("timur.stats")
+    with open('timur_output.txt', 'wt') as output:
+        stats = Stats('timur.stats', stream=output)
+        stats.sort_stats('cumulative', 'time')
+        stats.print_stats()
 
-    syms = symbols.Symbols(helpers.load_alphabet(resource_stream(Requirement.parse("timur"), 'timur/data/syms.txt')))
-    print(syms.member("<epsilon>"))
-    print(syms.member("!"))
-    print(syms.find("!"))
-
-    lex = helpers.load_lexicon(lexicon, syms.alphabet)
-    mappings = fsts.MapFst(syms)
-    deko_filter = fsts.DekoFst(syms)
 
     # add repetitive prefixes
     # TODO: move to fst function
@@ -65,24 +103,8 @@ def build(lexicon):
 #    lex = pynini.union(lex, repeatable_prefs).optimize()
 #    lex.draw("test1.dot")
 #
-#
-#    lex = pynini.compose(map1, lex).optimize()
-#    lex.draw("test2.dot")
-#
-#    lex = pynini.compose(lex, map2).optimize()
-#    lex.draw("test3.dot")
-#
 #    base_stems = sublexica.base_stems(lex, syms)
 #    pref_stems = sublexica.pref_stems(lex, syms)
 #    verbal_pref_stems = sublexica.verbal_pref_stems(lex, syms)
 #    simplex_suff_stems = sublexica.simplex_suff_stems(lex, syms)
 #    quant_suff_stems = sublexica.quant_suff_stems(lex, syms)
-
-    prof.enable()
-    inflection = fsts.InflectionFst(syms)
-    prof.disable()
-    prof.dump_stats("flex.stats")
-    with open('flex_output.txt', 'wt') as output:
-        stats = Stats('flex.stats', stream=output)
-        stats.sort_stats('cumulative', 'time')
-        stats.print_stats()

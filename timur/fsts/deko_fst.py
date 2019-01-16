@@ -521,7 +521,7 @@ class DekoFst:
             ),
           pynini.concat(
             pynini.transducer("<base>", "", input_token_type=self.__syms.alphabet),
-            self.__syms.origin_features,
+            pynini.transducer(self.__syms.origin_features, ""),
             self.__syms.inflection_classes
             )
           )

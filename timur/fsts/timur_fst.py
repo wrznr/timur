@@ -131,7 +131,7 @@ class TimurFst:
     s1.draw("p1.dot")
     tmp = s0 | s1
     tmp = tmp.closure(1) * deko_filter.compound_filter
-    tmp.draw("tmp.dot")
+    tmp.draw("tmp.dot", portrait=True)
 
     #
     # inflection
@@ -144,11 +144,11 @@ class TimurFst:
         self.__syms.characters,
         pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<CB>", "<NoHy>", "<VADJ>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
         self.__syms.stem_types,
-        ).closure().optimize()
+        ).project().closure().optimize()
 
-    base = tmp + inflection.inflection * alphabet + inflection.inflection_filter * deko_filter.infix_filter 
+    base = (tmp + inflection.inflection) * (alphabet + inflection.inflection_filter) * deko_filter.infix_filter 
     base = base * deko_filter.uplow
-    base.draw("base.dot")
+    base.draw("base2.dot", portrait=True)
 
     #
     # result

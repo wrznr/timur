@@ -97,18 +97,60 @@ class TimurFst:
 
     #
     # sublexica
+    sublexica = fsts.Sublexica(self.__syms, lex)
 
-    # sublexica.fst
-    sublexica = fsts.Sublexica(self.__syms)
+    #
+    # derivation and composition
 
     # deko.fst
-    #deko_filter = fsts.DekoFst(self.__syms)
+    deko_filter = fsts.DekoFst(self.__syms)
+
+    # derivation suffixes to be added to simplex stems
+    suffs1 = pynini.concat(
+        sublexica.simplex_suff_stems,
+        sublexica.suff_deriv_suff_stems.closure()
+        ).closure(0, 1)
+    
+    # derivation suffixes to be added to prefixed stems
+    suffs2 = pynini.concat(
+        sublexica.pref_deriv_suff_stems,
+        sublexica.suff_deriv_suff_stems.closure()
+        ).closure(0, 1)
+
+    # suffixes for "Dreifarbigkeit"
+    qsuffs = pynini.concat(
+        sublexica.quant_suff_stems,
+        sublexica.suff_deriv_suff_stems.closure()
+        )
+
+    s0 = sublexica.bdk_stems + suffs1 * deko_filter.suff_filter
+    s0.draw("s0.dot")
+    p1 = sublexica.pref_stems + s0 * deko_filter.pref_filter
+    p1.draw("p1.dot")
+    s1 = p1 + suffs2 * deko_filter.suff_filter
+    s1.draw("p1.dot")
+    tmp = s0 | s1
+    tmp = tmp.closure(1) * deko_filter.compound_filter
+    tmp.draw("tmp.dot", portrait=True)
+
+    #
+    # inflection
 
     # flexion.fsts
-    #inflection = fsts.InflectionFst(self.__syms)
+    inflection = fsts.InflectionFst(self.__syms)
 
+    # ANY
+    alphabet = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<CB>", "<NoHy>", "<VADJ>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
+        self.__syms.stem_types,
+        ).project().closure().optimize()
+
+    base = (tmp + inflection.inflection) * (alphabet + inflection.inflection_filter) * deko_filter.infix_filter 
+    base = base * deko_filter.uplow
+    base.draw("base2.dot", portrait=True)
 
     #
     # result
-    self.__timur = lex
+    self.__timur = base
     return self.__verify()

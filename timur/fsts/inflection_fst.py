@@ -435,6 +435,76 @@ class InflectionFst:
         ).optimize()
 
     #
+    # nouns
+    #
+ 
+    #
+    # inflection classes
+
+    #
+    # inflection endings: atomic
+
+    # Haus-es, Geist-(e)s
+    n_sg_es = pynini.union(
+        pynini.concat(
+          pynini.transducer("<Nom> <Sg>", "<FB>", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+          n
+          ),
+        pynini.concat(
+          pynini.transducer("<Gen> <Sg>", "<FB> e s <^Gen>", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+          n
+          ),
+        pynini.concat(
+          pynini.transducer("<Dat> <Sg>", "<FB>", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+          n
+          ),
+        pynini.concat(
+          pynini.transducer("<Dat> <Sg>", "<FB> e", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+          n
+          ),
+        pynini.concat(
+          pynini.transducer("<Akk> <Sg>", "<FB>", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+          n
+          )
+        ).optimize()
+
+    n_pl_0 = pynini.union(
+        pynini.concat(
+          pynini.transducer("<Nom> <Pl>", "", input_token_type=syms.alphabet),
+          n
+          ),
+        pynini.concat(
+          pynini.transducer("<Gen> <Pl>", "", input_token_type=syms.alphabet),
+          n
+          ),
+        pynini.concat(
+          pynini.transducer("<Dat> <Pl>", "n", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+          n
+          ),
+        pynini.concat(
+          pynini.transducer("<Akk> <Pl>", "", input_token_type=syms.alphabet),
+          n
+          )
+        ).optimize()
+
+
+    #
+    # inflection endings: meta
+    n_es_e = pynini.union(
+        n_sg_es,
+        pynini.concat(
+          pynini.transducer("", "<FB> e", output_token_type=syms.alphabet),
+          n_pl_0
+          )
+        )
+
+    # NMasc_es_e
+    self.__nmasc_es_e = pynini.concat(
+        pynini.transducer("<+NN> <Masc>", "", input_token_type=syms.alphabet),
+        n_es_e
+        ).optimize()
+
+    #
     # building the inflection transducer
     #
     self.__inflection = self.__construct_inflection()
@@ -470,6 +540,10 @@ class InflectionFst:
         pynini.concat(
           pynini.transducer("", "<Adj0-Up>", output_token_type=self.__syms.alphabet),
           self.__adj0_up
+          ),
+        pynini.concat(
+          pynini.transducer("", "<NMasc_es_e>", output_token_type=self.__syms.alphabet),
+          self.__nmasc_es_e
           )
         ).optimize()
 
@@ -480,7 +554,7 @@ class InflectionFst:
     alphabet = pynini.union(
         self.__syms.characters,
         pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<^imp>", "<^zz>", "<^pp>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>", "<Fix#>", "<Low#>", "<Up#>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet)
-        ).closure()
+        ).project().closure()
 
     return pynini.concat(
         pynini.union(
@@ -491,6 +565,10 @@ class InflectionFst:
           pynini.concat(
             pynini.transducer("<Adj0-Up>", "", input_token_type=self.__syms.alphabet),
             pynini.transducer("<Adj0-Up>", "", input_token_type=self.__syms.alphabet)
+            ),
+          pynini.concat(
+            pynini.transducer("<NMasc_es_e>", "", input_token_type=self.__syms.alphabet),
+            pynini.transducer("<NMasc_es_e>", "", input_token_type=self.__syms.alphabet)
             )
           ),
         alphabet

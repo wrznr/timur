@@ -109,7 +109,8 @@ class TimurFst:
     suffs1 = pynini.concat(
         sublexica.simplex_suff_stems,
         sublexica.suff_deriv_suff_stems.closure()
-        ).closure(0, 1)
+        ).closure(0, 1).optimize()
+    suffs1.draw("suffs1.dot")
     
     # derivation suffixes to be added to prefixed stems
     suffs2 = pynini.concat(
@@ -123,12 +124,15 @@ class TimurFst:
         sublexica.suff_deriv_suff_stems.closure()
         )
 
-    s0 = sublexica.bdk_stems + suffs1 * deko_filter.suff_filter
+    debug = pynini.concat(sublexica.bdk_stems, suffs1).optimize()
+    sublexica.bdk_stems.draw("bdk.dot")
+    debug.draw("debug.dot")
+    s0 = debug * deko_filter.suff_filter
     s0.draw("s0.dot")
     p1 = sublexica.pref_stems + s0 * deko_filter.pref_filter
     p1.draw("p1.dot")
     s1 = p1 + suffs2 * deko_filter.suff_filter
-    s1.draw("p1.dot")
+    s1.draw("s1.dot")
     tmp = s0 | s1
     tmp = tmp.closure(1) * deko_filter.compound_filter
     tmp.draw("tmp.dot", portrait=True)
@@ -153,6 +157,7 @@ class TimurFst:
     #
     #  application of phonological rules
     phon = fsts.PhonFst(self.__syms)
+    phon.phon.draw("phon.dot", portrait=True)
     base = pynini.compose(
         pynini.concat(
           pynini.transducer("", "<WB>", output_token_type=self.__syms.alphabet),

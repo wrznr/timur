@@ -20,17 +20,28 @@ class Symbols:
     chars = []
     chars_upper = []
     chars_lower = []
+    chars_to_upper = []
+    chars_to_lower = []
     for i in range(0,256):
       symbol = chr(i)
       if symbol.isprintable() and not symbol.isspace():
         chars.append(symbol)
         if symbol.isupper():
           chars_upper.append(symbol)
+          chars_to_upper.append((symbol, symbol))
+          chars_to_lower.append((symbol, symbol.lower()))
         elif symbol.islower():
           chars_lower.append(symbol)
+          chars_to_lower.append((symbol, symbol))
+          chars_to_upper.append((symbol, symbol.lower()))
+        else:
+          chars_to_lower.append((symbol, symbol))
+          chars_to_upper.append((symbol, symbol))
     self.__characters = pynini.string_map(chars, input_token_type=alphabet, output_token_type=alphabet).project().optimize()
     self.__characters_upper = pynini.string_map(chars_upper, input_token_type=alphabet, output_token_type=alphabet).project().optimize()
     self.__characters_lower = pynini.string_map(chars_lower, input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+    self.__characters_to_upper = pynini.string_map(chars_to_upper, input_token_type=alphabet, output_token_type=alphabet).optimize()
+    self.__characters_to_lower = pynini.string_map(chars_to_lower, input_token_type=alphabet, output_token_type=alphabet).optimize()
 
     self.__consonants_lower = pynini.string_map(["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z", "ß"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
@@ -203,6 +214,20 @@ class Symbols:
     Union over single uppercase characters
     '''
     return self.__characters_upper
+
+  @property
+  def to_lower(self):
+    '''
+    Map upper lower case to lower case characters
+    '''
+    return self.__characters_to_lower
+
+  @property
+  def to_upper(self):
+    '''
+    Map lower case to upper case characters
+    '''
+    return self.__characters_to_upper
 
   @property
   def characters_lower(self):

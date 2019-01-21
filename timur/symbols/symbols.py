@@ -32,7 +32,11 @@ class Symbols:
     self.__characters_upper = pynini.string_map(chars_upper, input_token_type=alphabet, output_token_type=alphabet).project().optimize()
     self.__characters_lower = pynini.string_map(chars_lower, input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
-    self.__consonants = pynini.string_map(["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z", "ß"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+    self.__consonants_lower = pynini.string_map(["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z", "ß"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
+    self.__consonants_upper = pynini.string_map(["B", "C", "D", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "X", "Y", "Z"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
+    self.__consonants = self.__consonants_lower | self.__consonants_upper
 
     self.__inititial_features = pynini.string_map(["<QUANT>", "<Initial>", "<NoHy>", "<ge>", "<no-ge>", "<NoPref>", "<NoDef>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 

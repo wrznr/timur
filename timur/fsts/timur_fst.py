@@ -151,6 +151,19 @@ class TimurFst:
     base.draw("base2.dot", portrait=True)
 
     #
+    #  application of phonological rules
+    phon = fsts.PhonFst(self.__syms)
+    base = pynini.compose(
+        pynini.concat(
+          pynini.transducer("", "<WB>", output_token_type=self.__syms.alphabet),
+          base,
+          pynini.transducer("", "<WB>", output_token_type=self.__syms.alphabet),
+          ),
+        phon.phon
+        ).optimize()
+    base.draw("base3.dot", portrait=True)
+
+    #
     # result
     self.__timur = base
     return self.__verify()

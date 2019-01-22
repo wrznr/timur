@@ -41,7 +41,6 @@ def lookup(strings, fst):
     timur = fsts.TimurFst()
     loaded = timur.load(fst)
 
-
     #
     # analysis
     #
@@ -59,12 +58,18 @@ def lookup(strings, fst):
 
     # convert
     for string in in_strings:
-        click.echo(timur.lookup(string))
+        items = timur.lookup(string)
+        for item in items:
+            click.echo("> Analysis")
+            istring = item[0].split(" ")
+            ostring = item[1].split(" ")
+            for i,sym in enumerate(istring):
+                click.echo("%s\t%s" % (istring[i], ostring[i]))
 
 @cli.command(name="build")
 @click.argument('lexicon', type=click.File())
-@click.option('--output', '-o')
-def build(lexicon, output):
+@click.option('--fst', '-f')
+def build(lexicon, fst):
 
     prof = Profile()
     prof.enable()
@@ -73,8 +78,8 @@ def build(lexicon, output):
 
     if timur.build(lexicon):
         click.echo("Successfully built the timur fst from the given lexicon.", err=True)
-        if output:
-            timur.dump(output)
+        if fst:
+            timur.dump_fst(fst)
         else:
             sys.stdout.write(timur.dumps())
     else:

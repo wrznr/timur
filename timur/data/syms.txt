@@ -1,443 +1,620 @@
-<CB>
-<FB>
-<SS>
-<n>
-<~n>
-<e>
-<d>
-<Ge-Nom>
-<UL>
-<DEL-S>
-# category features
-<ABK>
-<ADJ>
-<ADV>
-<CARD>
-<DIGCARD>
-<NE>
-<NN>
-<PRO>
-<V>
-<ORD>
-<OTHER>
-<VPART>
-<VPREF>
-<PREF>
-<SUFF>
-<CONV>
-<QUANT>
-<KSF>
-<CARD,DIGCARD,NE>
-<ADJ,CARD>
-<ADJ,NN>
-<CARD,NN>
-<CARD,NE>
-<ABK,ADJ,NE,NN>
-<ADJ,NE,NN>
-<ABK,NE,NN>
-<NE,NN>
-<ABK,CARD,NN>
-<ABK,NN>
-<ADJ,CARD,NN,V>
-<ADJ,NN,V>
-<ABK,ADJ,NE,NN,V>
-<ADJ,NE,NN,V>
-<ADV,NE,NN,V>
-<ABK,NE,NN,V>
-<NE,NN,V>
-<ABK,NN,V>
-<NN,V>
-<VADJ>
-# initial features
-<Initial>
-<NoHy>
-<ge>
-<no-ge>
-<NoPref>
-<NoDef>
-# intermediate features
-<Base_Stems>
-<Deriv_Stems>
-<Kompos_Stems>
-<Pref_Stems>
-<Suff_Stems>
-# stem type features
-<base>
-<deriv>
-<kompos>
-# complexity agreement features
-<simplex>
-<komposit>
-<suffderiv>
-<prefderiv>
-# complex lexicon entry features
-<Simplex>
-<Komplex>
-<Komplex_abstrakt>
-<Komplex_semi>
-<Nominalisierung>
-<Kurzwort>
-# Herkunft features
-<nativ>
-<frei>
-<gebunden>
-<kurz>
-<lang>
-<fremd>
-<klassisch>
-<frei,fremd,gebunden>
-<frei,fremd,gebunden,kurz>
-<frei,fremd,gebunden,lang>
-<fremd,gebunden,lang>
-<frei,fremd,kurz>
-<frei,fremd,lang>
-<frei,gebunden>
-<frei,gebunden,kurz,lang>
-<frei,gebunden,lang>
-<frei,lang>
-<klassisch,nativ>
-<fremd,klassisch,nativ>
-<fremd,klassisch>
-<frei,nativ>
-<frei,fremd,nativ>
-<fremd,nativ>
-<komposit,prefderiv,simplex,suffderiv>
-<prefderiv,suffderiv>
-<komposit,prefderiv,simplex>
-<komposit,simplex,suffderiv>
-<komposit,simplex>
-<prefderiv,simplex,suffderiv>
-<prefderiv,simplex>
-<simplex,suffderiv>
-# inflection classes
-<Abk_ADJ>
-<Abk_ADV>
-<Abk_ART>
-<Abk_DPRO>
-<Abk_KONJ>
-<Abk_NE-Low>
-<Abk_NE>
-<Abk_NN-Low>
-<Abk_NN>
-<Abk_PREP>
-<Abk_VPPAST>
-<Abk_VPPRES>
-<Adj$>
-<Adj$e>
-<Adj+(e)>
-<Adj+>
-<Adj&>
-<Adj+Lang>
-<Adj~+e>
-<Adj+e>
-<Adj-el/er>
-<Adj0>
-<Adj0-Up>
-<AdjComp>
-<AdjSup>
-<AdjNN>
-<AdjNNSuff>
-<AdjPos>
-<AdjPosAttr>
-<AdjPosPred>
-<AdjPosSup>
-<AdjSup>
-<Adj~+e>\
-<Adv>
-<Card>
-<Ord>
-<DigOrd>
-<Circp>
-<FamName_0>
-<FamName_s>
-<Name-Pl_0>
-<Name-Pl_x>
-<Intj>
-<IntjUp>
-<Konj-Inf>
-<Konj-Kon>
-<Konj-Sub>
-<Konj-Vgl>
-<N?/Pl_0>
-<N?/Pl_x>
-<NFem-Deriv>
-<NFem-a/en>
-<NFem-in>
-<NFem-is/en>
-<NFem-is/iden>
-<NFem-s/$sse>
-<NFem-s/sse>
-<NFem-s/ssen>
-<NFem/Pl>
-<NFem/Sg>
-<NFem_0_$>
-<NFem_0_$e>
-<NFem_0_e>
-<NFem_0_en>
-<NFem_0_n>
-<NFem_0_s>
-<NFem_0_x>
-<NGeo+er/in>
-<NGeo-Fem_0>
-<NGeo-Invar>
-<NGeo-Masc_0>
-<NGeo-Masc_s>
-<NGeo-Neut+Loc>
-<NGeo-Neut_0>
-<NGeo-Neut_s>
-<NGeo-Pl_0>
-<NMasc-Adj>
-<NMasc-ns>
-<NMasc-s/$sse>
-<NMasc-s/Sg>
-<NMasc-s/sse>
-<NMasc-s0/sse>
-<NMasc-us/en>
-<NMasc-us/i>
-<NMasc/Pl>
-<NMasc/Sg_0>
-<NMasc/Sg_es>
-<NMasc/Sg_s>
-<NMasc_0_x>
-<NMasc_en_en=in>
-<NMasc_en_en>
-<NMasc_es_$e>
-<NMasc_es_$er>
-<NMasc_es_e>
-<NMasc_es_en>
-<NMasc_n_n=$in>
-<NMasc_n_n=in>
-<NMasc_n_n>
-<NMasc_s_$>
-<NMasc_s_$x>
-<NMasc_s_0=in>
-<NMasc_s_0>
-<NMasc_s_e=in>
-<NMasc_s_e>
-<NMasc_s_en=in>
-<NMasc_s_en>
-<NMasc_s_n>
-<NMasc_s_s>
-<NMasc_s_x>
-<NNeut-0/ien>
-<NNeut-Dimin>
-<NNeut-Herz>
-<NNeut-a/ata>
-<NNeut-a/en>
-<NNeut-on/a>
-<NNeut-s/$sser>
-<NNeut-s/sse>
-<NNeut-um/a>
-<NNeut-um/en>
-<NNeut/Pl>
-<NNeut/Sg_0>
-<NNeut/Sg_en>
-<NNeut/Sg_es>
-<NNeut/Sg_s>
-<NNeut_0_x>
-<NNeut_es_$e>
-<NNeut_es_$er>
-<NNeut_es_e>
-<NNeut_es_en>
-<NNeut_es_er>
-<NNeut_s_$>
-<NNeut_s_0>
-<NNeut_s_e>
-<NNeut_s_en>
-<NNeut_s_n>
-<NNeut_s_s>
-<NNeut_s_x>
-<Name-Fem_0>
-<Name-Fem_s>
-<Name-Masc_0>
-<Name-Masc_s>
-<Name-Neut_s>
-<Name-Neut_0>
-<Name-Neut+Loc>
-<Name-Invar>
-<NSNeut_es_e>
-<NSFem_0_n>
-<NSFem_0_en>
-<NSMasc_es_e>
-<NSMasc_es_$e>
-<NSMasc-s/$sse>
-<NGeo-$er-NMasc_s_0>
-<NGeo-$er-Adj0-Up>
-<NGeo-$isch-Adj+>
-<NGeo-0-Name-Fem_0>
-<NGeo-0-Name-Masc_s>
-<NGeo-0-Name-Neut_s>
-<NGeo-0-$er-$er>
-<NGeo-0-$er-$isch>
-<NGeo-0-aner-aner>
-<NGeo-0-aner-anisch>
-<NGeo-0-e-isch>
-<NGeo-0-er-er>
-<NGeo-0-er-erisch>
-<NGeo-0-er-isch>
-<NGeo-0-ese-esisch>
-<NGeo-0-ianer-ianisch>
-<NGeo-0-0-0>
-<NGeo-0-ner-isch>
-<NGeo-0-ner-nisch>
-<NGeo-0fem-er-erisch>
-<NGeo-0masc-er-isch>
-<NGeo-0masc-ese-esisch>
-<NGeo-a-Name-Fem_s>
-<NGeo-a-Name-Neut_s>
-<NGeo-aner-NMasc_s_0>
-<NGeo-aner-Adj0-Up>
-<NGeo-anisch-Adj+>
-<NGeo-e-NMasc_n_n>
-<NGeo-e-Name-Fem_0>
-<NGeo-e-Name-Neut_s>
-<NGeo-ei-Name-Fem_0>
-<NGeo-en-Name-Neut_s>
-<NGeo-0-NMasc_s_0>
-<NGeo-0-Adj0-Up>
-<NGeo-er-NMasc_s_0>
-<NGeo-er-Adj0-Up>
-<NGeo-erisch-Adj+>
-<NGeo-ese-NMasc_n_n>
-<NGeo-esisch-Adj+>
-<NGeo-ianer-NMasc_s_0>
-<NGeo-ianisch-Adj+>
-<NGeo-ien-Name-Neut_s>
-<NGeo-ier-NMasc_s_0>
-<NGeo-isch-Adj+>
-<NGeo-istan-Name-Neut_s>
-<NGeo-land-Name-Neut_s>
-<NGeo-ner-NMasc_s_0>
-<NGeo-ner-Adj0-Up>
-<NGeo-nisch-Adj+>
-<NGeo-a-er-isch>
-<NGeo-a-ese-esisch>
-<NGeo-afem-er-isch>
-<NGeo-e-er-er>
-<NGeo-e-er-isch>
-<NGeo-efem-er-isch>
-<NGeo-ei-e-isch>
-<NGeo-en-aner-anisch>
-<NGeo-en-e-$isch>
-<NGeo-en-e-isch>
-<NGeo-en-er-er>
-<NGeo-en-er-isch>
-<NGeo-ien-e-isch>
-<NGeo-ien-er-isch>
-<NGeo-ien-ese-esisch>
-<NGeo-ien-ianer-ianisch>
-<NGeo-ien-ier-isch>
-<NGeo-istan-e-isch>
-<NGeo-land-$er-$er>
-<NGeo-land-e-isch>
-<NGeo-land-e-nisch>
-<Postp-Akk>
-<Postp-Dat>
-<Postp-Gen>
-<Pref/Adj>
-<Pref/Adv>
-<Pref/N>
-<Pref/ProAdv>
-<Pref/Sep>
-<Pref/V>
-<Prep-Akk>
-<Prep-Dat>
-<Prep-Gen>
-<Prep/Art-m>
-<Prep/Art-n>
-<Prep/Art-r>
-<Prep/Art-s>
-<ProAdv>
-<PInd-Invar>
-<Ptkl-Adj>
-<Ptkl-Ant>
-<Ptkl-Neg>
-<Ptkl-Zu>
-<VAImpPl>
-<VAImpSg>
-<VAPastKonj2>
-<VAPres1/3PlInd>
-<VAPres1SgInd>
-<VAPres2PlInd>
-<VAPres2SgInd>
-<VAPres3SgInd>
-<VAPresKonjPl>
-<VAPresKonjSg>
-<VInf+PPres>
-<VInf>
-<VMPast>
-<VMPastKonj>
-<VMPresPl>
-<VMPresSg>
-<VPPast>
-<VPPres>
-<VPastIndReg>
-<VPastIndStr>
-<VPastKonjStr>
-<VPresKonj>
-<VPresPlInd>
-<VVPP-en>
-<VVPP-t>
-<VVPastIndReg>
-<VVPastIndStr>
-<VVPastKonjReg>
-<VVPastKonjStr>
-<VVPastStr>
-<VVPres1+Imp>
-<VVPres1>
-<VVPres2+Imp0>
-<VVPres2+Imp>
-<VVPres2>
-<VVPres2t>
-<VVPres>
-<VVPresPl>
-<VVPresSg>
-<VVReg-el/er>
-<VVReg>
-<WAdv>
-# internal process marker
-<Low#>
-<Up#>
-<Fix#>
-<^imp>
-<^zz>
-<^UC>
-<^Ax>
-<^pl>
-<^Gen>
-<^Del>
-<^pp>
-<^ABK>
-<^ADJ>
-<^VPPAST>
-<^VPPRES>
-# final tags
-<+ADJ>
-<+ADV>
-<+ART>
-<+DEMPRO>
-<+KONJ>
-<+NE>
-<+NN>
-<+PREP>
-# morphosyntactic features
-<Invar>
-<Masc>
-<Fem>
-<Neut>
-<NoGend>
-<Nom>
-<Gen>
-<Dat>
-<Akk>
-<Sg>
-<Pl>
-<St>
-<St/Mix>
-<Sw>
-<Sw/Mix>
-<Pos>
-<Comp>
-<Sup>
-<Pred>
-<Adv>
+<epsilon>	0
+!	1
+"	2
+#	3
+$	4
+%	5
+&	6
+'	7
+(	8
+)	9
+*	10
++	11
+,	12
+-	13
+.	14
+/	15
+0	16
+1	17
+2	18
+3	19
+4	20
+5	21
+6	22
+7	23
+8	24
+9	25
+:	26
+;	27
+<	28
+=	29
+>	30
+?	31
+@	32
+A	33
+B	34
+C	35
+D	36
+E	37
+F	38
+G	39
+H	40
+I	41
+J	42
+K	43
+L	44
+M	45
+N	46
+O	47
+P	48
+Q	49
+R	50
+S	51
+T	52
+U	53
+V	54
+W	55
+X	56
+Y	57
+Z	58
+[	59
+\	60
+]	61
+^	62
+_	63
+`	64
+a	65
+b	66
+c	67
+d	68
+e	69
+f	70
+g	71
+h	72
+i	73
+j	74
+k	75
+l	76
+m	77
+n	78
+o	79
+p	80
+q	81
+r	82
+s	83
+t	84
+u	85
+v	86
+w	87
+x	88
+y	89
+z	90
+{	91
+|	92
+}	93
+~	94
+¡	95
+¢	96
+£	97
+¤	98
+¥	99
+¦	100
+§	101
+¨	102
+©	103
+ª	104
+«	105
+¬	106
+®	107
+¯	108
+°	109
+±	110
+²	111
+³	112
+´	113
+µ	114
+¶	115
+·	116
+¸	117
+¹	118
+º	119
+»	120
+¼	121
+½	122
+¾	123
+¿	124
+À	125
+Á	126
+Â	127
+Ã	128
+Ä	129
+Å	130
+Æ	131
+Ç	132
+È	133
+É	134
+Ê	135
+Ë	136
+Ì	137
+Í	138
+Î	139
+Ï	140
+Ð	141
+Ñ	142
+Ò	143
+Ó	144
+Ô	145
+Õ	146
+Ö	147
+×	148
+Ø	149
+Ù	150
+Ú	151
+Û	152
+Ü	153
+Ý	154
+Þ	155
+ß	156
+à	157
+á	158
+â	159
+ã	160
+ä	161
+å	162
+æ	163
+ç	164
+è	165
+é	166
+ê	167
+ë	168
+ì	169
+í	170
+î	171
+ï	172
+ð	173
+ñ	174
+ò	175
+ó	176
+ô	177
+õ	178
+ö	179
+÷	180
+ø	181
+ù	182
+ú	183
+û	184
+ü	185
+ý	186
+þ	187
+ÿ	188
+<WB>	189
+<CB>	190
+<FB>	191
+<SS>	192
+<n>	193
+<~n>	194
+<e>	195
+<d>	196
+<Ge-Nom>	197
+<UL>	198
+<DEL-S>	199
+<ABK>	200
+<ADJ>	201
+<ADV>	202
+<CARD>	203
+<DIGCARD>	204
+<NE>	205
+<NN>	206
+<PRO>	207
+<V>	208
+<ORD>	209
+<OTHER>	210
+<VPART>	211
+<VPREF>	212
+<PREF>	213
+<SUFF>	214
+<CONV>	215
+<QUANT>	216
+<KSF>	217
+<CARD,DIGCARD,NE>	218
+<ADJ,CARD>	219
+<ADJ,NN>	220
+<CARD,NN>	221
+<CARD,NE>	222
+<ABK,ADJ,NE,NN>	223
+<ADJ,NE,NN>	224
+<ABK,NE,NN>	225
+<NE,NN>	226
+<ABK,CARD,NN>	227
+<ABK,NN>	228
+<ADJ,CARD,NN,V>	229
+<ADJ,NN,V>	230
+<ABK,ADJ,NE,NN,V>	231
+<ADJ,NE,NN,V>	232
+<ADV,NE,NN,V>	233
+<ABK,NE,NN,V>	234
+<NE,NN,V>	235
+<ABK,NN,V>	236
+<NN,V>	237
+<VADJ>	238
+<Initial>	239
+<NoHy>	240
+<ge>	241
+<no-ge>	242
+<NoPref>	243
+<NoDef>	244
+<Base_Stems>	245
+<Deriv_Stems>	246
+<Kompos_Stems>	247
+<Pref_Stems>	248
+<Suff_Stems>	249
+<base>	250
+<deriv>	251
+<kompos>	252
+<simplex>	253
+<komposit>	254
+<suffderiv>	255
+<prefderiv>	256
+<Simplex>	257
+<Komplex>	258
+<Komplex_abstrakt>	259
+<Komplex_semi>	260
+<Nominalisierung>	261
+<Kurzwort>	262
+<nativ>	263
+<frei>	264
+<gebunden>	265
+<kurz>	266
+<lang>	267
+<fremd>	268
+<klassisch>	269
+<frei,fremd,gebunden>	270
+<frei,fremd,gebunden,kurz>	271
+<frei,fremd,gebunden,lang>	272
+<fremd,gebunden,lang>	273
+<frei,fremd,kurz>	274
+<frei,fremd,lang>	275
+<frei,gebunden>	276
+<frei,gebunden,kurz,lang>	277
+<frei,gebunden,lang>	278
+<frei,lang>	279
+<klassisch,nativ>	280
+<fremd,klassisch,nativ>	281
+<fremd,klassisch>	282
+<frei,nativ>	283
+<frei,fremd,nativ>	284
+<fremd,nativ>	285
+<komposit,prefderiv,simplex,suffderiv>	286
+<prefderiv,suffderiv>	287
+<komposit,prefderiv,simplex>	288
+<komposit,simplex,suffderiv>	289
+<komposit,simplex>	290
+<prefderiv,simplex,suffderiv>	291
+<prefderiv,simplex>	292
+<simplex,suffderiv>	293
+<Abk_ADJ>	294
+<Abk_ADV>	295
+<Abk_ART>	296
+<Abk_DPRO>	297
+<Abk_KONJ>	298
+<Abk_NE-Low>	299
+<Abk_NE>	300
+<Abk_NN-Low>	301
+<Abk_NN>	302
+<Abk_PREP>	303
+<Abk_VPPAST>	304
+<Abk_VPPRES>	305
+<Adj$>	306
+<Adj$e>	307
+<Adj+(e)>	308
+<Adj+>	309
+<Adj&>	310
+<Adj+Lang>	311
+<Adj~+e>	312
+<Adj+e>	313
+<Adj-el/er>	314
+<Adj0>	315
+<Adj0-Up>	316
+<AdjComp>	317
+<AdjSup>	318
+<AdjNN>	319
+<AdjNNSuff>	320
+<AdjPos>	321
+<AdjPosAttr>	322
+<AdjPosPred>	323
+<AdjPosSup>	324
+<Adj~+e>\	325
+<Adv>	326
+<Card>	327
+<Ord>	328
+<DigOrd>	329
+<Circp>	330
+<FamName_0>	331
+<FamName_s>	332
+<Name-Pl_0>	333
+<Name-Pl_x>	334
+<Intj>	335
+<IntjUp>	336
+<Konj-Inf>	337
+<Konj-Kon>	338
+<Konj-Sub>	339
+<Konj-Vgl>	340
+<N?/Pl_0>	341
+<N?/Pl_x>	342
+<NFem-Deriv>	343
+<NFem-a/en>	344
+<NFem-in>	345
+<NFem-is/en>	346
+<NFem-is/iden>	347
+<NFem-s/$sse>	348
+<NFem-s/sse>	349
+<NFem-s/ssen>	350
+<NFem/Pl>	351
+<NFem/Sg>	352
+<NFem_0_$>	353
+<NFem_0_$e>	354
+<NFem_0_e>	355
+<NFem_0_en>	356
+<NFem_0_n>	357
+<NFem_0_s>	358
+<NFem_0_x>	359
+<NGeo+er/in>	360
+<NGeo-Fem_0>	361
+<NGeo-Invar>	362
+<NGeo-Masc_0>	363
+<NGeo-Masc_s>	364
+<NGeo-Neut+Loc>	365
+<NGeo-Neut_0>	366
+<NGeo-Neut_s>	367
+<NGeo-Pl_0>	368
+<NMasc-Adj>	369
+<NMasc-ns>	370
+<NMasc-s/$sse>	371
+<NMasc-s/Sg>	372
+<NMasc-s/sse>	373
+<NMasc-s0/sse>	374
+<NMasc-us/en>	375
+<NMasc-us/i>	376
+<NMasc/Pl>	377
+<NMasc/Sg_0>	378
+<NMasc/Sg_es>	379
+<NMasc/Sg_s>	380
+<NMasc_0_x>	381
+<NMasc_en_en=in>	382
+<NMasc_en_en>	383
+<NMasc_es_$e>	384
+<NMasc_es_$er>	385
+<NMasc_es_e>	386
+<NMasc_es_en>	387
+<NMasc_n_n=$in>	388
+<NMasc_n_n=in>	389
+<NMasc_n_n>	390
+<NMasc_s_$>	391
+<NMasc_s_$x>	392
+<NMasc_s_0=in>	393
+<NMasc_s_0>	394
+<NMasc_s_e=in>	395
+<NMasc_s_e>	396
+<NMasc_s_en=in>	397
+<NMasc_s_en>	398
+<NMasc_s_n>	399
+<NMasc_s_s>	400
+<NMasc_s_x>	401
+<NNeut-0/ien>	402
+<NNeut-Dimin>	403
+<NNeut-Herz>	404
+<NNeut-a/ata>	405
+<NNeut-a/en>	406
+<NNeut-on/a>	407
+<NNeut-s/$sser>	408
+<NNeut-s/sse>	409
+<NNeut-um/a>	410
+<NNeut-um/en>	411
+<NNeut/Pl>	412
+<NNeut/Sg_0>	413
+<NNeut/Sg_en>	414
+<NNeut/Sg_es>	415
+<NNeut/Sg_s>	416
+<NNeut_0_x>	417
+<NNeut_es_$e>	418
+<NNeut_es_$er>	419
+<NNeut_es_e>	420
+<NNeut_es_en>	421
+<NNeut_es_er>	422
+<NNeut_s_$>	423
+<NNeut_s_0>	424
+<NNeut_s_e>	425
+<NNeut_s_en>	426
+<NNeut_s_n>	427
+<NNeut_s_s>	428
+<NNeut_s_x>	429
+<Name-Fem_0>	430
+<Name-Fem_s>	431
+<Name-Masc_0>	432
+<Name-Masc_s>	433
+<Name-Neut_s>	434
+<Name-Neut_0>	435
+<Name-Neut+Loc>	436
+<Name-Invar>	437
+<NSNeut_es_e>	438
+<NSFem_0_n>	439
+<NSFem_0_en>	440
+<NSMasc_es_e>	441
+<NSMasc_es_$e>	442
+<NSMasc-s/$sse>	443
+<NGeo-$er-NMasc_s_0>	444
+<NGeo-$er-Adj0-Up>	445
+<NGeo-$isch-Adj+>	446
+<NGeo-0-Name-Fem_0>	447
+<NGeo-0-Name-Masc_s>	448
+<NGeo-0-Name-Neut_s>	449
+<NGeo-0-$er-$er>	450
+<NGeo-0-$er-$isch>	451
+<NGeo-0-aner-aner>	452
+<NGeo-0-aner-anisch>	453
+<NGeo-0-e-isch>	454
+<NGeo-0-er-er>	455
+<NGeo-0-er-erisch>	456
+<NGeo-0-er-isch>	457
+<NGeo-0-ese-esisch>	458
+<NGeo-0-ianer-ianisch>	459
+<NGeo-0-0-0>	460
+<NGeo-0-ner-isch>	461
+<NGeo-0-ner-nisch>	462
+<NGeo-0fem-er-erisch>	463
+<NGeo-0masc-er-isch>	464
+<NGeo-0masc-ese-esisch>	465
+<NGeo-a-Name-Fem_s>	466
+<NGeo-a-Name-Neut_s>	467
+<NGeo-aner-NMasc_s_0>	468
+<NGeo-aner-Adj0-Up>	469
+<NGeo-anisch-Adj+>	470
+<NGeo-e-NMasc_n_n>	471
+<NGeo-e-Name-Fem_0>	472
+<NGeo-e-Name-Neut_s>	473
+<NGeo-ei-Name-Fem_0>	474
+<NGeo-en-Name-Neut_s>	475
+<NGeo-0-NMasc_s_0>	476
+<NGeo-0-Adj0-Up>	477
+<NGeo-er-NMasc_s_0>	478
+<NGeo-er-Adj0-Up>	479
+<NGeo-erisch-Adj+>	480
+<NGeo-ese-NMasc_n_n>	481
+<NGeo-esisch-Adj+>	482
+<NGeo-ianer-NMasc_s_0>	483
+<NGeo-ianisch-Adj+>	484
+<NGeo-ien-Name-Neut_s>	485
+<NGeo-ier-NMasc_s_0>	486
+<NGeo-isch-Adj+>	487
+<NGeo-istan-Name-Neut_s>	488
+<NGeo-land-Name-Neut_s>	489
+<NGeo-ner-NMasc_s_0>	490
+<NGeo-ner-Adj0-Up>	491
+<NGeo-nisch-Adj+>	492
+<NGeo-a-er-isch>	493
+<NGeo-a-ese-esisch>	494
+<NGeo-afem-er-isch>	495
+<NGeo-e-er-er>	496
+<NGeo-e-er-isch>	497
+<NGeo-efem-er-isch>	498
+<NGeo-ei-e-isch>	499
+<NGeo-en-aner-anisch>	500
+<NGeo-en-e-$isch>	501
+<NGeo-en-e-isch>	502
+<NGeo-en-er-er>	503
+<NGeo-en-er-isch>	504
+<NGeo-ien-e-isch>	505
+<NGeo-ien-er-isch>	506
+<NGeo-ien-ese-esisch>	507
+<NGeo-ien-ianer-ianisch>	508
+<NGeo-ien-ier-isch>	509
+<NGeo-istan-e-isch>	510
+<NGeo-land-$er-$er>	511
+<NGeo-land-e-isch>	512
+<NGeo-land-e-nisch>	513
+<Postp-Akk>	514
+<Postp-Dat>	515
+<Postp-Gen>	516
+<Pref/Adj>	517
+<Pref/Adv>	518
+<Pref/N>	519
+<Pref/ProAdv>	520
+<Pref/Sep>	521
+<Pref/V>	522
+<Prep-Akk>	523
+<Prep-Dat>	524
+<Prep-Gen>	525
+<Prep/Art-m>	526
+<Prep/Art-n>	527
+<Prep/Art-r>	528
+<Prep/Art-s>	529
+<ProAdv>	530
+<PInd-Invar>	531
+<Ptkl-Adj>	532
+<Ptkl-Ant>	533
+<Ptkl-Neg>	534
+<Ptkl-Zu>	535
+<VAImpPl>	536
+<VAImpSg>	537
+<VAPastKonj2>	538
+<VAPres1/3PlInd>	539
+<VAPres1SgInd>	540
+<VAPres2PlInd>	541
+<VAPres2SgInd>	542
+<VAPres3SgInd>	543
+<VAPresKonjPl>	544
+<VAPresKonjSg>	545
+<VInf+PPres>	546
+<VInf>	547
+<VMPast>	548
+<VMPastKonj>	549
+<VMPresPl>	550
+<VMPresSg>	551
+<VPPast>	552
+<VPPres>	553
+<VPastIndReg>	554
+<VPastIndStr>	555
+<VPastKonjStr>	556
+<VPresKonj>	557
+<VPresPlInd>	558
+<VVPP-en>	559
+<VVPP-t>	560
+<VVPastIndReg>	561
+<VVPastIndStr>	562
+<VVPastKonjReg>	563
+<VVPastKonjStr>	564
+<VVPastStr>	565
+<VVPres1+Imp>	566
+<VVPres1>	567
+<VVPres2+Imp0>	568
+<VVPres2+Imp>	569
+<VVPres2>	570
+<VVPres2t>	571
+<VVPres>	572
+<VVPresPl>	573
+<VVPresSg>	574
+<VVReg-el/er>	575
+<VVReg>	576
+<WAdv>	577
+<Low#>	578
+<Up#>	579
+<Fix#>	580
+<^imp>	581
+<^zz>	582
+<^UC>	583
+<^Ax>	584
+<^pl>	585
+<^Gen>	586
+<^Del>	587
+<^pp>	588
+<^ABK>	589
+<^ADJ>	590
+<^VPPAST>	591
+<^VPPRES>	592
+<+ADJ>	593
+<+ADV>	594
+<+ART>	595
+<+DEMPRO>	596
+<+KONJ>	597
+<+NE>	598
+<+NN>	599
+<+PREP>	600
+<Invar>	601
+<Masc>	602
+<Fem>	603
+<Neut>	604
+<NoGend>	605
+<Nom>	606
+<Gen>	607
+<Dat>	608
+<Akk>	609
+<Sg>	610
+<Pl>	611
+<St>	612
+<St/Mix>	613
+<Sw>	614
+<Sw/Mix>	615
+<Pos>	616
+<Comp>	617
+<Sup>	618
+<Pred>	619

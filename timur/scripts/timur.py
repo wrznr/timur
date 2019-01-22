@@ -63,7 +63,7 @@ def lookup(strings, fst):
             click.echo("> Analysis")
             istring = item[0].split(" ")
             ostring = item[1].split(" ")
-            for i in range(0, len(istring)):
+            for i,sym in enumerate(istring):
                 click.echo("%s\t%s" % (istring[i], ostring[i]))
 
 @cli.command(name="build")

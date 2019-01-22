@@ -46,8 +46,7 @@ class DekoFst:
       ).optimize()
     suff_phon = self.__construct_suff_phon()
     self.__suff_filter = pynini.compose(suff_filter_helper, suff_phon).optimize()
-    self.__suff_filter = self.__origin_filter
-    self.__origin_filter.draw("origin.dot")
+    #self.__suff_filter = (self.__origin_filter * self.__stem_type_filter).optimize()
 
     #
     # prefix filter

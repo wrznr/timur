@@ -23,13 +23,14 @@ class PhonFst:
     # construct single rules
     self.__r0 = self.__construct_r0()
     self.__r19 = self.__construct_r19()
+    self.__r20 = self.__construct_r20()
+    self.__r20.draw("r20.dot")
     self.__r21 = self.__construct_r21()
-    self.__r21.draw("r21.dot")
 
     #
     # construct intermediate rules
     self.__t1 = self.__r0
-    self.__t6 = pynini.compose(self.__r19, self.__r21).optimize()
+    self.__t6 = pynini.compose(self.__r19, pynini.compose(self.__r20, self.__r21)).optimize()
 
     self.__x1 = self.__t1
     self.__x2 = self.__t6
@@ -117,6 +118,31 @@ class PhonFst:
           ""
           )
         ).closure().optimize()
+  
+  def __construct_r20(self):
+    '''
+    Up to low
+
+    '''
+
+    alphabet = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<^UC>", "<NoHy>", "<NoDef>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
+        )
+
+    #
+    # SFST uses a rewrite rule here
+    return pynini.push(
+        pynini.union(
+          alphabet.closure(),
+          pynini.concat(
+            pynini.transducer("<CB>", "", input_token_type=self.__syms.alphabet).closure(1),
+            pynini.union(
+              pynini.string_map(["<^UC>", "<NoHy>", "<NoDef>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
+              self.__syms.to_lower
+              )
+            )
+          ).closure(), push_labels=True).optimize()
   
   def __construct_r21(self):
     '''

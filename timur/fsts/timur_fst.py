@@ -4,7 +4,7 @@ from __future__ import absolute_import
 import pynini
 import pickle
 
-from pkg_resources import resource_stream, Requirement
+from pkg_resources import resource_filename, Requirement
 
 from timur import symbols
 from timur import helpers
@@ -21,8 +21,8 @@ class TimurFst:
     '''
 
     #
-    # load the symbols
-    self.__syms = symbols.Symbols(helpers.load_alphabet(resource_stream(Requirement.parse("timur"), 'timur/data/syms.txt')))
+    # empty symbols
+    self.__syms = symbols.Symbols(pynini.SymbolTable.read_text(resource_filename(Requirement.parse("timur"), 'timur/data/syms.txt')))
 
     #
     # empty fst
@@ -32,7 +32,7 @@ class TimurFst:
     '''
     Check whether timur is ready to roll
     '''
-    return self.__timur is not None
+    return self.__timur is not None and self.__syms is not None
 
   def lookup(self, string):
     '''
@@ -41,7 +41,9 @@ class TimurFst:
     result = []
     if self.__verify():
       string_acceptor = pynini.acceptor(" ".join(c for c in string), token_type=self.__syms.alphabet)
-      result = list((string_acceptor * self.__timur).paths(input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).items())
+      intermediate = pynini.compose(self.__timur, string_acceptor)
+      paths = intermediate.paths(input_token_type=intermediate.input_symbols(),output_token_type=intermediate.output_symbols())
+      result = list(paths.items())
     return result
 
   def load(self, fst):
@@ -59,7 +61,7 @@ class TimurFst:
       return self.__timur.text()
     return ""
 
-  def dump(self, out_file):
+  def dump_fst(self, out_file):
     '''
     Save a previously built morphology
     '''
@@ -67,10 +69,21 @@ class TimurFst:
       return self.__timur.write(out_file)
     return ""
 
+  def dump_syms(self, out_file):
+    '''
+    Save a previously constructed symbol table
+    '''
+    if self.__verify():
+      return self.__syms.alphabet.write_text(out_file)
+    return ""
+
   def build(self, lexicon_stream):
     '''
     Build the morphology from scratch
     '''
+
+    #
+    # load the symbols and the lexicon
     lex = helpers.load_lexicon(lexicon_stream, self.__syms.alphabet)
 
     #
@@ -110,7 +123,7 @@ class TimurFst:
         sublexica.simplex_suff_stems,
         sublexica.suff_deriv_suff_stems.closure()
         ).closure(0, 1).optimize()
-    suffs1.draw("suffs1.dot")
+    suffs1.draw("suffs1.dot", portrait=True)
     
     # derivation suffixes to be added to prefixed stems
     suffs2 = pynini.concat(
@@ -124,10 +137,7 @@ class TimurFst:
         sublexica.suff_deriv_suff_stems.closure()
         )
 
-    debug = pynini.concat(sublexica.bdk_stems, suffs1).optimize()
-    sublexica.bdk_stems.draw("bdk.dot")
-    debug.draw("debug.dot")
-    s0 = debug * deko_filter.suff_filter
+    s0 = pynini.concat(sublexica.bdk_stems, suffs1).optimize() * deko_filter.suff_filter
     s0.draw("s0.dot")
     p1 = sublexica.pref_stems + s0 * deko_filter.pref_filter
     p1.draw("p1.dot")

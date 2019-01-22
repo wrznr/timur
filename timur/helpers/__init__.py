@@ -1,2 +1,2 @@
-from .helpers import load_alphabet
+from .helpers import Analysis
 from .helpers import load_lexicon

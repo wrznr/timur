@@ -10,6 +10,7 @@ import click
 import pynini
 
 from timur import fsts
+from timur import helpers
 
 def construct_any(symbol_table):
     '''
@@ -61,10 +62,8 @@ def lookup(strings, fst):
         items = timur.lookup(string)
         for item in items:
             click.echo("> Analysis")
-            istring = item[0].split(" ")
-            ostring = item[1].split(" ")
-            for i,sym in enumerate(istring):
-                click.echo("%s\t%s" % (istring[i], ostring[i]))
+            analysis = helpers.Analysis.spur(item)
+            click.echo(analysis.to_json())
 
 @cli.command(name="build")
 @click.argument('lexicon', type=click.File())

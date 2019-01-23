@@ -137,12 +137,14 @@ class TimurFst:
         sublexica.suff_deriv_suff_stems.closure()
         )
 
-    s0 = pynini.concat(sublexica.bdk_stems, suffs1).optimize() * deko_filter.suff_filter
-    s0.draw("s0.dot")
+    intermediate = pynini.concat(sublexica.bdk_stems, suffs1).optimize()
+    intermediate.draw("intermediate.dot", portrait=True)
+    s0 = intermediate * deko_filter.suff_filter
+    s0.draw("s0.dot", portrait=True)
     p1 = sublexica.pref_stems + s0 * deko_filter.pref_filter
-    p1.draw("p1.dot")
+    p1.draw("p1.dot", portrait=True)
     s1 = p1 + suffs2 * deko_filter.suff_filter
-    s1.draw("s1.dot")
+    s1.draw("s1.dot", portrait=True)
     tmp = s0 | s1
     tmp = tmp.closure(1) * deko_filter.compound_filter
     tmp.draw("tmp.dot", portrait=True)

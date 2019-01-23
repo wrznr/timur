@@ -522,6 +522,25 @@ class InflectionFst:
           )
         ).optimize()
 
+    n_pl_x = pynini.union(
+        pynini.concat(
+          pynini.transducer("<Nom> <Pl>", "", input_token_type=syms.alphabet),
+          n
+          ),
+        pynini.concat(
+          pynini.transducer("<Gen> <Pl>", "", input_token_type=syms.alphabet),
+          n
+          ),
+        pynini.concat(
+          pynini.transducer("<Dat> <Pl>", "", input_token_type=syms.alphabet),
+          n
+          ),
+        pynini.concat(
+          pynini.transducer("<Akk> <Pl>", "", input_token_type=syms.alphabet),
+          n
+          )
+        ).optimize()
+
 
     #
     # inflection endings: meta
@@ -532,6 +551,13 @@ class InflectionFst:
           n_pl_0
           )
         )
+    n_es_en = pynini.union(
+        n_sg_es,
+        pynini.concat(
+          pynini.transducer("", "<FB> e n", output_token_type=syms.alphabet),
+          n_pl_x
+          )
+        )
     n_0_en = pynini.union(
         n_sg_0,
         pynini.concat(
@@ -540,10 +566,16 @@ class InflectionFst:
           )
         )
 
-    # NMasc_es_e
+    # NMasc_es_e: Tag-(e)s/Tage
     self.__nmasc_es_e = pynini.concat(
         pynini.transducer("<+NN> <Masc>", "", input_token_type=syms.alphabet),
         n_es_e
+        ).optimize()
+
+    # NMasc_es_en: Fleck-(e)s/Flecken
+    self.__nmasc_es_en = pynini.concat(
+        pynini.transducer("<+NN> <Masc>", "", input_token_type=syms.alphabet),
+        n_es_en
         ).optimize()
 
     # NFem-Deriv
@@ -598,6 +630,10 @@ class InflectionFst:
           self.__nmasc_es_e
           ),
         pynini.concat(
+          pynini.transducer("", "<NMasc_es_en>", output_token_type=self.__syms.alphabet),
+          self.__nmasc_es_en
+          ),
+        pynini.concat(
           pynini.transducer("", "<NFem-Deriv>", output_token_type=self.__syms.alphabet),
           self.__nfem_deriv
           )
@@ -629,6 +665,10 @@ class InflectionFst:
           pynini.concat(
             pynini.transducer("<NMasc_es_e>", "", input_token_type=self.__syms.alphabet),
             pynini.transducer("<NMasc_es_e>", "", input_token_type=self.__syms.alphabet)
+            ),
+          pynini.concat(
+            pynini.transducer("<NMasc_es_en>", "", input_token_type=self.__syms.alphabet),
+            pynini.transducer("<NMasc_es_en>", "", input_token_type=self.__syms.alphabet)
             ),
           pynini.concat(
             pynini.transducer("<NFem-Deriv>", "", input_token_type=self.__syms.alphabet),

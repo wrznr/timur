@@ -109,14 +109,25 @@ class TimurFst:
     # lex = lex | numericals.num_stems
 
     #
+    # pre-constrcuted fsts
+
     # sublexica
     sublexica = fsts.Sublexica(self.__syms, lex)
 
-    #
-    # derivation and composition
+    # phonological rules
+    phon = fsts.PhonFst(self.__syms)
 
     # deko.fst
     deko_filter = fsts.DekoFst(self.__syms)
+
+    # flexion.fsts
+    inflection = fsts.InflectionFst(self.__syms)
+
+    # defaults
+    defaults = fsts.DefaultsFst(self.__syms, sublexica, deko_filter, inflection, phon)
+
+    #
+    # derivation and composition
 
     # derivation suffixes to be added to simplex stems
     suffs1 = pynini.concat(
@@ -137,7 +148,8 @@ class TimurFst:
         sublexica.suff_deriv_suff_stems.closure()
         )
 
-    intermediate = pynini.concat(sublexica.bdk_stems, suffs1).optimize()
+    bdk_stems = sublexica.bdk_stems | defaults.compound_stems_nn
+    intermediate = pynini.concat(bdk_stems, suffs1).optimize()
     intermediate.draw("intermediate.dot", portrait=True)
     s0 = intermediate * deko_filter.suff_filter
     s0.draw("s0.dot", portrait=True)
@@ -152,14 +164,9 @@ class TimurFst:
     #
     # inflection
 
-    # flexion.fsts
-    inflection = fsts.InflectionFst(self.__syms)
-
     #
-    # defaults
-    defaults = fsts.DefaultsFst(self.__syms, sublexica, deko_filter, inflection)
 
-    # ANY
+    # ANY TODO: Move to symbols!
     alphabet = pynini.union(
         self.__syms.characters,
         pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<CB>", "<NoHy>", "<VADJ>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
@@ -172,7 +179,6 @@ class TimurFst:
 
     #
     #  application of phonological rules
-    phon = fsts.PhonFst(self.__syms)
     phon.phon.draw("phon.dot", portrait=True)
     base = pynini.compose(
         pynini.concat(

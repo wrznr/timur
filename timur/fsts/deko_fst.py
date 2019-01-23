@@ -60,6 +60,7 @@ class DekoFst:
     self.__prefix_origin_filter = self.__construct_prefix_origin_filter()
 
     self.__pref_filter = pynini.concat(pynini.union(self.__del_ge, self.__prefix_origin_filter), self.__syms.inflection_classes.closure(0, 1)).optimize()
+    self.__pref_filter = pynini.concat(pynini.union(self.__del_ge, self.__prefix_origin_filter), self.__syms.inflection_classes.closure(0, 1)).optimize()
 
     #
     # compound filter

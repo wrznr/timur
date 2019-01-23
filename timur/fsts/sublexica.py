@@ -33,6 +33,8 @@ class Sublexica:
         syms.geo_inflection_classes
         ).closure().optimize()
 
+    #
+    # NoDef2NULL
     self.__nodef_to_null = pynini.union(
         self.__sigma_star,
         syms.origin_features,
@@ -50,6 +52,13 @@ class Sublexica:
     self.__suff_deriv_suff_stems = self.__construct_suff_deriv_suff_stems()
     self.__pref_deriv_suff_stems = self.__construct_pref_deriv_suff_stems()
     self.__quant_suff_stems = self.__construct_quant_suff_stems()
+
+  @property
+  def nodef_to_null(self):
+    '''
+    Delete <NoDef> marker 
+    '''
+    return self.__nodef_to_null
 
   @property
   def bdk_stems(self):

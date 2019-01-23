@@ -155,6 +155,10 @@ class TimurFst:
     # flexion.fsts
     inflection = fsts.InflectionFst(self.__syms)
 
+    #
+    # defaults
+    defaults = fsts.DefaultsFst(self.__syms, sublexica, deko_filter, inflection)
+
     # ANY
     alphabet = pynini.union(
         self.__syms.characters,

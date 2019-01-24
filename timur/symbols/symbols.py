@@ -186,6 +186,8 @@ class Symbols:
       "<VVPres2t>", "<VVPres>", "<VVPresPl>", "<VVPresSg>",
       "<VVReg-el/er>", "<VVReg>", "<WAdv>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
+    self.__gender = pynini.string_map(["<Masc>", "<Fem>", "<Neut>", "<NoGend>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
   #
   # access to the alphabet (pynini.SymbolTable)
   @property
@@ -340,3 +342,10 @@ class Symbols:
     Union over all inflection classes
     '''
     return self.__inflection_classes
+
+  @property
+  def gender(self):
+    '''
+    Union over all genders
+    '''
+    return self.__gender

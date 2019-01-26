@@ -82,10 +82,8 @@ class DekoFst:
         self.__insert_ge,
         pynini.compose(
           self.__insert_zu,
-          self.__imperative_filter,
-          compose_filter="null"
-          ),
-        compose_filter="null"
+          self.__imperative_filter
+          )
         ).optimize()
 
     #
@@ -534,8 +532,7 @@ class DekoFst:
 
     alphabet = pynini.union(
         self.__syms.characters,
-        pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^zz>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
-        self.__syms.stem_types,
+        pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^zz>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
         ).optimize()
 
     c2 = pynini.union(
@@ -590,8 +587,7 @@ class DekoFst:
 
     alphabet = pynini.union(
         self.__syms.characters,
-        pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
-        self.__syms.stem_types,
+        pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
         ).optimize()
 
     c2 = pynini.union(
@@ -628,8 +624,7 @@ class DekoFst:
 
     alphabet = pynini.union(
         self.__syms.characters,
-        pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
-        self.__syms.stem_types
+        pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
         ).optimize()
 
     c2 = pynini.union(

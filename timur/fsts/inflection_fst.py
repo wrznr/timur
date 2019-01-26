@@ -673,20 +673,20 @@ class InflectionFst:
         v_plus_es
         ).optimize()
 
-    # TODO: investigate Lernen<+NN>
+    # SMOR: investigate Lernen<+NN>
     v_inf = pynini.union(
         pynini.transducer("<+V> <Inf>", "", input_token_type=syms.alphabet),
         pynini.transducer("<+V> <Inf> <zu>", "<^zz>", input_token_type=syms.alphabet, output_token_type=syms.alphabet)
         ) + v
 
-    # TODO: investigate lernendes<+ADJ>
+    # SMOR: investigate lernendes<+ADJ>
     v_ppres = pynini.union(
         pynini.transducer("<+V> <PPres>", "", input_token_type=syms.alphabet),
         pynini.transducer("<+V> <PPres> <zu>", "<^zz>", input_token_type=syms.alphabet, output_token_type=syms.alphabet)
         ) + v
 
-    # TODO: investigate gelerntes<+ADJ>
-    v_ppast = pynini.transducer("<+V> <PPast>", "<^pp>", input_token_type=syms.alphabet) + v
+    # SMOR: investigate gelerntes<+ADJ>
+    v_ppast = pynini.transducer("<+V> <PPast>", "<^pp>", input_token_type=syms.alphabet, output_token_type=syms.alphabet) + v
 
     # lernend
     v_inf_plus_ppres = pynini.union(
@@ -810,7 +810,7 @@ class InflectionFst:
     '''
     alphabet = pynini.union(
         self.__syms.characters,
-        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<^imp>", "<^zz>", "<^pp>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>", "<Fix#>", "<Low#>", "<Up#>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet)
+        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<DEL-S>", "<ge>", "<no-ge>", "<^imp>", "<^zz>", "<^pp>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>", "<Fix#>", "<Low#>", "<Up#>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet)
         ).project().closure()
 
     return pynini.concat(

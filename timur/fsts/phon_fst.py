@@ -19,17 +19,20 @@ class PhonFst:
     # store alphabet
     self.__syms = syms
 
+    self.__bound = pynini.string_map(["<FB>", "<DEL-S>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project().optimize()
+
     #
     # construct single rules
     self.__r0 = self.__construct_r0()
+    self.__r1 = self.__construct_r1()
+    self.__r1.draw("r1.dot", portrait=True)
     self.__r19 = self.__construct_r19()
     self.__r20 = self.__construct_r20()
-    self.__r20.draw("r20.dot")
     self.__r21 = self.__construct_r21()
 
     #
     # construct intermediate rules
-    self.__t1 = self.__r0
+    self.__t1 = pynini.compose(self.__r0, self.__r1).optimize()
     self.__t6 = pynini.compose(self.__r19, pynini.compose(self.__r20, self.__r21)).optimize()
 
     self.__x1 = self.__t1
@@ -98,8 +101,54 @@ class PhonFst:
 
     alphabet = pynini.union(
         self.__syms.characters,
-        pynini.string_map(["<e>", "<d>", "<CB>", "<FB>", "<UL>", "<DEL-S>", "<SS>", "<WB>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>", "<NoHy>", "<NoDef>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
+        pynini.string_map(["<CB>", "<FB>", "<UL>", "<DEL-S>", "<SS>", "<WB>", "<^UC>", "<^Ax>", "<e>", "<^pl>", "<^Gen>", "<^Del>", "<NoHy>", "<NoDef>", "<UL>", "<FB>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
         )
+
+    # r1a
+    tau = pynini.push(pynini.string_map([("a", "ä"), ("o", "ö"), ("u", "ü"), ("A", "Ä"), ("O", "Ö"), ("U", "Ü")], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet), push_labels=True)
+    lc = pynini.union(
+        self.__syms.consonants,
+        pynini.string_map(["<CB>", "<WB>", "<NoHy>", "<NoDef>", "<^UC>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
+        ).optimize()
+    r1a = pynini.cdrewrite(
+        tau,
+        lc,
+        pynini.concat(
+          alphabet.closure(),
+          pynini.acceptor("<UL>", token_type=self.__syms.alphabet)
+          ),
+        alphabet.closure()
+        )
+
+    # r1c
+    tau = pynini.transducer("a", "", input_token_type=self.__syms.alphabet)
+    r1c = pynini.cdrewrite(
+        tau,
+        pynini.string_map(["ä", "Ä"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
+        pynini.concat(
+          self.__syms.consonants_lower,
+          alphabet.closure(),
+          pynini.acceptor("<UL>", token_type=self.__syms.alphabet)
+        ),
+        alphabet.closure()
+        ).optimize()
+    r1c.draw("r1c.dot")
+
+    # r1d
+    r1d = pynini.cdrewrite(
+        pynini.transducer("<UL>", "<FB>", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+        "",
+        "",
+        alphabet.closure()
+        )
+
+    return pynini.compose(
+        r1a,
+        pynini.compose(
+          r1c,
+          r1d
+          )
+        ).optimize()
   
   def __construct_r19(self):
     '''
@@ -155,6 +204,7 @@ class PhonFst:
         pynini.string_map(["<NoHy>", "<NoDef>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
         )
 
+    self.__syms.to_upper.draw("to_upper.dot")
     # Construction in SFST involves negation (which is expensiv).
     # It looks like we can do better:
     return pynini.push(

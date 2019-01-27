@@ -29,11 +29,17 @@ class Symbols:
         if symbol.isupper():
           chars_upper.append(symbol)
           chars_to_upper.append((symbol, symbol))
-          chars_to_lower.append((symbol, symbol.lower()))
+          if alphabet.find(symbol.lower()) != -1:
+              chars_to_lower.append((symbol, symbol.lower()))
+          else:
+              chars_to_lower.append((symbol, symbol))
         elif symbol.islower():
           chars_lower.append(symbol)
           chars_to_lower.append((symbol, symbol))
-          chars_to_upper.append((symbol, symbol.lower()))
+          if alphabet.find(symbol.upper()) != -1:
+              chars_to_upper.append((symbol, symbol.upper()))
+          else:
+              chars_to_upper.append((symbol, symbol))
         else:
           chars_to_lower.append((symbol, symbol))
           chars_to_upper.append((symbol, symbol))
@@ -244,6 +250,13 @@ class Symbols:
     Union over single consonants
     '''
     return self.__consonants
+
+  @property
+  def consonants_lower(self):
+    '''
+    Union over single lowercase consonants
+    '''
+    return self.__consonants_lower
 
   @property
   def initial_features(self):

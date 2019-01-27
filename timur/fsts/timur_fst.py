@@ -174,6 +174,7 @@ class TimurFst:
         ).project().closure().optimize()
 
     base = (tmp + inflection.inflection) * (alphabet + inflection.inflection_filter) * deko_filter.infix_filter 
+    base.draw("base.dot", portrait=True)
     base = base * deko_filter.uplow
     base.draw("base2.dot", portrait=True)
 

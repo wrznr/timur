@@ -551,6 +551,13 @@ class InflectionFst:
           n_pl_0
           )
         )
+    n_es_e_ul = pynini.union(
+        n_sg_es,
+        pynini.concat(
+          pynini.transducer("", "<UL> e", output_token_type=syms.alphabet),
+          n_pl_0
+          )
+        )
     n_es_en = pynini.union(
         n_sg_es,
         pynini.concat(
@@ -570,6 +577,12 @@ class InflectionFst:
     self.__nmasc_es_e = pynini.concat(
         pynini.transducer("<+NN> <Masc>", "", input_token_type=syms.alphabet),
         n_es_e
+        ).optimize()
+
+    # NMasc_es_e: Arzt-(e)s/Ärzte
+    self.__nmasc_es_e_ul = pynini.concat(
+        pynini.transducer("<+NN> <Masc>", "", input_token_type=syms.alphabet),
+        n_es_e_ul
         ).optimize()
 
     # NMasc_es_en: Fleck-(e)s/Flecken
@@ -791,6 +804,10 @@ class InflectionFst:
           self.__nmasc_es_e
           ),
         pynini.concat(
+          pynini.transducer("", "<NMasc_es_$e>", output_token_type=self.__syms.alphabet),
+          self.__nmasc_es_e_ul
+          ),
+        pynini.concat(
           pynini.transducer("", "<NMasc_es_en>", output_token_type=self.__syms.alphabet),
           self.__nmasc_es_en
           ),
@@ -830,6 +847,10 @@ class InflectionFst:
           pynini.concat(
             pynini.transducer("<NMasc_es_e>", "", input_token_type=self.__syms.alphabet),
             pynini.transducer("<NMasc_es_e>", "", input_token_type=self.__syms.alphabet)
+            ),
+          pynini.concat(
+            pynini.transducer("<NMasc_es_$e>", "", input_token_type=self.__syms.alphabet),
+            pynini.transducer("<NMasc_es_$e>", "", input_token_type=self.__syms.alphabet)
             ),
           pynini.concat(
             pynini.transducer("<NMasc_es_en>", "", input_token_type=self.__syms.alphabet),

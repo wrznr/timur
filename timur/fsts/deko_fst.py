@@ -599,12 +599,12 @@ class DekoFst:
     # insert "zu" after verbal prefixes if followed by infinitive marker
     return pynini.union(
         c2,
-        pynini.concat(
-          pynini.acceptor("<Base_Stems>", token_type=self.__syms.alphabet),
-          alphabet.closure(),
-          pynini.transducer("<^zz>", "", input_token_type=self.__syms.alphabet),
-          alphabet.closure()
-          ),
+        #pynini.concat(
+        #  pynini.acceptor("<Base_Stems>", token_type=self.__syms.alphabet),
+        #  alphabet.closure(),
+        #  pynini.transducer("<^zz>", "", input_token_type=self.__syms.alphabet),
+        #  alphabet.closure()
+        #  ),
         pynini.concat(
           c2,
           pynini.acceptor("<Pref_Stems>", token_type=self.__syms.alphabet),

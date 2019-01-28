@@ -479,6 +479,26 @@ class InflectionFst:
           )
         ).optimize()
 
+    # Opa-s, Klima-s
+    n_sg_s = pynini.union(
+        pynini.concat(
+          pynini.transducer("<Nom> <Sg>", "<FB>", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+          n
+          ),
+        pynini.concat(
+          pynini.transducer("<Gen> <Sg>", "<FB> s", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+          n
+          ),
+        pynini.concat(
+          pynini.transducer("<Dat> <Sg>", "<FB>", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+          n
+          ),
+        pynini.concat(
+          pynini.transducer("<Akk> <Sg>", "<FB>", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+          n
+          )
+        ).optimize()
+
     # Haus-es, Geist-(e)s
     n_sg_es = pynini.union(
         pynini.concat(
@@ -596,6 +616,12 @@ class InflectionFst:
         pynini.transducer("<+NN> <Fem>", "", input_token_type=syms.alphabet),
         n_0_en
         ).optimize()
+
+    # NNeut/Sg_s: Abitur-s/--
+    self.__nneut_sg_s = pynini.concat(
+        pynini.transducer("<+NN> <Neut>", "", input_token_type=syms.alphabet),
+        n_sg_s
+        ).optimize()
     
     #
     # verbs
@@ -688,9 +714,12 @@ class InflectionFst:
 
     # SMOR: investigate Lernen<+NN>
     v_inf = pynini.union(
-        pynini.transducer("<+V> <Inf>", "", input_token_type=syms.alphabet),
-        pynini.transducer("<+V> <Inf> <zu>", "<^zz>", input_token_type=syms.alphabet, output_token_type=syms.alphabet)
-        ) + v
+        pynini.union(
+          pynini.transducer("<+V> <Inf>", "", input_token_type=syms.alphabet),
+          pynini.transducer("<+V> <Inf> <zu>", "<^zz>", input_token_type=syms.alphabet, output_token_type=syms.alphabet)
+          ) + v,
+        pynini.transducer("<V> <CONV>", "", input_token_type=syms.alphabet) + self.__nneut_sg_s,
+        )
 
     # SMOR: investigate lernendes<+ADJ>
     v_ppres = pynini.union(
@@ -816,6 +845,10 @@ class InflectionFst:
           self.__nfem_deriv
           ),
         pynini.concat(
+          pynini.transducer("", "<NNeut/Sg_s>", output_token_type=self.__syms.alphabet),
+          self.__nneut_sg_s
+          ),
+        pynini.concat(
           pynini.transducer("", "<VVReg>", output_token_type=self.__syms.alphabet),
           self.__vv_reg
           )
@@ -859,6 +892,10 @@ class InflectionFst:
           pynini.concat(
             pynini.transducer("<NFem-Deriv>", "", input_token_type=self.__syms.alphabet),
             pynini.transducer("<NFem-Deriv>", "", input_token_type=self.__syms.alphabet)
+            ),
+          pynini.concat(
+            pynini.transducer("<NNeut/Sg_s>", "", input_token_type=self.__syms.alphabet),
+            pynini.transducer("<NNeut/Sg_s>", "", input_token_type=self.__syms.alphabet)
             ),
           pynini.concat(
             pynini.transducer("<VVReg>", "", input_token_type=self.__syms.alphabet),

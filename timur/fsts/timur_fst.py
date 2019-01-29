@@ -85,6 +85,7 @@ class TimurFst:
     #
     # load the symbols and the lexicon
     lex = helpers.load_lexicon(lexicon_stream, self.__syms.alphabet)
+    lex.draw("lex.dot", portrait=True)
 
     #
     # smor.fst
@@ -98,6 +99,7 @@ class TimurFst:
 
     # delete certain symbols on the upper and lower level
     lex = mappings.map1 * lex * mappings.map2
+    lex.draw("lex.dot", portrait=True)
 
     #
     # num.fst

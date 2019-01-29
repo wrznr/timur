@@ -224,6 +224,7 @@ class MapFst:
 
     map_helper3 = pynini.union(
       syms.characters,
+      pynini.string_map(["<Ge-Nom>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project(),
       syms.initial_features,
       syms.stem_types,
       syms.categories,

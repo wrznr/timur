@@ -29,6 +29,7 @@ class Sublexica:
         syms.stem_types,
         syms.stem_type_features,
         syms.origin_features,
+        syms.circumfix_features,
         syms.inflection_classes,
         syms.geo_inflection_classes
         ).closure().optimize()

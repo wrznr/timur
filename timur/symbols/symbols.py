@@ -75,6 +75,8 @@ class Symbols:
 
     self.__origin_features = pynini.string_map(["<nativ>", "<frei>", "<gebunden>", "<kurz>", "<lang>", "<fremd>", "<klassisch>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
+    self.__circumfix_features = pynini.string_map(["<Ge-Nom>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
     self.__ns_features = pynini.string_map(["<NSNeut_es_e>",
       "<NSFem_0_n>", "<NSFem_0_en>",
       "<NSMasc_es_e>", "<NSMasc_es_$e>", "<NSMasc-s/$sse>"],
@@ -327,6 +329,13 @@ class Symbols:
     Union over feature corresponding to a word's origin
     '''
     return self.__origin_features
+
+  @property
+  def circumfix_features(self):
+    '''
+    Union over feature corresponding to a circumfix
+    '''
+    return self.__circumfix_features
 
   @property
   def ns_features(self):

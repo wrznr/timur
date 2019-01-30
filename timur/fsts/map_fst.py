@@ -69,7 +69,7 @@ class MapFst:
       syms.characters,
       pynini.acceptor("<FB>", token_type=syms.alphabet),
       pynini.acceptor("<SS>", token_type=syms.alphabet),
-      pynini.acceptor("<Ge-Nom>", token_type=syms.alphabet),
+      pynini.transducer("e", "<Ge-Nom>", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
       pynini.transducer("n", "<n>", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
       pynini.transducer("e", "<e>", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
       pynini.transducer("d", "<d>", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
@@ -224,6 +224,7 @@ class MapFst:
 
     map_helper3 = pynini.union(
       syms.characters,
+      syms.circumfix_features,
       syms.initial_features,
       syms.stem_types,
       syms.categories,

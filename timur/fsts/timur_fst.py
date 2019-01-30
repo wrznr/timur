@@ -85,6 +85,7 @@ class TimurFst:
     #
     # load the symbols and the lexicon
     lex = helpers.load_lexicon(lexicon_stream, self.__syms.alphabet)
+    lex.draw("lex.dot", portrait=True)
 
     #
     # smor.fst
@@ -98,6 +99,7 @@ class TimurFst:
 
     # delete certain symbols on the upper and lower level
     lex = mappings.map1 * lex * mappings.map2
+    lex.draw("lex.dot", portrait=True)
 
     #
     # num.fst
@@ -148,7 +150,8 @@ class TimurFst:
         sublexica.suff_deriv_suff_stems.closure()
         )
 
-    bdk_stems = sublexica.bdk_stems | defaults.compound_stems_nn
+    bdk_stems = sublexica.bdk_stems | defaults.compound_stems_nn | defaults.ge_nom_stems_v
+    bdk_stems.draw("bdk_stems.dot", portrait=True)
     intermediate = pynini.concat(bdk_stems, suffs1).optimize()
     intermediate.draw("intermediate.dot", portrait=True)
     s0 = intermediate * deko_filter.suff_filter
@@ -169,7 +172,7 @@ class TimurFst:
     # ANY TODO: Move to symbols!
     alphabet = pynini.union(
         self.__syms.characters,
-        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<no-ge>", "<CB>", "<NoHy>", "<VADJ>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
+        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<Ge>", "<no-ge>", "<CB>", "<NoHy>", "<VADJ>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
         self.__syms.stem_types,
         ).project().closure().optimize()
 

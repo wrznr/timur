@@ -589,7 +589,14 @@ class InflectionFst:
         n_sg_0,
         pynini.concat(
           pynini.transducer("", "<FB> e n", output_token_type=syms.alphabet),
-          n_pl_0
+          n_pl_x
+          )
+        )
+    n_0_n = pynini.union(
+        n_sg_0,
+        pynini.concat(
+          pynini.transducer("", "<FB> n", output_token_type=syms.alphabet),
+          n_pl_x
           )
         )
 
@@ -615,6 +622,12 @@ class InflectionFst:
     self.__nfem_deriv = pynini.concat(
         pynini.transducer("<+NN> <Fem>", "", input_token_type=syms.alphabet),
         n_0_en
+        ).optimize()
+
+    # NFem_0_n: Kammer/Kammern
+    self.__nfem_0_n = pynini.concat(
+        pynini.transducer("<+NN> <Fem>", "", input_token_type=syms.alphabet),
+        n_0_n
         ).optimize()
 
     # NNeut/Sg_s: Abitur-s/--
@@ -845,6 +858,10 @@ class InflectionFst:
           self.__nfem_deriv
           ),
         pynini.concat(
+          pynini.transducer("", "<NFem_0_n>", output_token_type=self.__syms.alphabet),
+          self.__nfem_0_n
+          ),
+        pynini.concat(
           pynini.transducer("", "<NNeut/Sg_s>", output_token_type=self.__syms.alphabet),
           self.__nneut_sg_s
           ),
@@ -892,6 +909,10 @@ class InflectionFst:
           pynini.concat(
             pynini.transducer("<NFem-Deriv>", "", input_token_type=self.__syms.alphabet),
             pynini.transducer("<NFem-Deriv>", "", input_token_type=self.__syms.alphabet)
+            ),
+          pynini.concat(
+            pynini.transducer("<NFem_0_n>", "", input_token_type=self.__syms.alphabet),
+            pynini.transducer("<NFem_0_n>", "", input_token_type=self.__syms.alphabet)
             ),
           pynini.concat(
             pynini.transducer("<NNeut/Sg_s>", "", input_token_type=self.__syms.alphabet),

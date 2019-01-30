@@ -38,14 +38,17 @@ class Analysis:
     lower = path[1].split(" ")
 
     for i,sym in enumerate(lower):
-      if sym != "<epsilon>":
+      if sym == upper[i]:
+        a.result += sym
         a.query += sym
-      if upper[i] != "<epsilon>":
-        a.result += upper[i]
+      else:
+        a.result += "%s:%s" % (upper[i],sym)
+        if sym != "<epsilon>":
+          a.query += sym
     return a
 
   def to_json(self):
     '''
     Serialize analysis as JSON
     '''
-    return json.dumps(self.__dict__)
+    return json.dumps(self.__dict__, ensure_ascii=False)

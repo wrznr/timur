@@ -606,7 +606,7 @@ class InflectionFst:
         n_es_e
         ).optimize()
 
-    # NMasc_es_e: Arzt-(e)s/Ärzte
+    # NMasc_es_e$: Arzt-(e)s/Ärzte
     self.__nmasc_es_e_ul = pynini.concat(
         pynini.transducer("<+NN> <Masc>", "", input_token_type=syms.alphabet),
         n_es_e_ul

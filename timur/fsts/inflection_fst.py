@@ -359,6 +359,26 @@ class InflectionFst:
           ),
         ).optimize()
 
+    # superlative with e
+    adj_sup_e = pynini.union(
+        pynini.concat(
+          pynini.transducer("<+ADJ> <Sup> <Pred>", "e s t e n", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+          adj
+          ),
+        pynini.concat(
+          pynini.transducer("<+ADJ> <Sup> <Pred>", "e s t", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+          adj
+          ),
+        pynini.concat(
+          pynini.transducer("<+ADJ> <Sup> <Adv>", "e s t e n", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+          adj
+          ),
+        pynini.concat(
+          pynini.transducer("<+ADJ> <Sup>", "e s t", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+          adj_flex_suff
+          ),
+        ).optimize()
+
     # comparative
     adj_comp = pynini.union(
         pynini.concat(
@@ -390,6 +410,21 @@ class InflectionFst:
         pynini.concat(
           pynini.transducer("", "<FB>", output_token_type=syms.alphabet),
           adj_sup
+          )
+        ).optimize()
+
+    self.__adj_plus_e = pynini.union(
+        pynini.concat(
+          pynini.transducer("", "<FB>", output_token_type=syms.alphabet),
+          adj_pos
+          ),
+        pynini.concat(
+          pynini.transducer("", "<FB>", output_token_type=syms.alphabet),
+          adj_comp
+          ),
+        pynini.concat(
+          pynini.transducer("", "<FB>", output_token_type=syms.alphabet),
+          adj_sup_e
           )
         ).optimize()
 
@@ -599,6 +634,10 @@ class InflectionFst:
           n_pl_x
           )
         )
+    n_s_x = pynini.union(
+        n_sg_s,
+        n_pl_x
+        )
 
     # NMasc_es_e: Tag-(e)s/Tage
     self.__nmasc_es_e = pynini.concat(
@@ -628,6 +667,12 @@ class InflectionFst:
     self.__nfem_0_n = pynini.concat(
         pynini.transducer("<+NN> <Fem>", "", input_token_type=syms.alphabet),
         n_0_n
+        ).optimize()
+
+    # NNeut-Dimin: Mäuschen-s/Mäuschen
+    self.__nneut_dimin = pynini.concat(
+        pynini.transducer("<+NN> <Neut>", "", input_token_type=syms.alphabet),
+        n_s_x
         ).optimize()
 
     # NNeut/Sg_s: Abitur-s/--
@@ -842,6 +887,10 @@ class InflectionFst:
           self.__adj_plus
           ),
         pynini.concat(
+          pynini.transducer("", "<Adj+e>", output_token_type=self.__syms.alphabet),
+          self.__adj_plus_e
+          ),
+        pynini.concat(
           pynini.transducer("", "<NMasc_es_e>", output_token_type=self.__syms.alphabet),
           self.__nmasc_es_e
           ),
@@ -860,6 +909,10 @@ class InflectionFst:
         pynini.concat(
           pynini.transducer("", "<NFem_0_n>", output_token_type=self.__syms.alphabet),
           self.__nfem_0_n
+          ),
+        pynini.concat(
+          pynini.transducer("", "<NNeut-Dimin>", output_token_type=self.__syms.alphabet),
+          self.__nneut_dimin
           ),
         pynini.concat(
           pynini.transducer("", "<NNeut/Sg_s>", output_token_type=self.__syms.alphabet),
@@ -895,6 +948,10 @@ class InflectionFst:
             pynini.transducer("<Adj+>", "", input_token_type=self.__syms.alphabet)
             ),
           pynini.concat(
+            pynini.transducer("<Adj+e>", "", input_token_type=self.__syms.alphabet),
+            pynini.transducer("<Adj+e>", "", input_token_type=self.__syms.alphabet)
+            ),
+          pynini.concat(
             pynini.transducer("<NMasc_es_e>", "", input_token_type=self.__syms.alphabet),
             pynini.transducer("<NMasc_es_e>", "", input_token_type=self.__syms.alphabet)
             ),
@@ -913,6 +970,10 @@ class InflectionFst:
           pynini.concat(
             pynini.transducer("<NFem_0_n>", "", input_token_type=self.__syms.alphabet),
             pynini.transducer("<NFem_0_n>", "", input_token_type=self.__syms.alphabet)
+            ),
+          pynini.concat(
+            pynini.transducer("<NNeut-Dimin>", "", input_token_type=self.__syms.alphabet),
+            pynini.transducer("<NNeut-Dimin>", "", input_token_type=self.__syms.alphabet)
             ),
           pynini.concat(
             pynini.transducer("<NNeut/Sg_s>", "", input_token_type=self.__syms.alphabet),

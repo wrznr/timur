@@ -11,9 +11,11 @@ def load_lexicon(source, symbol_table):
   lex.set_input_symbols(symbol_table)
   lex.set_output_symbols(symbol_table)
   # longest match, prefer complex over simple symbols
-  tokenizer = re.compile("<[^>]*>|.", re.U)
+  tokenizer = re.compile(b"<[^>]*>|.")
   for line in source:
-    lex = pynini.union(lex, pynini.acceptor(" ".join(tokenizer.findall(line.strip())), token_type=symbol_table))
+    line = line.strip()
+    if line:
+      lex = pynini.union(lex, pynini.acceptor((b" ".join(tokenizer.findall(line))).decode("utf-8"), token_type=symbol_table))
   return lex
 
 class Analysis:

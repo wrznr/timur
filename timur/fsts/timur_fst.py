@@ -4,7 +4,7 @@ from __future__ import absolute_import
 import pynini
 import pickle
 
-from pkg_resources import resource_filename, resource_stream, Requirement
+from pkg_resources import resource_filename, Requirement
 
 from timur import symbols
 from timur import helpers
@@ -85,8 +85,9 @@ class TimurFst:
     #
     # load the lexicon and the productive suffixes
     lex = helpers.load_lexicon(lexicon_stream, self.__syms.alphabet)
+    lex.draw("lex.dot", portrait=True)
 
-    suff_stems = helpers.load_lexicon(resource_stream(Requirement.parse("timur"), 'timur/data/suff_stems.txt'), self.__syms.alphabet)
+    suff_stems = helpers.load_lexicon(open(resource_filename(Requirement.parse("timur"), 'timur/data/suff_stems.txt')), self.__syms.alphabet)
     suff_stems.draw("suff_stems.dot", portrait=True)
 
     lex = lex | suff_stems
@@ -103,7 +104,6 @@ class TimurFst:
 
     # delete certain symbols on the upper and lower level
     lex = mappings.map1 * lex * mappings.map2
-    lex.draw("lex.dot", portrait=True)
 
     #
     # num.fst

@@ -66,7 +66,7 @@ def lookup(strings, fst):
             click.echo(analysis.to_json())
 
 @cli.command(name="build")
-@click.argument('lexicon', type=click.File('rb'))
+@click.argument('lexicon', type=click.File('r'))
 @click.option('--fst', '-f')
 def build(lexicon, fst):
 

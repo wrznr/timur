@@ -95,7 +95,6 @@ class MapFst:
           pynini.union(
             pynini.union(
               syms.characters,
-              "<SUFF>",
               pynini.acceptor("<SUFF>", token_type=syms.alphabet),
               pynini.acceptor("<CONV>", token_type=syms.alphabet)
               ),
@@ -121,61 +120,38 @@ class MapFst:
             ),
           pynini.concat(
             pynini.transducer("", "<Pref_Stems>", output_token_type=syms.alphabet),
-            pynini.concat(map_helper1, del_cat_ext)
+            map_helper1,
+            del_cat_ext
             ),
           pynini.concat(
             pynini.transducer("", "<Suff_Stems>", output_token_type=syms.alphabet),
-            pynini.concat(
-              map_helper1,
-              pynini.concat(
-                del_cat_ext,
-                pynini.concat(
-                  map_helper1,
-                  pynini.concat(
-                    syms.categories,
-                    pynini.transducer("", "<base>", output_token_type=syms.alphabet)
-                    )
-                  )
-                )
-              )
+            map_helper1,
+            del_cat_ext,
+            map_helper1,
+            syms.categories,
+            pynini.transducer("", "<base>", output_token_type=syms.alphabet)
             ),
           pynini.concat(
             pynini.transducer("", "<Suff_Stems>", output_token_type=syms.alphabet),
+            map_helper1,
+            del_cat_ext,
             pynini.concat(
               map_helper1,
-              pynini.concat(
-                del_cat_ext,
-                pynini.concat(
-                  map_helper1,
-                  pynini.concat(
-                    del_cat_ext,
-                    pynini.concat(
-                      pynini.acceptor("<SUFF>", token_type=syms.alphabet),
-                      pynini.transducer("", "<base>", output_token_type=syms.alphabet)
-                      )
-                    )
-                  )
-                )
-              )
+              del_cat_ext,
+              pynini.acceptor("<SUFF>", token_type=syms.alphabet)
+              ).closure(1),
+              pynini.transducer("", "<base>", output_token_type=syms.alphabet)
             ),
           pynini.concat(
             pynini.transducer("", "<Suff_Stems>", output_token_type=syms.alphabet),
+            map_helper1,
+            del_cat_ext,
             pynini.concat(
               map_helper1,
-              pynini.concat(
-                del_cat_ext,
-                pynini.concat(
-                  map_helper1,
-                  pynini.concat(
-                    syms.categories,
-                    pynini.concat(
-                      pynini.acceptor("<SUFF>", token_type=syms.alphabet),
-                      pynini.transducer("", pynini.string_map(["<deriv>", "<kompos>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project())
-                      )
-                    )
-                  )
-                )
-              )
+              syms.categories,
+              pynini.acceptor("<SUFF>", token_type=syms.alphabet)
+              ).closure(1),
+            pynini.transducer("", pynini.string_map(["<deriv>", "<kompos>"], input_token_type=syms.alphabet, output_token_type=syms.alphabet).project())
             )
           ),
         map_helper1,

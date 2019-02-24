@@ -1,5 +1,8 @@
 <Suff_Stems><simplex><nativ><deriv><V><Ge-Nom><NN><SUFF><base><nativ><NNeut/Sg_s>
 
+<Suff_Stems><prefderiv,simplex,suffderiv><frei,nativ><deriv><V>ung<>:s<NN><SUFF><kompos><nativ>
+<Suff_Stems><prefderiv,simplex,suffderiv><frei,nativ><deriv><V>ung<NN><SUFF><base><nativ><NFem-Deriv>
+<Suff_Stems><prefderiv,simplex,suffderiv><frei,nativ><deriv><V>ung<NN><SUFF><kompos><nativ>
 
 <Suff_Stems><prefderiv,simplex,suffderiv><frei,fremd,nativ><deriv><V>bar<ADJ><SUFF><base><nativ><Adj+>
 <Suff_Stems><prefderiv,simplex,suffderiv><frei,fremd,nativ><deriv><V>bar<ADJ><SUFF><deriv><nativ>

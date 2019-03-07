@@ -137,7 +137,7 @@ class DekoFst:
     # C2
     intermediate_stuff = pynini.union(
       self.__syms.characters,
-      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<Suff_Stems>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
+      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<Suff_Stems>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
       ).closure()
 
     # C3

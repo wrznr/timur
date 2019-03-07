@@ -31,7 +31,8 @@ class Sublexica:
         syms.origin_features,
         syms.circumfix_features,
         syms.inflection_classes,
-        syms.geo_inflection_classes
+        syms.geo_inflection_classes,
+        pynini.acceptor("<ge>", token_type=syms.alphabet) # for word-internal <ge> (ausgewertet)
         ).closure().optimize()
 
     #

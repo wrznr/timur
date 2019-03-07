@@ -699,13 +699,13 @@ class InflectionFst:
 
     # (du) lernst
     v_pres_reg_2 = pynini.concat(
-        pynini.transducer("<+V> <2> <Sg> <Pres> <Ind>", "<FB> s t", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+        pynini.transducer("<+V> <2> <Sg> <Pres> <Ind>", "<DEL-S> s t", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
         v_plus_es
         ).optimize()
 
     # (er/sie/es) lernt
     v_pres_reg_3 = pynini.concat(
-        pynini.transducer("<+V> <3> <Sg> <Pres> <Ind>", "<FB> t", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
+        pynini.transducer("<+V> <3> <Sg> <Pres> <Ind>", "<DEL-S> t", input_token_type=syms.alphabet, output_token_type=syms.alphabet),
         v_plus_es
         ).optimize()
 

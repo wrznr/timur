@@ -26,6 +26,7 @@ class PhonFst:
     self.__r0 = self.__construct_r0()
     self.__r1 = self.__construct_r1()
     self.__r14 = self.__construct_r14()
+    self.__r14.draw("r14.dot", portrait=True)
     self.__r19 = self.__construct_r19()
     self.__r20 = self.__construct_r20()
     self.__r21 = self.__construct_r21()

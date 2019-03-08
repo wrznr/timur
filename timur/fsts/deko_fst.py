@@ -59,7 +59,10 @@ class DekoFst:
     # prefix origin filter
     self.__prefix_origin_filter = self.__construct_prefix_origin_filter()
 
-    self.__pref_filter = pynini.concat(pynini.union(self.__del_ge, self.__prefix_origin_filter), self.__syms.inflection_classes.closure(0, 1)).optimize()
+    # repeatable prefixation
+    self.__rep_pref = self.__construct_rep_pref()
+
+    self.__pref_filter = pynini.concat(pynini.union(self.__del_ge, self.__prefix_origin_filter, self.__rep_pref), self.__syms.inflection_classes.closure(0, 1)).optimize()
 
     #
     # compound filter
@@ -343,6 +346,16 @@ class DekoFst:
         self.__syms.categories,
         ).closure().optimize()
 
+  def __construct_rep_pref(self):
+    '''
+    Replace the marker of manually prefixed stems
+    '''
+    return pynini.cdrewrite(
+        pynini.transducer("<prefnativ>", "<nativ>"),
+        "",
+        "",
+        self.__prefix_filter_helper
+        ).optimize()
 
   def __construct_del_ge(self):
     '''

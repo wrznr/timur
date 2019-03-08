@@ -570,9 +570,9 @@ class DekoFst:
           ),
         pynini.concat(
           c2,
-          pynini.transducer("<Ge>", "", input_token_type=self.__syms.alphabet),
           pynini.acceptor("<Deriv_Stems>", token_type=self.__syms.alphabet).closure(0, 1),
-          pynini.transducer("", "g e", output_token_type=self.__syms.alphabet),
+          alphabet.closure(),
+          pynini.transducer("<Ge>", "", input_token_type=self.__syms.alphabet),
           alphabet.closure(),
           pynini.transducer("<Suff_Stems> <Ge-Nom>", "e", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
           alphabet.closure()

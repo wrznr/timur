@@ -73,7 +73,7 @@ class Symbols:
 
     self.__complexity_entry_features = pynini.string_map(["<Simplex>", "<Komplex>", "<Komplex_abstrakt>", "<Komplex_semi>", "<Nominalisierung>", "<Kurzwort>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
-    self.__origin_features = pynini.string_map(["<nativ>", "<frei>", "<gebunden>", "<kurz>", "<lang>", "<fremd>", "<klassisch>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+    self.__origin_features = pynini.string_map(["<nativ>", "<frei>", "<gebunden>", "<kurz>", "<lang>", "<fremd>", "<klassisch>", "<prefnativ>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
     self.__circumfix_features = pynini.string_map(["<Ge-Nom>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 

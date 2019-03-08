@@ -25,7 +25,8 @@ class PhonFst:
     # construct single rules
     self.__r0 = self.__construct_r0()
     self.__r1 = self.__construct_r1()
-    self.__r1.draw("r1.dot", portrait=True)
+    self.__r14 = self.__construct_r14()
+    self.__r14.draw("r14.dot", portrait=True)
     self.__r19 = self.__construct_r19()
     self.__r20 = self.__construct_r20()
     self.__r21 = self.__construct_r21()
@@ -33,10 +34,11 @@ class PhonFst:
     #
     # construct intermediate rules
     self.__t1 = pynini.compose(self.__r0, self.__r1).optimize()
+    self.__t4 = self.__r14
     self.__t6 = pynini.compose(self.__r19, pynini.compose(self.__r20, self.__r21)).optimize()
 
     self.__x1 = self.__t1
-    self.__x2 = self.__t6
+    self.__x2 = pynini.compose(self.__t4, self.__t6).optimize()
 
     #
     # result transducer
@@ -132,7 +134,6 @@ class PhonFst:
         ),
         alphabet.closure()
         ).optimize()
-    r1c.draw("r1c.dot")
 
     # r1d
     r1d = pynini.cdrewrite(
@@ -148,6 +149,50 @@ class PhonFst:
           r1c,
           r1d
           )
+        ).optimize()
+  
+  def __construct_r13(self):
+    '''
+    e-epenthesis 1
+    '''
+
+    alphabet = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<CB>", "<FB>", "<DEL-S>", "<SS>", "<WB>",
+            "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>", "<NoHy>", "<NoDef>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
+        )
+
+    return pynini.union(
+        alphabet,
+        pynini.transducer(
+          pynini.string_map(["<DEL-S>", "<SS>", "<FB>", "<^Gen>", "<^Del>", "<^pl>", "<^Ax>", "<WB>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
+          ""
+          )
+        ).closure().optimize()
+  
+  def __construct_r14(self):
+    '''
+    e-epenthesis 2
+    '''
+
+    alphabet = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<CB>", "<FB>", "<DEL-S>", "<SS>", "<WB>",
+            "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>", "<NoHy>", "<NoDef>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
+        )
+
+    tau = pynini.transducer("<DEL-S>", "e", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet)
+    return pynini.cdrewrite(
+        tau,
+        pynini.union(
+          pynini.concat(
+            pynini.string_map(["d", "t"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
+            pynini.acceptor("m", token_type=self.__syms.alphabet).closure(0, 1)
+            ),
+          pynini.acceptor("t w", token_type=self.__syms.alphabet)
+          ),
+        "",
+        alphabet.closure()
         ).optimize()
   
   def __construct_r19(self):

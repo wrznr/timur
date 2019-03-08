@@ -6,7 +6,6 @@
 
 <Suff_Stems><prefderiv,simplex,suffderiv><frei,fremd,nativ><deriv><V>bar<ADJ><SUFF><base><nativ><Adj+>
 <Suff_Stems><prefderiv,simplex,suffderiv><frei,fremd,nativ><deriv><V>bar<ADJ><SUFF><deriv><nativ>
-<Suff_Stems><prefderiv,simplex,suffderiv><frei,fremd,nativ><deriv><V>bar<ADJ><SUFF><kompos><nativ>
 
 <Suff_Stems><prefderiv,simplex,suffderiv><frei,fremd,nativ><kompos><NN>los<ADJ><SUFF><base><nativ><Adj+e>
 

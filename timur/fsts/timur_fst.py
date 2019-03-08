@@ -87,10 +87,13 @@ class TimurFst:
     lex = helpers.load_lexicon(lexicon_stream, self.__syms.alphabet)
     lex.draw("lex.dot", portrait=True)
 
+    pref_stems = helpers.load_lexicon(open(resource_filename(Requirement.parse("timur"), 'timur/data/pref_stems.txt')), self.__syms.alphabet)
+    pref_stems.draw("pref_stems.dot", portrait=True)
+
     suff_stems = helpers.load_lexicon(open(resource_filename(Requirement.parse("timur"), 'timur/data/suff_stems.txt')), self.__syms.alphabet)
     suff_stems.draw("suff_stems.dot", portrait=True)
 
-    lex = lex | suff_stems
+    lex = lex | pref_stems | suff_stems
 
     #
     # smor.fst
@@ -104,6 +107,7 @@ class TimurFst:
 
     # delete certain symbols on the upper and lower level
     lex = mappings.map1 * lex * mappings.map2
+    lex.draw("lex_map.dot", portrait=True)
 
     #
     # num.fst
@@ -158,11 +162,12 @@ class TimurFst:
     bdk_stems.draw("bdk_stems.dot", portrait=True)
     intermediate = pynini.concat(bdk_stems, suffs1).optimize()
     intermediate.draw("intermediate.dot", portrait=True)
+    deko_filter.suff_filter.draw("suff_filter.dot", portrait=True)
     s0 = intermediate * deko_filter.suff_filter
     s0.draw("s0.dot", portrait=True)
-    p1 = sublexica.pref_stems + s0 * deko_filter.pref_filter
+    p1 = (sublexica.pref_stems + s0) * deko_filter.pref_filter
     p1.draw("p1.dot", portrait=True)
-    s1 = p1 + suffs2 * deko_filter.suff_filter
+    s1 = (p1 + suffs2) * deko_filter.suff_filter
     s1.draw("s1.dot", portrait=True)
     tmp = s0 | s1
     tmp = tmp.closure(1) * deko_filter.compound_filter

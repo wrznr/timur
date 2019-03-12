@@ -1,6 +1,6 @@
 # timur: Finite-state morphology for German
 
-This package started as a migration of a set of finite-state grammars for the morphological analysis of German words delivered with [`SFST`](http://www.cis.uni-muenchen.de/~schmid/tools/SFST/), a finite-state transducer (FST) toolkit by [Helmut Schmid](http://www.cis.uni-muenchen.de/~schmid/), to [`Pynini`](http://www.opengrm.org/twiki/bin/view/GRM/Pynini), another FST toolkit. The latter has the advantage that it is implemented as a python library allowing for seamless interaction with tons of other useful python packages. By now a number of morphological operations have been added and some analysis strategies adjusted in comparison to the original rule set.
+This package started as a migration of a set of finite-state grammars for the morphological analysis of German words delivered with [`SFST`](http://www.cis.uni-muenchen.de/~schmid/tools/SFST/), a finite-state transducer (FST) toolkit by [Helmut Schmid](http://www.cis.uni-muenchen.de/~schmid/), to [`Pynini`](http://www.opengrm.org/twiki/bin/view/GRM/Pynini), another FST toolkit. The latter has the advantage that it is implemented as a python library allowing for seamless interaction with tons of other useful python packages. By now, a number of morphological operations have been added and some analysis strategies adjusted in comparison to the original rule set.
 
 ## Installation
 

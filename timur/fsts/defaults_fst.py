@@ -54,20 +54,75 @@ class DefaultsFst:
     '''
     Stems for ge nominalization of verbs ("Gejammer")
     '''
+    alphabet = pynini.union(
+        self.__syms.characters,
+        self.__syms.categories,
+        pynini.string_map(["<CONV>", "<SUFF>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
+    )
+
+    # extract infinitives
+    infinitives = pynini.compose(
+        pynini.concat(
+          pynini.concat(
+              self.__syms.characters.closure(1),
+              pynini.acceptor("<PREF>", token_type=self.__syms.alphabet)
+            ).closure(),
+          alphabet.closure(1),
+          pynini.transducer(
+            "",
+            "<+V> <Inf>", output_token_type=self.__syms.alphabet)
+          ),
+        tmp
+        ).optimize()
+
+    insert_ge = pynini.concat(
+        pynini.concat(
+          self.__syms.characters.closure(1),
+          pynini.acceptor("<PREF>", token_type=self.__syms.alphabet)
+          ).closure(),
+        pynini.transducer("g e <PREF> <Ge>", "", input_token_type=self.__syms.alphabet),
+        alphabet.closure(1)
+      ).optimize()
+    
+    inserted_ge = pynini.compose(
+        pynini.compose(insert_ge, infinitives).project(),
+        pynini.union(
+          self.__syms.to_lower,
+          self.__syms.categories,
+          self.__syms.prefix_suffix_marker,
+          pynini.acceptor("<Ge>", token_type=self.__syms.alphabet)
+          ).closure()
+        ).optimize()
+
     return pynini.concat(
-        pynini.transducer("g e <PREF>", "<Ge> <Deriv_Stems>", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+        pynini.transducer("", "<Deriv_Stems>", output_token_type=self.__syms.alphabet),
         pynini.compose(
           pynini.compose(
-            pynini.concat(
-              self.__syms.characters.closure(1),
-              pynini.transducer(
-                "",
-                "<+V> <Inf>", output_token_type=self.__syms.alphabet)
+            pynini.compose(
+              pynini.union(
+                alphabet,
+                pynini.acceptor("<PREF>", token_type=self.__syms.alphabet),
+                pynini.transducer("", "<Ge>", output_token_type=self.__syms.alphabet)
+                ).closure(),
+              inserted_ge
               ),
-            tmp
+            pynini.union(
+              self.__syms.characters,
+              pynini.acceptor("<Ge>", token_type=self.__syms.alphabet),
+              pynini.transducer(
+                pynini.union(
+                  self.__syms.categories,
+                  self.__syms.prefix_suffix_marker
+                  ),
+                ""
+                )
+              ).closure()
             ),
           pynini.concat(
-            self.__syms.characters.closure(1),
+            pynini.union(
+              self.__syms.characters,
+              pynini.acceptor("<Ge>", token_type=self.__syms.alphabet),
+              ).closure(1),
             pynini.transducer("e n", "", input_token_type=self.__syms.alphabet)
             )
           ),

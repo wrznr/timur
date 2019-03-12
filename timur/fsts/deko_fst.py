@@ -34,18 +34,11 @@ class DekoFst:
     # umlautung
     self.__umlautung = self.__construct_umlautung()
 
-    suff_filter_helper = pynini.compose(
-      self.__origin_filter,
-      pynini.compose(
-        self.__stem_type_filter,
-        pynini.compose(
-          self.__category_filter,
-          self.__umlautung,
-          )
-        )
-      ).optimize()
-    suff_phon = self.__construct_suff_phon()
-    self.__suff_filter = pynini.compose(suff_filter_helper, suff_phon).optimize()
+    # suffix phonology
+    self.__suff_phon = self.__construct_suff_phon()
+
+    # putting it all together
+    self.__suff_filter = (self.__origin_filter * self.__stem_type_filter * self.__category_filter * self.__umlautung * self.__suff_phon).optimize()
 
     #
     # prefix filter
@@ -80,13 +73,7 @@ class DekoFst:
     # imperative filter
     self.__imperative_filter = self.__construct_imperative_filter()
 
-    self.__infix_filter = pynini.compose(
-        self.__insert_ge,
-        pynini.compose(
-          self.__insert_zu,
-          self.__imperative_filter
-          )
-        ).optimize()
+    self.__infix_filter = (self.__insert_ge * self.__insert_zu * self.__imperative_filter).optimize()
 
     #
     # uplow
@@ -177,7 +164,7 @@ class DekoFst:
         self.__syms.stem_type_features
         ).closure().optimize()
 
-    filtering = self.__suff_stems_filter(["<nativ>", "<frei>", "<gebunden>", "<kurz>", "<lang>", "<fremd>", "<klassisch>", "<NSNeut_es_e>", "<NSFem_0_n>", "<NSFem_0_en>", "<NSMasc_es_e>", "<NSMasc_es_$e>", "<NSMasc-s/$sse>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$er-Adj0-Up>", "<NGeo-$isch-Adj+>", "<NGeo-0-Name-Fem_0>", "<NGeo-0-Name-Masc_s>", "<NGeo-0-Name-Neut_s>", "<NGeo-a-Name-Fem_s>", "<NGeo-a-Name-Neut_s>", "<NGeo-aner-NMasc_s_0>", "<NGeo-aner-Adj0-Up>", "<NGeo-anisch-Adj+>", "<NGeo-e-NMasc_n_n>", "<NGeo-e-Name-Fem_0>", "<NGeo-e-Name-Neut_s>", "<NGeo-ei-Name-Fem_0>", "<NGeo-en-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-er-Adj0-Up>", "<NGeo-0-NMasc_s_0>", "<NGeo-0-Adj0-Up>", "<NGeo-erisch-Adj+>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>", "<NGeo-ianer-NMasc_s_0>", "<NGeo-ianisch-Adj+>", "<NGeo-ien-Name-Neut_s>", "<NGeo-ier-NMasc_s_0>", "<NGeo-isch-Adj+>", "<NGeo-istan-Name-Neut_s>", "<NGeo-land-Name-Neut_s>", "<NGeo-ner-NMasc_s_0>", "<NGeo-ner-Adj0-Up>", "<NGeo-nisch-Adj+>"])
+    filtering = self.__suff_stems_filter(["<nativ>", "<prefnativ>", "<frei>", "<gebunden>", "<kurz>", "<lang>", "<fremd>", "<klassisch>", "<NSNeut_es_e>", "<NSFem_0_n>", "<NSFem_0_en>", "<NSMasc_es_e>", "<NSMasc_es_$e>", "<NSMasc-s/$sse>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$er-Adj0-Up>", "<NGeo-$isch-Adj+>", "<NGeo-0-Name-Fem_0>", "<NGeo-0-Name-Masc_s>", "<NGeo-0-Name-Neut_s>", "<NGeo-a-Name-Fem_s>", "<NGeo-a-Name-Neut_s>", "<NGeo-aner-NMasc_s_0>", "<NGeo-aner-Adj0-Up>", "<NGeo-anisch-Adj+>", "<NGeo-e-NMasc_n_n>", "<NGeo-e-Name-Fem_0>", "<NGeo-e-Name-Neut_s>", "<NGeo-ei-Name-Fem_0>", "<NGeo-en-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-er-Adj0-Up>", "<NGeo-0-NMasc_s_0>", "<NGeo-0-Adj0-Up>", "<NGeo-erisch-Adj+>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>", "<NGeo-ianer-NMasc_s_0>", "<NGeo-ianisch-Adj+>", "<NGeo-ien-Name-Neut_s>", "<NGeo-ier-NMasc_s_0>", "<NGeo-isch-Adj+>", "<NGeo-istan-Name-Neut_s>", "<NGeo-land-Name-Neut_s>", "<NGeo-ner-NMasc_s_0>", "<NGeo-ner-Adj0-Up>", "<NGeo-nisch-Adj+>"])
 
     return pynini.concat(
         pynini.concat(

@@ -159,7 +159,7 @@ class TimurFst:
         )
 
     defaults.ge_nom_stems_v.draw("target.dot", portrait=True)
-    bdk_stems = sublexica.bdk_stems | defaults.compound_stems_nn | defaults.ge_nom_stems_v
+    bdk_stems = sublexica.bdk_stems | defaults.compound_stems_nn #| defaults.ge_nom_stems_v
     bdk_stems.draw("bdk_stems.dot", portrait=True)
     intermediate = pynini.concat(bdk_stems, suffs1).optimize()
     intermediate.draw("intermediate.dot", portrait=True)
@@ -186,10 +186,15 @@ class TimurFst:
         self.__syms.stem_types,
         ).project().closure().optimize()
 
-    base = (tmp + inflection.inflection) * (alphabet + inflection.inflection_filter) * deko_filter.infix_filter 
+    base = (tmp + inflection.inflection)
     base.optimize().draw("base.dot", portrait=True)
+    base = base * (alphabet + inflection.inflection_filter)
+    base.optimize().draw("base1.dot", portrait=True)
+    base = base * deko_filter.infix_filter 
+    deko_filter.infix_filter.optimize().draw("infix_filter.dot", portrait=True)
+    base.optimize().draw("base2.dot", portrait=True)
     base = base * deko_filter.uplow
-    base.draw("base2.dot", portrait=True)
+    base.optimize().draw("base3.dot", portrait=True)
 
     #
     #  application of phonological rules

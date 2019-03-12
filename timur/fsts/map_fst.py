@@ -58,7 +58,8 @@ class MapFst:
     "<fremd,gebunden,lang>", "<frei,fremd,kurz>", "<frei,fremd,lang>", "<frei,gebunden>", 
     "<frei,gebunden,kurz,lang>", "<frei,gebunden,lang>", "<frei,lang>", "<klassisch,nativ>", 
     "<fremd,klassisch,nativ>", "<fremd,klassisch>", "<frei,nativ>", "<frei,fremd,nativ>", 
-    "<fremd,nativ>", "<komposit,prefderiv,simplex,suffderiv>", "<prefderiv,suffderiv>", 
+    "<fremd,nativ>","<nativ,prefnativ>","<frei,nativ,prefnativ>",
+    "<komposit,prefderiv,simplex,suffderiv>", "<prefderiv,suffderiv>", 
     "<komposit,prefderiv,simplex>", "<komposit,simplex,suffderiv>", "<komposit,simplex>", 
     "<prefderiv,simplex,suffderiv>", "<prefderiv,simplex>", "<simplex,suffderiv>"]
     disjunctive_feats = pynini.string_map(disjunctive_feat_list, input_token_type=syms.alphabet, output_token_type=syms.alphabet).project().optimize()

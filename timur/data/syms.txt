@@ -633,3 +633,5 @@ z	90
 <zu>    632
 <Ge>    633
 <prefnativ>	644
+<nativ,prefnativ>	645
+<frei,nativ,prefnativ>	646

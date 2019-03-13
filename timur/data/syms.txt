@@ -635,3 +635,4 @@ z	90
 <prefnativ>	644
 <nativ,prefnativ>	645
 <frei,nativ,prefnativ>	646
+<FT>	647

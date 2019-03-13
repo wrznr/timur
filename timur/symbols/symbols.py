@@ -57,7 +57,7 @@ class Symbols:
 
     self.__inititial_features = pynini.string_map(["<QUANT>", "<Initial>", "<NoHy>", "<ge>", "<no-ge>", "<NoPref>", "<NoDef>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
-    self.__categories = pynini.string_map(["<ABK>", "<ADJ>", "<ADV>", "<CARD>", "<DIGCARD>", "<NE>", "<NN>", "<PRO>", "<V>", "<ORD>", "<OTHER>", "<KSF>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+    self.__categories = pynini.string_map(["<ABK>", "<ADJ>", "<ADV>", "<CARD>", "<DIGCARD>", "<NE>", "<NN>", "<PRO>", "<V>", "<ORD>", "<OTHER>", "<KSF>", "<FT>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
     self.__disjunctive_categories = pynini.string_map(["<CARD,DIGCARD,NE>", "<ADJ,CARD>", "<ADJ,NN>", "<CARD,NN>", "<CARD,NE>", "<ABK,ADJ,NE,NN>", "<ADJ,NE,NN>", "<ABK,NE,NN>", "<NE,NN>", "<ABK,CARD,NN>", "<ABK,NN>", "<ADJ,CARD,NN,V>", "<ADJ,NN,V>", "<ABK,ADJ,NE,NN,V>", "<ADJ,NE,NN,V>", "<ADV,NE,NN,V>", "<ABK,NE,NN,V>", "<NE,NN,V>", "<ABK,NN,V>", "<NN,V>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 

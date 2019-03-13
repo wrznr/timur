@@ -82,8 +82,28 @@ class DefaultsFst:
                 )
               ),
             pynini.transducer("", "<ADJ>", output_token_type=self.__syms.alphabet),
-            pynini.transducer("<CONV> <base> <nativ>", "", input_token_type=self.__syms.alphabet),
-            pynini.transducer("", "<Adj+e>", output_token_type=self.__syms.alphabet)
+            pynini.transducer("<CONV>", "", input_token_type=self.__syms.alphabet),
+            pynini.transducer("", "<base> <nativ> <Adj+e>", output_token_type=self.__syms.alphabet)
+            ),
+          pynini.concat(
+            pynini.compose(
+              pynini.concat(
+                alphabet,
+                pynini.transducer("<V>", "<+V>", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+                pynini.acceptor("<zu>", token_type=self.__syms.alphabet).closure(0, 1),
+                pynini.string_map(["<PPast>", "<PPres>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
+                ),
+              pynini.compose(
+                tmp,
+                pynini.concat(
+                  sublexica.nodef_to_null,
+                  pynini.acceptor("e n", token_type=self.__syms.alphabet) | pynini.acceptor("n d", token_type=self.__syms.alphabet)
+                  )
+                )
+              ),
+            pynini.transducer("", "<ADJ>", output_token_type=self.__syms.alphabet),
+            pynini.transducer("<CONV>", "", input_token_type=self.__syms.alphabet),
+            pynini.transducer("", "<base> <nativ> <Adj+>", output_token_type=self.__syms.alphabet)
             )
           )
         ).optimize()

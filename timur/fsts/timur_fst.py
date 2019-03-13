@@ -159,7 +159,7 @@ class TimurFst:
         )
 
     defaults.ge_nom_stems_v.draw("target.dot", portrait=True)
-    bdk_stems = sublexica.bdk_stems | defaults.compound_stems_nn #| defaults.ge_nom_stems_v
+    bdk_stems = sublexica.bdk_stems | defaults.compound_stems_nn | defaults.ge_nom_stems_v
     bdk_stems.draw("bdk_stems.dot", portrait=True)
     intermediate = pynini.concat(bdk_stems, suffs1).optimize()
     intermediate.draw("intermediate.dot", portrait=True)

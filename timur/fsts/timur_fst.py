@@ -158,8 +158,8 @@ class TimurFst:
         sublexica.suff_deriv_suff_stems.closure()
         )
 
-    defaults.ge_nom_stems_v.draw("target.dot", portrait=True)
-    bdk_stems = sublexica.bdk_stems | defaults.compound_stems_nn | defaults.ge_nom_stems_v
+    #defaults.ge_nom_stems_v.draw("target.dot", portrait=True)
+    bdk_stems = sublexica.bdk_stems | defaults.compound_stems_nn | defaults.ge_nom_stems_v | defaults.participle_adj
     bdk_stems.draw("bdk_stems.dot", portrait=True)
     intermediate = pynini.concat(bdk_stems, suffs1).optimize()
     intermediate.draw("intermediate.dot", portrait=True)
@@ -171,8 +171,9 @@ class TimurFst:
     s1 = (p1 + suffs2) * deko_filter.suff_filter
     s1.draw("s1.dot", portrait=True)
     tmp = s0 | s1
-    tmp = tmp.closure(1) * deko_filter.compound_filter
     tmp.draw("tmp.dot", portrait=True)
+    tmp = tmp.closure(1) * deko_filter.compound_filter
+    tmp.draw("tmp2.dot", portrait=True)
 
     #
     # inflection

@@ -43,11 +43,51 @@ class DefaultsFst:
     #
     # default stems
 
-    #
+    # create a default composition stem for nouns
     self.__compound_stems_nn = self.__construct_compound_stems_nn(tmp)
 
-    #
+    # create a deriv stem for Ge nominalization (Gelerne)
     self.__ge_nom_stems_v = self.__construct_ge_nom_stems_v(tmp)
+
+    # create an adjective base stem from participles
+    self.__participle_adj = self.__construct_participle_adj(tmp, sublexica)
+    self.__participle_adj.draw("participle_adj.dot", portrait=True)
+  
+  def __construct_participle_adj(self, tmp, sublexica):
+    '''
+    Stems for conversion of participles into adjectives
+    '''
+    alphabet = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<VPART>", "<VPREF>", "<PREF>", "<CONV>", "<SUFF>", "<NN>", "<ADJ>", "<V>", "<FT>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
+    ).closure().optimize()
+
+    return pynini.concat(
+        pynini.transducer("", "<Base_Stems>", output_token_type=self.__syms.alphabet),
+        pynini.union(
+          pynini.concat(
+            pynini.compose(
+              pynini.concat(
+                alphabet,
+                pynini.transducer("<V>", "<+V>", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
+                pynini.acceptor("<zu>", token_type=self.__syms.alphabet).closure(0, 1),
+                pynini.acceptor("<PPast>", token_type=self.__syms.alphabet)
+                ),
+              pynini.compose(
+                tmp,
+                pynini.concat(
+                  sublexica.nodef_to_null,
+                  pynini.acceptor("t", token_type=self.__syms.alphabet)
+                  )
+                )
+              ),
+            pynini.transducer("", "<ADJ>", output_token_type=self.__syms.alphabet),
+            pynini.transducer("<CONV> <base> <nativ>", "", input_token_type=self.__syms.alphabet),
+            pynini.transducer("", "<Adj+e>", output_token_type=self.__syms.alphabet)
+            )
+          )
+        ).optimize()
+
     
   
   def __construct_ge_nom_stems_v(self, tmp):
@@ -163,6 +203,13 @@ class DefaultsFst:
         pynini.acceptor("<NN>", token_type=self.__syms.alphabet),
         pynini.transducer("", "<kompos> <nativ>", output_token_type=self.__syms.alphabet)
         ).optimize()
+
+  @property
+  def participle_adj(self):
+    '''
+    Default base stems for participle adjectives
+    '''
+    return self.__participle_adj
 
   @property
   def ge_nom_stems_v(self):

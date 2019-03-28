@@ -59,11 +59,14 @@ Kay-Michael Würzner
 # Morphologische Analyse
 
 - Operanden:
-    + **freie Morpheme**: isoliert auftretende Wörter/Wortbestandteile
-    + **gebundene Morpheme**: nur in Kombination mit freien Morphemen auftretende Wörter/Wortbestandteile
-    + **Formative**: Zwischenstatus; nicht isoliert auftretende Wortstämme
-- Wortbildungsprozesse
+    + **freie Morpheme**: isoliert auftretende Wörter/Wortbestandteile (*Stamm*)
+    + **gebundene Morpheme**: nur in Kombination mit freien Morphemen auftretende Wörter/Wortbestandteile (*Affix*)
+    + **Zwischenstatus**: nicht isoliert auftretende Wortstämme (*Formativ*)
+- Prozesse
     + **Flexion**: Kombination eines Wortes mit einem oder mehreren Affixen zur Erfüllung morphosyntaktischer Umgebungsanforderungen
+    + **Derivation**: Kombination eines freien Morphems mit einem Affix zur Änderung von Wortart und/oder Bedeutung
+    + **Konversion**: Änderung der Wortart eines Stammes **ohne** Affixinvolvierung
+    + **Komposition**: Kombination zweier freier Morpheme
 
 ---
 

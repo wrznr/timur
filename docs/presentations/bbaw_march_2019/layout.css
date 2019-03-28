@@ -1,0 +1,75 @@
+* { font-family:'Istok Web',Arial,sans-serif }
+
+
+a { color:#009; text-decoration:none }
+
+blockquote  > p { padding:0 1em; color:#6a737d; border-left:0.25em solid #dfe2e5; font-size:1.5rem }
+
+code, code * { font-family:monospace; font-size:1.3rem; background:#f6f8fa }
+
+img { max-width:90% }
+.img-orig img { max-width:initial !important }
+.img-fit img { max-width:70% }
+
+li { line-height:1.5em; font-size:2rem }
+
+p { line-height:1.25em; font-size:2rem; margin-block-end: auto }
+
+pre { margin:0; padding:.5em; background:#f6f8fa }
+
+table { margin:auto; width:100% }
+
+ul > li > ul > li { font-size:1.5rem }
+ul > li > ol > li { font-size:1.5rem }
+ol > li > ul > li { font-size:1.5rem }
+
+ul > li > ul > li > ul > li { font-size:1.2rem }
+ul > li > ol > li > ul > li { font-size:1.2rem }
+
+.center { text-align:center }
+.diasys { color:#595; font-weight:bold }
+.smaller { font-size:1.2em }
+.red { color:#c00 }
+
+.remark-slide-content h1 { font-size:3rem; margin-top:0; color:#c60c30 }
+.remark-slide-content h2 { font-size:2.5rem }
+.remark-slide-content { padding:1em 1em }
+
+.remark-code-line { line-height:1.3em }
+
+.remark-slide-number { bottom:25px; right:15px; font-size:9pt }
+
+.title-slide h1 { text-align:center; margin-top:100px }
+.title-slide h2 { font-size:3rem; color:#c60c30; text-align:center; margin-top:30px }
+.title-slide .remark-slide-number { display:none }
+
+.my-header {
+  background-image: url("figures/bbaw.svg");
+  background-repeat: no-repeat;
+  background-position: right;
+  background-size: 10%;
+  border-bottom: 1px solid #ccc;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 80px;
+  width: 100%;
+  text-align: left;
+}
+
+.my-footer {
+  background-color: #222;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  height: 20px;
+  width: 100%;
+}
+
+.my-footer td {
+  font-size: 10pt;
+  color: #fff;
+  padding:1px 10px;
+}
+
+.my-footer a { color:#fff; text-decoration:none }

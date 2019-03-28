@@ -45,7 +45,7 @@ ul > li > ol > li > ul > li { font-size:1.2rem }
 .smaller { font-size:1.2em }
 .red { color:#c00 }
 
-.remark-slide-content h1 { font-size:3rem; margin-top:0; color:#c60c30 }
+.remark-slide-content h1 { font-size:3rem; margin-top:0; color:#e52421 }
 .remark-slide-content h2 { font-size:2.5rem }
 .remark-slide-content { padding:1em 1em }
 
@@ -54,7 +54,7 @@ ul > li > ol > li > ul > li { font-size:1.2rem }
 .remark-slide-number { bottom:25px; right:15px; font-size:9pt }
 
 .title-slide h1 { text-align:center; margin-top:100px }
-.title-slide h2 { font-size:3rem; color:#c60c30; text-align:center; margin-top:30px }
+.title-slide h2 { font-size:3rem; color:#e52421; text-align:center; margin-top:30px }
 .title-slide .remark-slide-number { display:none }
 
 .my-header {

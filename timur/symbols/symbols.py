@@ -134,6 +134,9 @@ class Symbols:
       "<NGeo-istan-e-isch>",
       "<NGeo-land-$er-$er>", "<NGeo-land-e-isch>", "<NGeo-land-e-nisch>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
+    self.__inflection_features = pynini.string_map([
+      "<Pl>", "<Sg>", "<Nom>", "<Gen>", "<Dat>", "<Akk>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
     self.__inflection_classes = pynini.string_map([
       "<Abk_ADJ>", "<Abk_ADV>", "<Abk_ART>", "<Abk_DPRO>",
       "<Abk_KONJ>", "<Abk_NE-Low>", "<Abk_NE>", "<Abk_NN-Low>",
@@ -195,6 +198,12 @@ class Symbols:
       "<VVReg-el/er>", "<VVReg>", "<WAdv>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
     self.__gender = pynini.string_map(["<Masc>", "<Fem>", "<Neut>", "<NoGend>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
+    self.__word_classes = pynini.string_map([
+      "<+NN>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
+    self.__inner_word_classes = pynini.string_map([
+      "<NN>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
   #
   # access to the alphabet (pynini.SymbolTable)
@@ -359,11 +368,32 @@ class Symbols:
     return self.__geo_inflection_classes
 
   @property
+  def inflection_features(self):
+    '''
+    Union over all inflection features
+    '''
+    return self.__inflection_features
+
+  @property
   def inflection_classes(self):
     '''
     Union over all inflection classes
     '''
     return self.__inflection_classes
+
+  @property
+  def word_classes(self):
+    '''
+    Union over all word classes
+    '''
+    return self.__word_classes
+
+  @property
+  def inner_word_classes(self):
+    '''
+    Union over all word-internal word classes
+    '''
+    return self.__inner_word_classes
 
   @property
   def gender(self):

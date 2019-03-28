@@ -27,6 +27,7 @@ class TimurFst:
     #
     # empty fst
     self.__timur = None
+    self.__lemma = None
 
   def __verify(self):
     '''
@@ -51,6 +52,7 @@ class TimurFst:
     Load a previously built morphology
     '''
     self.__timur = pynini.Fst.read(fst)
+    self.__lemma = self.__build_lemmatizer()
     return self.__verify()
 
   def dumps(self):
@@ -160,7 +162,7 @@ class TimurFst:
 
     #defaults.ge_nom_stems_v.draw("target.dot", portrait=True)
     bdk_stems = sublexica.bdk_stems | defaults.compound_stems_nn | defaults.ge_nom_stems_v | defaults.participle_adj
-    bdk_stems.draw("bdk_stems.dot", portrait=True)
+    defaults.compound_stems_surface_nn.draw("bdk_stems.dot", portrait=True)
     intermediate = pynini.concat(bdk_stems, suffs1).optimize()
     intermediate.draw("intermediate.dot", portrait=True)
     deko_filter.suff_filter.draw("suff_filter.dot", portrait=True)
@@ -198,7 +200,7 @@ class TimurFst:
     base.optimize().draw("base3.dot", portrait=True)
 
     #
-    #  application of phonological rules
+    # application of phonological rules
     phon.phon.draw("phon.dot", portrait=True)
     base = pynini.compose(
         pynini.concat(
@@ -208,9 +210,25 @@ class TimurFst:
           ),
         phon.phon
         ).optimize()
-    base.draw("base3.dot", portrait=True)
+    base.draw("base4.dot", portrait=True)
 
     #
     # result
     self.__timur = base
     return self.__verify()
+
+  def __build_lemmatizer(self):
+    '''
+    Construct a lemmatizer from the morphology transducer
+    '''
+    del_infl_feats1 = pynini.union(
+        self.__syms.characters,
+        self.__syms.word_classes,
+        self.__syms.inner_word_classes,
+        self.__syms.gender,
+        pynini.transducer(self.__syms.inflection_features, "")
+        ).closure().optimize()
+
+    self.__lemma = (self.__timur.copy().invert() * del_infl_feats1) 
+    self.__lemma.draw("lemma.dot", portrait=True)
+    state = self.__lemma.start()

@@ -45,6 +45,7 @@ class DefaultsFst:
 
     # create a default composition stem for nouns
     self.__compound_stems_nn = self.__construct_compound_stems_nn(tmp)
+    self.__compound_stems_surface_nn = self.__construct_compound_stems_surface_nn()
 
     # create a deriv stem for Ge nominalization (Gelerne)
     self.__ge_nom_stems_v = self.__construct_ge_nom_stems_v(tmp)
@@ -189,7 +190,7 @@ class DefaultsFst:
         pynini.acceptor("<V>", token_type=self.__syms.alphabet),
         pynini.transducer("", "<deriv> <nativ>", output_token_type=self.__syms.alphabet)
         ).optimize()
-  
+ 
   def __construct_compound_stems_nn(self, tmp):
     '''
     Default noun compounding stems
@@ -223,6 +224,18 @@ class DefaultsFst:
         pynini.acceptor("<NN>", token_type=self.__syms.alphabet),
         pynini.transducer("", "<kompos> <nativ>", output_token_type=self.__syms.alphabet)
         ).optimize()
+ 
+  def __construct_compound_stems_surface_nn(self):
+    '''
+    Default noun compounding stems for lemmatizer
+    '''
+    del_feats = pynini.union(
+        self.__syms.characters,
+        pynini.transducer("", "<Kompos_Stems>", output_token_type=self.__syms.alphabet),
+        pynini.transducer("", "<kompos> <nativ>", output_token_type=self.__syms.alphabet),
+        pynini.acceptor("<NN>", token_type=self.__syms.alphabet)
+        ).closure().optimize()
+    return (del_feats * self.__compound_stems_nn.copy().project(project_output=True)).optimize()
 
   @property
   def participle_adj(self):
@@ -244,3 +257,10 @@ class DefaultsFst:
     Default compound stems for nouns
     '''
     return self.__compound_stems_nn
+
+  @property
+  def compound_stems_surface_nn(self):
+    '''
+    Default lemmatizing compound stems for nouns
+    '''
+    return self.__compound_stems_surface_nn

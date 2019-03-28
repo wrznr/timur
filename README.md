@@ -1,4 +1,4 @@
-![Logo](docs/img/logo_title.svg)
+![Logo](docs/img/logo_title.svg | width=100)
 
 # timur: Finite-state morphology for German
 

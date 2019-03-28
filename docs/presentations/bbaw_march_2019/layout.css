@@ -1,3 +1,15 @@
+@font-face {
+    font-family: 'LAIKA';
+    src: url('fonts/LAIKA.eot');
+    src: url('fonts/LAIKA.eot?#iefix') format('embedded-opentype'),
+        url('fonts/LAIKA.woff2') format('woff2'),
+        url('fonts/LAIKA.woff') format('woff'),
+        url('fonts/LAIKA.ttf') format('truetype'),
+        url('fonts/LAIKA.svg#LAIKA') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
 * { font-family:'Istok Web',Arial,sans-serif }
 
 
@@ -6,6 +18,8 @@ a { color:#009; text-decoration:none }
 blockquote  > p { padding:0 1em; color:#6a737d; border-left:0.25em solid #dfe2e5; font-size:1.5rem }
 
 code, code * { font-family:monospace; font-size:1.3rem; background:#f6f8fa }
+
+.title-slide h1 { font-family:'LAIKA' }
 
 img { max-width:90% }
 .img-orig img { max-width:initial !important }
@@ -44,7 +58,7 @@ ul > li > ol > li > ul > li { font-size:1.2rem }
 .title-slide .remark-slide-number { display:none }
 
 .my-header {
-  background-image: url("figures/bbaw.svg");
+  background-image: url("../../bbaw.svg");
   background-repeat: no-repeat;
   background-position: right;
   background-size: 10%;

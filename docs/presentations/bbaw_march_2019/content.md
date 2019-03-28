@@ -187,5 +187,24 @@ count: false
 # Morphologische Analyse
 
 - Schwachpunkte des Ansatzes:
-    + Tendenz zur Übergenerierung
-        * wenige echt produktive Derivationsprozesse
+    + Tendenz zur **Übergenerierung**
+        * wenige echt produktive Derivationsprozesse!
+    + hoher Aufwand bei der **Lexikonpflege**
+        * wenige echt produktive Derivationsprozesse!
+    + nicht robust
+    + **flache Analyse** nicht für alle Anwendungsfälle adäquat
+    + Modellierung 
+- Vorteile des Ansatzes:
+    + schnell (i.e. linear zur Eingabelänge)
+    + rel. kompakt (i.e. quadratisch zur Lexikongröße)
+
+---
+
+# timur
+
+- Schlüsselfakten:
+    + Morphologisches Analysesystem auf Basis endlicher Automaten
+    + Weiterentwicklung/Konsolidierung einer Wortgrammatik von Helmut Schmid
+    + Implementierung in Python mit Hilfe von `pynini`, einer Python-API zu `OpenFst`
+    + Open-Source-Entwicklung auf GitHub
+- Motivation

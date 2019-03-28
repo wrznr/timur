@@ -58,7 +58,7 @@ ul > li > ol > li > ul > li { font-size:1.2rem }
 .title-slide .remark-slide-number { display:none }
 
 .my-header {
-  background-image: url("../../bbaw.svg");
+  background-image: url("img/logo_bare.svg");
   background-repeat: no-repeat;
   background-position: right;
   background-size: 10%;

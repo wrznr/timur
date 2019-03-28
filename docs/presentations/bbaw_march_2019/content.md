@@ -58,6 +58,17 @@ Kay-Michael Würzner
 
 # Morphologische Analyse
 
+- Operanden:
+    + **freie Morpheme**: isoliert auftretende Wörter/Wortbestandteile
+    + **gebundene Morpheme**: nur in Kombination mit freien Morphemen auftretende Wörter/Wortbestandteile
+    + **Formative**: Zwischenstatus; nicht isoliert auftretende Wortstämme
+- Wortbildungsprozesse
+    + **Flexion**: Kombination eines Wortes mit einem oder mehreren Affixen zur Erfüllung morphosyntaktischer Umgebungsanforderungen
+
+---
+
+# Morphologische Analyse
+
 - Analyseebenen
     + **Oberfläche**: sichtbare Gestalt der einzelnen Morpheme (i.e. Morphe)
         * phonotaktische Prozesse (Fugenelemente, Ab- und Umlaut)
@@ -69,11 +80,12 @@ Kay-Michael Würzner
         * Unterstützung der Wortrennung: Oberfläche
     + z.B. Grundformbildung
         * Oberfläche **plus** Tiefe
+
 ```
 Ärztekammern:
-    Ärztekammer
-    Ärzte#kammer~n
-    Arzt<NN>Kammer<NN>
+   ↦ Ärztekammer<NN>
+   ↦ Ärzte#kammer~n
+   ↦ Arzt<NN>Kammer<NN>
 ```
 
 ---
@@ -168,3 +180,9 @@ count: false
 <center><img src="img/morph_ex5.svg" width="880" /></center>
 
 ---
+
+# Morphologische Analyse
+
+- Schwachpunkte des Ansatzes:
+    + Tendenz zur Übergenerierung
+        * wenige echt produktive Derivationsprozesse

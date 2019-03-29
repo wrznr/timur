@@ -384,5 +384,43 @@ count: false
     + *Nachschlagen* der identifizierten Bestandteile
     + *Auswahl* der maximalen Zerlegung zur Abbildung auf bestehende Artikel
 
-<center><img src="img/fahrgast.png" height="380" /></center>
+<center><img src="img/fahrgast.png" height="340" /></center>
 
+---
+
+# Anwendungsszenarien
+
+- Unterstützung der **Worttrennung**
+    + Silbenstruktur deutscher Wörter bestimmt durch *Maximum Onset Principle*
+        * so viele wie möglich Konsonanten in den Silbenansatz
+    + Prinzip durch morphologische Struktur „überstimmt“
+        * `verirren ↦ ver-ir-ren` vs.
+        * `verifizieren ↦ ve-ri-fi-zie-ren`
+        * Präfix- und Kompositionsgrenzen **immer** Silbengrenzen
+- aktuell `SMOR` im Einsatz
+    + viele komplexe Vollformen lexikalisiert
+    + einige nicht-produktive Suffixe produktiv
+    + sehr viele Tickets
+    + z.B. `Kalkei ↦ kalk<V>ei<NN><Suff>` 
+    + z.B. `Seiteneinsteiger ↦ Seiteneinsteiger<NN>` 
+- mit timur Kontrolle über das Lexikon **und** die Grammatik
+
+---
+
+# Anwendungsszenarien
+
+- Unterstützung der **Aussprachegenerierung**
+    + morphologische Struktur an vielen Stellen der Aussprache sichtbar
+        * Glottalverschluss (vor vokalisch anlautenden Wortstämmen, auch in Komposita)
+        * Auslautverhärtung ([ˈloː**s**fɛɐ̯ˌfaːʁən])
+        * Akzentverteilung („Schweine**'**rei“ vs. „**'**Hühnerei“)
+- aktuell erfolgt die Aussprachegenerierung von `gramophone` unabhängig von morphologischer oder Silbenstruktur
+    + sehr, sehr viele Tickets
+
+---
+
+# Anwendungsszenarien
+
+- Generierung von **Flexionsparadigmen**
+
+> Guten Tag und erst ein Mal einen herzlichen Dank und meine Komplimente für ihr Projekt. Als niederländischer Muutersprachler Wohne ich seit mehr als 30 Jahren in Deutschland. Dennoch muss ich häufig in Online-Wörterbücher nach mir unbekannte Begriffe, beziehungsweise die Schreibweise deren suchen. Hier ist DWDS. de eine große Hilfe. Jedoch muss ich auch gelegentlich die Konjugation von wenig benutzten Wörtern nach schlagen. Gibt es auf ihrer Seite eine Möglichkeit nach der Konjugation von Verben zu suchen?

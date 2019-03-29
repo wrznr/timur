@@ -202,9 +202,29 @@ count: false
 
 # timur
 
-- Schlüsselfakten:
+- **Schlüsselfakten**:
     + Morphologisches Analysesystem auf Basis endlicher Automaten
+        * zugeschnitten auf Wortzerlegung
     + Weiterentwicklung/Konsolidierung einer Wortgrammatik von Helmut Schmid
     + Implementierung in Python mit Hilfe von `pynini`, einer Python-API zu `OpenFst`
     + Open-Source-Entwicklung auf GitHub
-- Motivation
+- **Motivation**: Es fehlt an Alternativen!
+    + wissenschaftlich längst gelöstes Problem
+    + begrenzte Verfügbarkeit existierender Werkzeuge (hoher Aufwand bei Lexikonerstellung und -pflege?)
+    + veraltete Architekturen für Implementierung und Nutzung
+
+---
+
+# timur
+
+| Software | **TAGH** | **SMOR** | **Morphisto** | **Zmorge** | **timur** |
+|------|----------|--------|-------|-------------|-------------------|
+| OpenSource Framework | (✓) | ✓ | ✓ | ✓ | ✓ |
+| OpenSource Lexikon | ✗ | ✗ | ✓ | (✓) | ✓ |
+| OpenSource Grammatik | ✗ | (✓) | ✓ | ✓ | ✓ | 
+| komplexe Lexikoneinträge| ✓ | ✓ | ✓ | ✓ | ✗ |
+| letzte Version | 2017 | 2013 | 2011 | 2015 | 8. Mai 2019 |
+
+---
+
+# timur

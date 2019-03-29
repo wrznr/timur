@@ -384,5 +384,5 @@ count: false
     + *Nachschlagen* der identifizierten Bestandteile
     + *Auswahl* der minimal nötigen Zerlegung zur Abbildung auf bestehende Artikel
 
-<center><img src="img/fahrgast.png" style="position:absolute;top:200px;left:0;height:1200px" /></center>
+<center><img src="img/fahrgast.png" height="400" /></center>
 

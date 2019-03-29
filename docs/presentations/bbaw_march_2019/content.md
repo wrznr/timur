@@ -447,14 +447,15 @@ count: false
 
 # Diskussion und Ausblick
 
-1. Angesichts der erheblich gestiegenen Dynamik bei der Arbeit im Zentrum Sprache ist
-   eine Morphologiekomponente mit kurzen Entwicklungszyklen zwingend erforderlich.
-2. Um den Anforderungen der BBAW hinsichtlich der Lizensierung von Software zu
-   entsprechen, ist eine quelloffene Morphologiekomponente zwingend erforderlich.
-3. Die Nachfrage nach neuen und verlässlichen computerlinguistischen Webservices
-   könnte durch eine Morphologiekomponente auf Basis einer gepflegten,
-   veröffentlichten und auf verschiedenen Systemen deploybaren Automatenbibliothek
-   beantwortet werden.
+- Thesen:
+    1. Angesichts der erheblich gestiegenen Dynamik bei der Arbeit im Zentrum Sprache ist
+       eine Morphologiekomponente mit kurzen Entwicklungszyklen zwingend erforderlich.
+    2. Um den Anforderungen der BBAW hinsichtlich der Lizensierung von Software zu
+       entsprechen, ist eine quelloffene Morphologiekomponente zwingend erforderlich.
+    3. Die Nachfrage nach neuen und verlässlichen computerlinguistischen Webservices
+       könnte durch eine Morphologiekomponente auf Basis einer gepflegten,
+       veröffentlichten und auf verschiedenen Systemen deploybaren Automatenbibliothek
+       beantwortet werden.
 
 ---
 

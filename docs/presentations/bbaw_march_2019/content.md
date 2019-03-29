@@ -17,7 +17,7 @@ class: title-slide
 
 # timur
 
-## Morphologische Zerlegung mittels endlicher Automaten
+## Morphologische Zerlegung<br>mittels endlicher Automaten
 
 
 | Kay-Michael Würzner |
@@ -60,7 +60,7 @@ class: title-slide
 
 # Morphologische Analyse
 
-- Operanden:
+- Operanden
     + **freie Morpheme**: isoliert auftretende Wörter/Wortbestandteile (*Stamm*)
     + **gebundene Morpheme**: nur in Kombination mit freien Morphemen auftretende Wörter/Wortbestandteile (*Affix*)
     + **Zwischenstatus**: nicht isoliert auftretende Wortstämme (*Formativ*)
@@ -75,15 +75,15 @@ class: title-slide
 # Morphologische Analyse
 
 - Analyseebenen
-    + **Oberfläche**: sichtbare Gestalt der einzelnen Morpheme (i.e. Morphe)
+    + **Oberfläche**: sichtbare Gestalt der einzelnen Morpheme (i.&#x202f;e. Morphe)
         * phonotaktische Prozesse (Fugenelemente, Ab- und Umlaut)
         * Flexion
     + **Tiefe**: (abstrakte) Repräsentation aller Morpheme
 - Anwendungsbezug
-    + z.B. morphologische Zerlegung
+    + z.&#x202f;B. morphologische Zerlegung
         * Einschätzung der Bildungsproduktivität einzelner Morpheme: Tiefe
         * Unterstützung der Wortrennung: Oberfläche
-    + z.B. Grundformbildung
+    + z.&#x202f;B. Grundformbildung
         * Oberfläche **plus** Tiefe
 
 ```
@@ -101,11 +101,11 @@ class: title-slide
 - Herausfordend für Sprachen mit komplexer Wortbildung
 - `Finite State Morphology` (klassischer regelbasierter Ansatz):
     + Man nehme
-        * eine **große** Liste einfacher Wörter
-        * deren **morphosyntaktische** Eigenschaften
+        * eine **große** Liste einfacher Wörter,
+        * deren **morphosyntaktische** Eigenschaften,
         * Vor- und Nachsilben,
     + packe dies in einen **endlichen Automaten** und
-    + bilde dessen **Kleenesche Hülle**
+    + bilde dessen **<span style="font-variant:small-caps">Kleene</span>sche Hülle**.
 - Bestandteil der meisten Sprachverarbeitungssysteme
 
 ---
@@ -188,7 +188,7 @@ count: false
 
 # Morphologische Analyse
 
-- Schwachpunkte des Ansatzes:
+- Schwachpunkte des Ansatzes
     + Tendenz zur **Übergenerierung**
         * wenige echt produktive Derivationsprozesse!
     + hoher Aufwand bei der **Lexikonpflege**
@@ -196,18 +196,18 @@ count: false
     + nicht robust
     + **flache Analyse** nicht für alle Anwendungsfälle adäquat
     + Modellierung 
-- Vorteile des Ansatzes:
-    + schnell (i.e. linear zur Eingabelänge)
-    + rel. kompakt (i.e. quadratisch zur Lexikongröße)
+- Vorteile des Ansatzes
+    + schnell (i.&#x202f;e. linear zur Eingabelänge)
+    + rel. kompakt (i.&#x202f;e. quadratisch zur Lexikongröße)
 
 ---
 
 # timur
 
-- **Schlüsselfakten**:
+- **Schlüsselfakten**
     + Morphologisches Analysesystem auf Basis endlicher Automaten
         * zugeschnitten auf Wortzerlegung
-    + Weiterentwicklung/Konsolidierung einer Wortgrammatik von Helmut Schmid
+    + Weiterentwicklung/Konsolidierung einer Wortgrammatik von <span style="font-variant:small-caps">Helmut Schmid</span>
     + Implementierung in Python mit Hilfe von `pynini`, einer Python-API zu `OpenFst`
     + Open-Source-Entwicklung auf GitHub
 - **Motivation**: Es fehlt an Alternativen!
@@ -221,20 +221,20 @@ count: false
 
 | Software | **TAGH** | **SMOR** | **Morphisto** | **Zmorge** | **timur** |
 |:------|:----------:|:--------:|:-------:|:-------------:|:-------------------:|
-| OpenSource Framework | (✓) | ✓ | ✓ | ✓ | ✓ |
-| OpenSource Lexikon | ✗ | ✗ | ✓ | (✓) | ✓ |
-| OpenSource Grammatik | ✗ | (✓) | ✓ | ✓ | ✓ | 
-| komplexe Lexikoneinträge| ✓ | ✓ | ✓ | ✓ | ✗ |
+| OpenSource-Framework | .yellow[(✓)] | .green[✓] | .green[✓] | .green[✓] | .green[✓] |
+| OpenSource-Lexikon | .red[✗] | .red[✗] | .green[✓] | .yellow[(✓)] | .green[✓] |
+| OpenSource-Grammatik | .red[✗] | .yellow[(✓)] | .green[✓] | .green[✓] | .green[✓] | 
+| komplexe Lexikoneinträge| .green[✓] | .green[✓] | .green[✓] | .green[✓] | .red[✗] |
 | letzte Version | 2017 | 2013 | 2011 | 2015 | 8. Mai 2019 |
 
 ---
 
-# timur -- Lexikon
+# timur – Lexikon
 
 - entstanden auf Basis einer großen Wortliste
     + Wortart
-    + **DMOR**-Flexionsklasse (Schiller 1996)
-- überarbeitet/annotiert in Kooperation mit Forschungsgruppe REaD (Sascha Schroeder)
+    + **DMOR**-Flexionsklasse (<span style="font-variant:small-caps">Schiller</span> 1996)
+- überarbeitet/annotiert in Kooperation mit Forschungsgruppe REaD (<span style="font-variant:small-caps">Sascha Schroeder</span>)
     + morphologische Komplexität
     + Bildungsmuster
 - Zahlen:
@@ -244,36 +244,36 @@ count: false
 
 ---
 
-# timur -- Lexikon
+# timur – Lexikon
 
 | Wort | *Wortart* | *Flexionsklasse* | *komplex?* | *Bildung* |
 |:------|:----------:|:--------:|:-------:|:-------------:|
-| Acht | `NN` | `NFem/Sg` | ✗ | - |
-| achten | `V` | `VVReg` | ✓ | `NN` |
-| Achtung | `NN` | `NFem-Deriv` | ✓ | `V + ung` |
-| achtbar | `ADJ` | `Adj+` | ✓ | `V + bar` |
-| Achtbarkeit | `NN` | `NFem-Deriv` | ✓ | `ADJ + keit` |
-| ächten | `V` | `VVReg` | ✓ | `NN$` |
-| achtenswert | `ADJ` | `Adj+e` | ✓ | `NN + wert` |
+| Acht | `NN` | `NFem/Sg` | .red[✗] | - |
+| achten | `V` | `VVReg` | .green[✓] | `NN` |
+| Achtung | `NN` | `NFem-Deriv` | .green[✓] | `V + ung` |
+| achtbar | `ADJ` | `Adj+` | .green[✓] | `V + bar` |
+| Achtbarkeit | `NN` | `NFem-Deriv` | .green[✓] | `ADJ + keit` |
+| ächten | `V` | `VVReg` | .green[✓] | `NN$` |
+| achtenswert | `ADJ` | `Adj+e` | .green[✓] | `NN + wert` |
 
 - Ziel: Erstellung einer Baumstruktur pro Simplex
 
 ---
 
-# timur -- Lexikon
+# timur – Lexikon
 
 <center><img src="img/tree.svg" style="position:absolute;top:200px;left:0;width:1200px;height:1200px" /></center>
 
 ---
 
-# timur -- Lexikon
+# timur – Lexikon
 
-- Ziel:
+- Ziel
     + Erstellung einer Baumstruktur pro Simplex
     + abhängig von der gewählten Kodierungsstrategie
         * Konvertierung der Lexikoneinträge in **automatenverarbeitbares** Format
         * Gestalt eines komplexen Eintrags abhängig von der Gestalt seines „Vorgängers”
-- Herausforderungen:
+- Herausforderungen
     + **Lücken** in der Ableitungshierarchie
        * insbesondere im Bereich latinater Wortbildung (*inkommensurabel*)
        * und bei nicht-produktiven Ableitungen produktiv ableitbarer Wörter (*argusäugig*)
@@ -282,9 +282,9 @@ count: false
 
 ---
 
-# timur -- Grammatik
+# timur – Grammatik
 
-- basierend auf einer Beispielgrammatik von Helmut Schmid
+- basierend auf einer Beispielgrammatik von <span style="font-variant:small-caps">Helmut Schmid</span>
     + auch für `Morphisto` und `Zmorge` genutzt
     + SFST-Format
 - Transduktoren für
@@ -298,7 +298,7 @@ count: false
 
 ---
 
-# timur -- Grammatik
+# timur – Grammatik
 
 ```
 <Base_Stems>Arzt<NN><base><nativ><NMasc_es_$e>
@@ -321,9 +321,9 @@ count: false
 
 ---
 
-# timur -- Grammatik
+# timur – Grammatik
 
-- Lexikoneinträge:
+- Lexikoneinträge
     + **manuell kodierte** Morpheme
     + **automatisch erzeugte** Morpheme
         * jedes (Basis-)Nomen als `<Kompos_Stems>`
@@ -338,11 +338,11 @@ count: false
 
 ---
 
-# timur -- Varianten
+# timur – Varianten
 
 ---
 
-# timur -- Interface
+# timur – Interface
 
 - Python-API mit Kommandozeilenanwendung für Konstruktion und Abfrage
     + basierend auf `pynini`
@@ -359,16 +359,16 @@ count: false
 
 ---
 
-# timur -- aktueller Stand
+# timur – aktueller Stand
 
-- **Done**:
-    + Portierung der Grammatik im wesentlichen abgeschlossen
+- **Done**
+    + Portierung der Grammatik im Wesentlichen abgeschlossen
         * fehlende Flexionsklassen
         * Bugs (vgl. GitHub-Issues)
     + CLI funktional
     + Lexikon**tabelle** bearbeitet
     + Proof-of-Concept für **Grundformbestimmung**
-- **ToDo**:
+- **ToDo**
     + Ausgabeformate
     + Webservice
     + Interpretation der Lexikontabelle
@@ -404,8 +404,8 @@ count: false
     + viele komplexe Vollformen lexikalisiert
     + einige nicht-produktive Suffixe produktiv
     + sehr viele Tickets
-        * z.B. `Kalkei ↦ kalk<V>ei<NN><Suff>` 
-        * z.B. `Seiteneinsteiger ↦ Seiteneinsteiger<NN>` 
+        * z.&#x202f;B. `Kalkei ↦ kalk<V>ei<NN><Suff>` 
+        * z.&#x202f;B. `Seiteneinsteiger ↦ Seiteneinsteiger<NN>` 
 - mit timur Kontrolle über das Lexikon **und** die Grammatik
 
 ---

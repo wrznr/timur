@@ -32,6 +32,8 @@ p { line-height:1.25em; font-size:2rem; margin-block-end: auto }
 pre { margin:0; padding:.5em; background:#f6f8fa }
 
 table { margin:auto; width:100% }
+thead { background:#eee }
+tbody tr:nth-child(even) { background:#f3f3f3 }
 
 ul > li > ul > li { font-size:1.5rem }
 ul > li > ol > li { font-size:1.5rem }
@@ -43,7 +45,9 @@ ul > li > ol > li > ul > li { font-size:1.2rem }
 .center { text-align:center }
 .diasys { color:#595; font-weight:bold }
 .smaller { font-size:1.2em }
+.yellow { color:#d3d300 }
 .red { color:#c00 }
+.green { color:#0f0 }
 
 .remark-slide-content h1 { font-size:3rem; margin-top:0; color:#e52421 }
 .remark-slide-content h2 { font-size:2.5rem }

@@ -429,3 +429,40 @@ count: false
 > Guten Tag und erst ein Mal einen herzlichen Dank und meine Komplimente für ihr Projekt. Als niederländischer Muutersprachler Wohne ich seit mehr als 30 Jahren in Deutschland. Dennoch muss ich häufig in Online-Wörterbücher nach mir unbekannte Begriffe, beziehungsweise die Schreibweise deren suchen. Hier ist DWDS. de eine große Hilfe. Jedoch muss ich auch gelegentlich die Konjugation von wenig benutzten Wörtern nach schlagen. Gibt es auf ihrer Seite eine Möglichkeit nach der Konjugation von Verben zu suchen?
 
 - bald! (mit Hilfe der **Generierungskomponente**)
+
+---
+
+# Anwendungsszenarien
+
+- weitere mögliche Einsatzgebiete
+    + Korpusindizierung
+        * Part-Of-Speech Tagging
+        * Wortverlaufskurven
+        * Wortprofil (*Arztekammer*)
+    + Cascaded Analysis Broker: Zielsprache
+    + OCR-Nachkorrektur
+    + ...
+
+---
+
+# Diskussion und Ausblick
+
+1. Angesichts der erheblich gestiegenen Dynamik bei der Arbeit im Zentrum Sprache ist
+   eine Morphologiekomponente mit kurzen Entwicklungszyklen zwingend erforderlich.
+2. Um den Anforderungen der BBAW hinsichtlich der Lizensierung von Software zu
+   entsprechen, ist eine quelloffene Morphologiekomponente zwingend erforderlich.
+3. Die Nachfrage nach neuen und verlässlichen computerlinguistischen Webservices
+   könnte durch eine Morphologiekomponente auf Basis einer gepflegten,
+   veröffentlichten und auf verschiedenen Systemen deploybaren Automatenbibliothek
+   beantwortet werden.
+
+---
+
+# Diskussion und Ausblick
+
+- Fertigstellung einer ersten Version bis 08.05.2019
+- Optimierung und Anpassung auf die Bedarfe des Zentrums bis Oktober 2019
+- Unterstützung in Form von Abdeckungstests, Bugreports, Pull Requests willkommen
+
+Herzlichen Dank für Eure Aufmerksamkeit, für die Zusammenarbeit in den vergangenen
+sechzehn Jahren, den Kaffee, die Geduld mit mir und für Eure Existenz überhaupt.

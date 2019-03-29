@@ -521,5 +521,9 @@ count: false
 - Optimierung und Anpassung auf die Bedarfe des Zentrums bis Oktober 2019
 - Unterstützung in Form von Abdeckungstests, Bugreports, Pull Requests willkommen
 
+---
+
+<center><img src="img/tust.png" style="width:300px;margin-top:60px"/></center>
+
 Herzlichen Dank für Eure Aufmerksamkeit, für die Zusammenarbeit in den vergangenen
-sechzehn Jahren, den Kaffee, die Geduld mit mir und für Eure Existenz überhaupt.
+sechzehn Jahren, den Kaffee, die Geduld mit mir und für Eure Existenz überhaupt!

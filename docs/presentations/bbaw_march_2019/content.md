@@ -260,7 +260,7 @@ Ziel: Erstellung einer Baumstruktur pro Simplex
 
 # timur -- Lexikon
 
-<center><img src="img/tree.svg" /></center>
+<center><img src="img/tree.svg" width="100" /></center>
 
 ---
 

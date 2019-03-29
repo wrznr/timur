@@ -378,11 +378,11 @@ count: false
 
 # Anwendungsszenarien
 
-- automatisch erzeugte Artikel
+- automatisch erzeugte [Artikel](http://zwei.dwds.de/?q=Fahrgastschifffahrt)
     + *Zerlegung* der Suchanfrage
     + *Generierung* der Zwischenebenen
     + *Nachschlagen* der identifizierten Bestandteile
-    + *Auswahl* der minimal nötigen Zerlegung zur Abbildung auf bestehende Artikel
+    + *Auswahl* der maximalen Zerlegung zur Abbildung auf bestehende Artikel
 
-<center><img src="img/fahrgast.png" height="400" /></center>
+<center><img src="img/fahrgast.png" height="380" /></center>
 

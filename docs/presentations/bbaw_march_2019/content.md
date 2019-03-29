@@ -19,8 +19,10 @@ class: title-slide
 
 ## Morphologische Zerlegung mittels endlicher Automaten
 
-Kay-Michael Würzner
-[wuerzner@bbaw.de](mailto:wuerzner@bbaw.de)
+
+| Kay-Michael Würzner |
+|:-------------------:|
+| [wuerzner@bbaw.de](mailto:wuerzner@bbaw.de) |
 
 ---
 
@@ -373,6 +375,7 @@ count: false
         * Auffüllen von Lexikonlücken
         * Generierung des Eingabeformates
     + Abdeckungstests
+    + **Generator**
 
 ---
 
@@ -384,7 +387,7 @@ count: false
     + *Nachschlagen* der identifizierten Bestandteile
     + *Auswahl* der maximalen Zerlegung zur Abbildung auf bestehende Artikel
 
-<center><img src="img/fahrgast.png" height="340" /></center>
+<center><img src="img/fahrgast.png" height="330" /></center>
 
 ---
 
@@ -401,8 +404,8 @@ count: false
     + viele komplexe Vollformen lexikalisiert
     + einige nicht-produktive Suffixe produktiv
     + sehr viele Tickets
-    + z.B. `Kalkei ↦ kalk<V>ei<NN><Suff>` 
-    + z.B. `Seiteneinsteiger ↦ Seiteneinsteiger<NN>` 
+        * z.B. `Kalkei ↦ kalk<V>ei<NN><Suff>` 
+        * z.B. `Seiteneinsteiger ↦ Seiteneinsteiger<NN>` 
 - mit timur Kontrolle über das Lexikon **und** die Grammatik
 
 ---
@@ -424,3 +427,5 @@ count: false
 - Generierung von **Flexionsparadigmen**
 
 > Guten Tag und erst ein Mal einen herzlichen Dank und meine Komplimente für ihr Projekt. Als niederländischer Muutersprachler Wohne ich seit mehr als 30 Jahren in Deutschland. Dennoch muss ich häufig in Online-Wörterbücher nach mir unbekannte Begriffe, beziehungsweise die Schreibweise deren suchen. Hier ist DWDS. de eine große Hilfe. Jedoch muss ich auch gelegentlich die Konjugation von wenig benutzten Wörtern nach schlagen. Gibt es auf ihrer Seite eine Möglichkeit nach der Konjugation von Verben zu suchen?
+
+- bald! (mit Hilfe der **Generierungskomponente**)

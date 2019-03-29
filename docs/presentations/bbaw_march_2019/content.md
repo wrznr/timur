@@ -252,15 +252,31 @@ count: false
 | achtbar | `ADJ` | `Adj+` | ✓ | `V + bar` |
 | Achtbarkeit | `NN` | `NFem-Deriv` | ✓ | `ADJ + keit` |
 | ächten | `V` | `VVReg` | ✓ | `NN$` |
-| achtenswert | `ADJ` | `Adj+e` | ✓ | `k` |
+| achtenswert | `ADJ` | `Adj+e` | ✓ | `NN + wert` |
 
-Ziel: Erstellung einer Baumstruktur pro Simplex
+- Ziel: Erstellung einer Baumstruktur pro Simplex
 
 ---
 
 # timur -- Lexikon
 
 <center><img src="img/tree.svg" width="100" /></center>
+
+---
+
+# timur -- Lexikon
+
+- Ziel:
+    + Erstellung einer Baumstruktur pro Simplex
+    + abhängig von der gewählten Kodierungsstrategie
+        * Konvertierung der Lexikoneinträge in **automatenverarbeitbares** Format
+        * Gestalt eines komplexen Eintrags abhängig von der Gestalt seines „Vorgängers”
+- Herausforderungen:
+    + **Lücken** in der Ableitungshierarchie
+       * insbesondere im Bereich latinater Wortbildung (*inkommensurabel*)
+       * und bei nicht-produktiven Ableitungen produktiv ableitbarer Wörter (*argusäugig*)
+    + Ableitungen aus **Formativen** (*Amphitheater*)
+    + **Pseudo-** bzw. synchron intransparente Derivationen (*verschwenden*)
 
 ---
 

@@ -338,7 +338,21 @@ count: false
 
 ---
 
-# timur – Varianten
+# timur – Analysevarianten
+
+- Tiefenzerlegung
+    + nativ vorhanden per **Ausgabeband des Transduktors**
+- Oberflächenzerlegung
+    + nativ vorhanden per **Ausgabeinterpretation**
+        * *Letter transducer* ermöglicht Übertragung der Grenzsymbole in die Eingabe
+- Grundformabbildung
+    + nativ vorhanden per **Ausgabeinterpretation**
+        * Oberflächenzerlegung aller Wortbestandteile außer des Kopfes
+    + auch zur Konstruktionszeit möglich!
+        * `<Deriv_Stems>` und `<Kompos_Stems>` vs. `<Base_Stems>`
+- Generierung (i.e. Ausgabe der **flektierten Formen** bei Eingabe **Grundform**)
+    + nur konstruktiv möglich
+    + **ToDo**
 
 ---
 

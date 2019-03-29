@@ -286,6 +286,30 @@ count: false
     + auch für `Morphisto` und `Zmorge` genutzt
     + SFST-Format
 - Transduktoren für
-    + Flexion
-    + Derivation
-    + Komposition
+    + Lexikon
+        * Basiseinträge
+        * **Affixe**
+    + Flexion (Suffixe + Filter)
+    + Derivation (Filter)
+    + Komposition (Filter)
+    + Konversion (Konstruktionsregeln)
+
+---
+
+# timur -- Grammatik
+
+```
+<Base_Stems>Arzt<NN><base><nativ><NMasc_es_$e>
+<ge><Base_Stems>lern<V><base><nativ><VVReg>
+<Kompos_Stems>Ende:<epsilon><NN><kompos><nativ>
+<Deriv_Stems>er<Pref>tra:äg<V><deriv><nativ>
+<Suff_Stems><prefderiv,simplex,suffderiv><fremd,nativ><deriv><NN>chen<NN><SUFF><base><nativ><NNeut-Dimin>
+<Suff_Stems><prefderiv,simplex,suffderiv><fremd,nativ><deriv><NN>chen<NN><SUFF><kompos><nativ>
+<Suff_Stems><prefderiv,simplex,suffderiv><fremd,nativ><kompos><NN>los<ADJ><SUFF><base><nativ><Adj+e>
+<no-ge><Pref_Stems>zer<PREF><V><nativ>
+<Pref_Stems>durch<PREF><V><nativ>
+```
+
+- Σ
+    + `<X>`: komplexe Symbole
+    + `x`: Zeichen

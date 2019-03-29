@@ -238,9 +238,9 @@ count: false
     + morphologische Komplexität
     + Bildungsmuster
 - Zahlen:
-    + 11 989 **Adjektive** davon 774 Simplizia
-    + 5 818 **Verben** davon 1 353 Simplizia
-    + 24 107 **Nomen** davon 6 105 Simplizia
+    + 11 989 **Adjektive**, davon 774 Simplizia
+    + 5 818 **Verben**, davon 1 353 Simplizia
+    + 24 107 **Nomen**, davon 6 105 Simplizia
 
 ---
 
@@ -350,7 +350,7 @@ count: false
         * Oberflächenzerlegung aller Wortbestandteile außer des Kopfes
     + auch zur Konstruktionszeit möglich!
         * `<Deriv_Stems>` und `<Kompos_Stems>` vs. `<Base_Stems>`
-- Generierung (i.e. Ausgabe der **flektierten Formen** bei Eingabe **Grundform**)
+- Generierung (i.&nbsp;e. Ausgabe der **flektierten Formen** bei Eingabe **Grundform**)
     + nur konstruktiv möglich
     + **ToDo**
 

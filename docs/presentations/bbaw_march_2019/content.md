@@ -387,7 +387,63 @@ count: false
     + *Nachschlagen* der identifizierten Bestandteile
     + *Auswahl* der maximalen Zerlegung zur Abbildung auf bestehende Artikel
 
-<center><img src="img/fahrgast.png" height="330" /></center>
+<center><img src="img/tree1.png" height="300" /></center>
+
+---
+
+count: false
+
+# Anwendungsszenarien
+
+- automatisch erzeugte [Artikel](http://zwei.dwds.de/?q=Fahrgastschifffahrt)
+    + *Zerlegung* der Suchanfrage
+    + *Generierung* der Zwischenebenen
+    + *Nachschlagen* der identifizierten Bestandteile
+    + *Auswahl* der maximalen Zerlegung zur Abbildung auf bestehende Artikel
+
+<center><img src="img/tree2.png" height="300" /></center>
+
+---
+
+count: false
+
+# Anwendungsszenarien
+
+- automatisch erzeugte [Artikel](http://zwei.dwds.de/?q=Fahrgastschifffahrt)
+    + *Zerlegung* der Suchanfrage
+    + *Generierung* der Zwischenebenen
+    + *Nachschlagen* der identifizierten Bestandteile
+    + *Auswahl* der maximalen Zerlegung zur Abbildung auf bestehende Artikel
+
+<center><img src="img/tree3.png" height="300" /></center>
+
+---
+
+count: false
+
+# Anwendungsszenarien
+
+- automatisch erzeugte [Artikel](http://zwei.dwds.de/?q=Fahrgastschifffahrt)
+    + *Zerlegung* der Suchanfrage
+    + *Generierung* der Zwischenebenen
+    + *Nachschlagen* der identifizierten Bestandteile
+    + *Auswahl* der maximalen Zerlegung zur Abbildung auf bestehende Artikel
+
+<center><img src="img/tree4.png" height="300" /></center>
+
+---
+
+count: false
+
+# Anwendungsszenarien
+
+- automatisch erzeugte [Artikel](http://zwei.dwds.de/?q=Fahrgastschifffahrt)
+    + *Zerlegung* der Suchanfrage
+    + *Generierung* der Zwischenebenen
+    + *Nachschlagen* der identifizierten Bestandteile
+    + *Auswahl* der maximalen Zerlegung zur Abbildung auf bestehende Artikel
+
+<center><img src="img/tree5.png" height="300" /></center>
 
 ---
 

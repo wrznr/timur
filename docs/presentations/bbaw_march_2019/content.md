@@ -260,7 +260,7 @@ count: false
 
 # timur -- Lexikon
 
-<center><img src="img/tree.svg" width="100" /></center>
+<center><img src="img/tree.svg" style="position:absolute;top:200px;left:0;width:1200px;height:1200px" /></center>
 
 ---
 

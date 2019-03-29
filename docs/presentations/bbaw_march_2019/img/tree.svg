@@ -1,0 +1,27 @@
+<svg id="diagramSvg" xmlns="http://www.w3.org/2000/svg" style="width: 1090px; height: 500px;">
+      <style id="stylesheet">text {
+  text-anchor: middle;
+  font-size: small;
+  font-weight: bold;
+}
+
+rect {
+  fill: white;
+  stroke: black;
+  opacity: 0.5;
+  stroke-width: 1.5;
+}
+
+line {
+  stroke: black;
+  opacity: 0.5;
+  stroke-width: 1.5;
+}
+  </style>
+      <defs>
+        <marker id="arrowHead" viewBox="-10 -5 10 10" markerUnits="strokeWidth" markerWidth="6" markerHeight="5" orient="auto">
+          <path d="M -10 -5 L 0 0 L -10 5 z"></path>
+        </marker>
+      </defs>
+      <g id="diagramGroup"><rect x="354px" y="0px" width="82px" height="41px"></rect><text x="396px" y="0px"><tspan x="396" dy="26.333333333333332">Acht</tspan></text><rect x="206px" y="91px" width="82px" height="41px"></rect><text x="247px" y="91px"><tspan x="247" dy="26.333333333333332">ächten</tspan></text><line x1="382px" y1="41px" x2="247px" y2="91px" marker-end="url(#arrowHead)"></line><rect x="503px" y="91px" width="82px" height="41px"></rect><text x="545px" y="91px"><tspan x="545" dy="26.333333333333332">achten</tspan></text><line x1="409px" y1="41px" x2="545px" y2="91px" marker-end="url(#arrowHead)"></line><rect x="412px" y="183px" width="82px" height="41px"></rect><text x="453px" y="183px"><tspan x="453" dy="26.333333333333332">achtbar</tspan></text><line x1="524px" y1="133px" x2="453px" y2="183px" marker-end="url(#arrowHead)"></line><rect x="503px" y="183px" width="82px" height="41px"></rect><text x="545px" y="183px"><tspan x="545" dy="26.333333333333332">Achtung</tspan></text><line x1="545px" y1="133px" x2="545px" y2="183px" marker-end="url(#arrowHead)"></line><rect x="595px" y="183px" width="82px" height="41px"></rect><text x="636px" y="183px"><tspan x="636" dy="26.333333333333332">*Achten</tspan></text><line x1="565px" y1="133px" x2="636px" y2="183px" marker-end="url(#arrowHead)"></line><rect x="412px" y="275px" width="82px" height="41px"></rect><text x="453px" y="275px"><tspan x="453" dy="26.333333333333332">Achtbarkeit</tspan></text><line x1="453px" y1="225px" x2="453px" y2="275px" marker-end="url(#arrowHead)"></line><rect x="595px" y="275px" width="82px" height="41px"></rect><text x="636px" y="275px"><tspan x="636" dy="26.333333333333332">Achtenswert</tspan></text><line x1="636px" y1="225px" x2="636px" y2="275px" marker-end="url(#arrowHead)"></line></g>
+    </svg>

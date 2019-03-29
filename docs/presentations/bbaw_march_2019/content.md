@@ -303,9 +303,12 @@ count: false
 <ge><Base_Stems>lern<V><base><nativ><VVReg>
 <Kompos_Stems>Ende:<epsilon><NN><kompos><nativ>
 <Deriv_Stems>er<Pref>tra:äg<V><deriv><nativ>
-<Suff_Stems><prefderiv,simplex,suffderiv><fremd,nativ><deriv><NN>chen<NN><SUFF><base><nativ><NNeut-Dimin>
-<Suff_Stems><prefderiv,simplex,suffderiv><fremd,nativ><deriv><NN>chen<NN><SUFF><kompos><nativ>
-<Suff_Stems><prefderiv,simplex,suffderiv><fremd,nativ><kompos><NN>los<ADJ><SUFF><base><nativ><Adj+e>
+<Suff_Stems><prefderiv,simplex,suffderiv>
+    <fremd,nativ><deriv><NN>chen<NN><SUFF><base><nativ><NNeut-Dimin>
+<Suff_Stems><prefderiv,simplex,suffderiv>
+    <fremd,nativ><deriv><NN>chen<NN><SUFF><kompos><nativ>
+<Suff_Stems><prefderiv,simplex,suffderiv>
+    <fremd,nativ><kompos><NN>los<ADJ><SUFF><base><nativ><Adj+e>
 <no-ge><Pref_Stems>zer<PREF><V><nativ>
 <Pref_Stems>durch<PREF><V><nativ>
 ```
@@ -313,3 +316,20 @@ count: false
 - Σ
     + `<X>`: komplexe Symbole
     + `x`: Zeichen
+
+---
+
+# timur -- Grammatik
+
+- Lexikoneinträge:
+    + **manuell kodierte** Morpheme
+    + **automatisch erzeugte** Morpheme
+        * jedes (Basis-)Nomen als `<Kompos_Stems>`
+        * jeder Verbstamm als `<Deriv_Stems>`
+        * ...
+        * jedoch nur für **produktive** Prozesse
+- automatische **Konversion**
+    + Partizipien als Adjektive
+    + Infinitive als Nomen
+    + (flektierte) Adjektive als Nomen
+    + *ge*-Verbstämme als *Ge*-Nomen (*Gerenne* vs. * *Geverliere*)

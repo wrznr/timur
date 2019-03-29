@@ -215,10 +215,10 @@ count: false
 
 ---
 
-# timur
+# timur im Vergleich
 
 | Software | **TAGH** | **SMOR** | **Morphisto** | **Zmorge** | **timur** |
-|:------:|:----------:|:--------:|:-------:|:-------------:|:-------------------:|
+|:------|:----------:|:--------:|:-------:|:-------------:|:-------------------:|
 | OpenSource Framework | (✓) | ✓ | ✓ | ✓ | ✓ |
 | OpenSource Lexikon | ✗ | ✗ | ✓ | (✓) | ✓ |
 | OpenSource Grammatik | ✗ | (✓) | ✓ | ✓ | ✓ | 
@@ -227,4 +227,49 @@ count: false
 
 ---
 
-# timur
+# timur -- Lexikon
+
+- entstanden auf Basis einer großen Wortliste
+    + Wortart
+    + **DMOR**-Flexionsklasse (Schiller 1996)
+- überarbeitet/annotiert in Kooperation mit Forschungsgruppe REaD (Sascha Schroeder)
+    + morphologische Komplexität
+    + Bildungsmuster
+- Zahlen:
+    + 11 989 **Adjektive** davon 774 Simplizia
+    + 5 818 **Verben** davon 1 353 Simplizia
+    + 24 107 **Nomen** davon 6 105 Simplizia
+
+---
+
+# timur -- Lexikon
+
+| Wort | *Wortart* | *Flexionsklasse* | *komplex?* | *Bildung* |
+|:------|:----------:|:--------:|:-------:|:-------------:|
+| Acht | `NN` | `NFem/Sg` | ✗ | - |
+| achten | `V` | `VVReg` | ✓ | `NN` |
+| Achtung | `NN` | `NFem-Deriv` | ✓ | `V + ung` |
+| achtbar | `ADJ` | `Adj+` | ✓ | `V + bar` |
+| Achtbarkeit | `NN` | `NFem-Deriv` | ✓ | `ADJ + keit` |
+| ächten | `V` | `VVReg` | ✓ | `NN$` |
+| achtenswert | `ADJ` | `Adj+e` | ✓ | `k` |
+
+Ziel: Erstellung einer Baumstruktur pro Simplex
+
+---
+
+# timur -- Lexikon
+
+<center><img src="img/tree.svg" width="880" /></center>
+
+---
+
+# timur -- Grammatik
+
+- basierend auf einer Beispielgrammatik von Helmut Schmid
+    + auch für `Morphisto` und `Zmorge` genutzt
+    + SFST-Format
+- Transduktoren für
+    + Flexion
+    + Derivation
+    + Komposition

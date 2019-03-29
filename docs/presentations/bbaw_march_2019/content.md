@@ -218,7 +218,7 @@ count: false
 # timur
 
 | Software | **TAGH** | **SMOR** | **Morphisto** | **Zmorge** | **timur** |
-|------|----------|--------|-------|-------------|-------------------|
+|:------:|:----------:|:--------:|:-------:|:-------------:|:-------------------:|
 | OpenSource Framework | (✓) | ✓ | ✓ | ✓ | ✓ |
 | OpenSource Lexikon | ✗ | ✗ | ✓ | (✓) | ✓ |
 | OpenSource Grammatik | ✗ | (✓) | ✓ | ✓ | ✓ | 

@@ -315,7 +315,7 @@ count: false
 
 - Σ
     + `<X>`: komplexe Symbole
-    + `x`: Zeichen
+    + `x`: Zeichen (*Letter transducers*!)
 
 ---
 
@@ -333,3 +333,56 @@ count: false
     + Infinitive als Nomen
     + (flektierte) Adjektive als Nomen
     + *ge*-Verbstämme als *Ge*-Nomen (*Gerenne* vs. * *Geverliere*)
+
+---
+
+# timur -- Varianten
+
+---
+
+# timur -- Interface
+
+- Python-API mit Kommandozeilenanwendung für Konstruktion und Abfrage
+    + basierend auf `pynini`
+        * basierend auf `OpenFst`
+        * entwickelt von Google
+        * Support für „mindestens drei Jahre“
+    + **Portierung** von Beispielgrammatik im SFST-Format
+    + einzelne Klassen für die Morphologiekomponenten
+        * Flexionsklassen
+        * Derivationsfilter
+        * ...
+- (noch?) kein Lexikoneditor
+- verfügbar via [`https://github.com/wrznr/timur`](https://github.com/wrznr/timur)
+
+---
+
+# timur -- aktueller Stand
+
+- **Done**:
+    + Portierung der Grammatik im wesentlichen abgeschlossen
+        * fehlende Flexionsklassen
+        * Bugs (vgl. GitHub-Issues)
+    + CLI funktional
+    + Lexikon**tabelle** bearbeitet
+    + Proof-of-Concept für **Grundformbestimmung**
+- **ToDo**:
+    + Ausgabeformate
+    + Webservice
+    + Interpretation der Lexikontabelle
+        * Auffüllen von Lexikonlücken
+        * Generierung des Eingabeformates
+    + Abdeckungstests
+
+---
+
+# Anwendungsszenarien
+
+- automatisch erzeugte Artikel
+    + *Zerlegung* der Suchanfrage
+    + *Generierung* der Zwischenebenen
+    + *Nachschlagen* der identifizierten Bestandteile
+    + *Auswahl* der minimal nötigen Zerlegung zur Abbildung auf bestehende Artikel
+
+<center><img src="img/fahrgast.png" style="position:absolute;top:200px;left:0;height:1200px" /></center>
+

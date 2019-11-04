@@ -1,3 +1,0 @@
-<no-ge><Pref_Stems>zer<PREF><V><nativ>
-<Pref_Stems>durch<PREF><V><nativ>
-<Pref_Stems>ur<PREF><ADJ,NN><fremd,klassisch,nativ>

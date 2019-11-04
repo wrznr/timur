@@ -87,13 +87,13 @@ class TimurFst:
     lex = helpers.load_lexicon(lexicon_stream, self.__syms.alphabet)
     lex.draw("lex.dot", portrait=True)
 
-    pref_stems = helpers.load_lexicon(open(resource_filename(Requirement.parse("timur"), 'timur/data/pref_stems.txt')), self.__syms.alphabet)
-    pref_stems.draw("pref_stems.dot", portrait=True)
+    prefixes = helpers.load_lexicon(open(resource_filename(Requirement.parse("timur"), 'timur/data/prefixes.txt')), self.__syms.alphabet)
+    prefixes.draw("prefixes.dot", portrait=True)
 
-    suff_stems = helpers.load_lexicon(open(resource_filename(Requirement.parse("timur"), 'timur/data/suff_stems.txt')), self.__syms.alphabet)
-    suff_stems.draw("suff_stems.dot", portrait=True)
+    suffixes = helpers.load_lexicon(open(resource_filename(Requirement.parse("timur"), 'timur/data/suffixes.txt')), self.__syms.alphabet)
+    suffixes.draw("suffixes.dot", portrait=True)
 
-    lex = lex | pref_stems | suff_stems
+    lex = lex | prefixes | suffixes
 
     #
     # smor.fst
@@ -141,21 +141,21 @@ class TimurFst:
 
     # derivation suffixes to be added to simplex stems
     suffs1 = pynini.concat(
-        sublexica.simplex_suff_stems,
-        sublexica.suff_deriv_suff_stems.closure()
+        sublexica.simplex_suffixes,
+        sublexica.suff_deriv_suffixes.closure()
         ).closure(0, 1).optimize()
     suffs1.draw("suffs1.dot", portrait=True)
     
     # derivation suffixes to be added to prefixed stems
     suffs2 = pynini.concat(
-        sublexica.pref_deriv_suff_stems,
-        sublexica.suff_deriv_suff_stems.closure()
+        sublexica.pref_deriv_suffixes,
+        sublexica.suff_deriv_suffixes.closure()
         ).closure(0, 1)
 
     # suffixes for "Dreifarbigkeit"
     qsuffs = pynini.concat(
-        sublexica.quant_suff_stems,
-        sublexica.suff_deriv_suff_stems.closure()
+        sublexica.quant_suffixes,
+        sublexica.suff_deriv_suffixes.closure()
         )
 
     #defaults.ge_nom_stems_v.draw("target.dot", portrait=True)
@@ -166,7 +166,7 @@ class TimurFst:
     deko_filter.suff_filter.draw("suff_filter.dot", portrait=True)
     s0 = intermediate * deko_filter.suff_filter
     s0.draw("s0.dot", portrait=True)
-    p1 = (sublexica.pref_stems + s0) * deko_filter.pref_filter
+    p1 = (sublexica.prefixes + s0) * deko_filter.pref_filter
     p1.draw("p1.dot", portrait=True)
     s1 = (p1 + suffs2) * deko_filter.suff_filter
     s1.draw("s1.dot", portrait=True)

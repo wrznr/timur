@@ -1,0 +1,3 @@
+<no-ge><Prefix>zer<PREF><V><nativ>
+<Prefix>durch<PREF><V><nativ>
+<Prefix>ur<PREF><ADJ,NN><fremd,klassisch,nativ>

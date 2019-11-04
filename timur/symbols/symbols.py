@@ -12,11 +12,19 @@ class Symbols:
     '''
     Constructor
     '''
+    #
     # store alphabet
+    #
     self.__alphabet = alphabet
 
     #
     # create different subsets
+    #
+
+    #
+    # character sets
+
+    # all characters
     chars = []
     chars_upper = []
     chars_lower = []
@@ -43,31 +51,70 @@ class Symbols:
         else:
           chars_to_lower.append((symbol, symbol))
           chars_to_upper.append((symbol, symbol))
+
     self.__characters = pynini.string_map(chars, input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
+    # uppercase characters
     self.__characters_upper = pynini.string_map(chars_upper, input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
+    # lowercase characters
     self.__characters_lower = pynini.string_map(chars_lower, input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
+    # lower -> upper conversion
     self.__characters_to_upper = pynini.string_map(chars_to_upper, input_token_type=alphabet, output_token_type=alphabet).optimize()
+
+    # upper -> lower conversion
     self.__characters_to_lower = pynini.string_map(chars_to_lower, input_token_type=alphabet, output_token_type=alphabet).optimize()
 
+    # lowercase consonants
     self.__consonants_lower = pynini.string_map(["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z", "ß"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
+    # uppercase consonants
     self.__consonants_upper = pynini.string_map(["B", "C", "D", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "X", "Y", "Z"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
+    # all consonants
     self.__consonants = self.__consonants_lower | self.__consonants_upper
 
-    self.__inititial_features = pynini.string_map(["<QUANT>", "<Initial>", "<NoHy>", "<ge>", "<no-ge>", "<NoPref>", "<NoDef>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+    #
+    # ss trigger
+    self.__ss_trigger = pynini.string_map(["<SS>", "<SSneu>", "<SSalt>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
+    #
+    # orth trigger
+    self.__orth_trigger = pynini.string_map(["<NEWORTH>", "<OLDORTH>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
+    #
+    # phon triggers
+    self.__phon_trigger1 = pynini.string_map(["<INS-E>", "<FB>", "<^Gen>", "<^Del>", "<^pl>", "<^Ax>", "<WB>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+    self.__phon_trigger2 = pynini.string_map(["<CB>", "<^UC>", "<NoHy>", "<NoDef>", "<I>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+    self.__phon_trigger3 = pynini.string_map(["<UL>", "<SS>", "<SSneu>", "<SSalt>", "<NEWORTH>", "<OLDORTH>", "<e>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+    self.__phon_trigger = pynini.union(self.__phon_trigger1, self.__phon_trigger2).optimize()
+
+    #
+    # surface trigger
+    self.__surface_trigger = pynini.string_map(["<~n>", "<d>", "<e>", "<er>", "<n>", "<NoPref>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
+    #
+    # capitalization trigger
+    self.__cap_trigger = pynini.string_map(["<UC>", "<LC>", "<CAP>", "<DECAP>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
+    #
+    # marker ?
+    self.__marker = pynini.string_map(["<PPast>", "<PPres>", "<PREF>", "<SUFF>", "<CAP>", "<DECAP>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
+    #
+    # deko trigger
+    self.__deko_trigger = pynini.string_map(["<Initial>", "<NoHy>", "<ge>", "<no-ge>", "<NoPref>", "<NoDef>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
     self.__categories = pynini.string_map(["<ABK>", "<ADJ>", "<ADV>", "<CARD>", "<DIGCARD>", "<NE>", "<NN>", "<PRO>", "<V>", "<ORD>", "<OTHER>", "<KSF>", "<FT>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
     self.__disjunctive_categories = pynini.string_map(["<CARD,DIGCARD,NE>", "<ADJ,CARD>", "<ADJ,NN>", "<CARD,NN>", "<CARD,NE>", "<ABK,ADJ,NE,NN>", "<ADJ,NE,NN>", "<ABK,NE,NN>", "<NE,NN>", "<ABK,CARD,NN>", "<ABK,NN>", "<ADJ,CARD,NN,V>", "<ADJ,NN,V>", "<ABK,ADJ,NE,NN,V>", "<ADJ,NE,NN,V>", "<ADV,NE,NN,V>", "<ABK,NE,NN,V>", "<NE,NN,V>", "<ABK,NN,V>", "<NN,V>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
-    self.__base_stem_types = pynini.string_map(["<Base_Stems>", "<Kompos_Stems>", "<Deriv_Stems>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
-
-    self.__stem_types = pynini.string_map(["<Base_Stems>", "<Kompos_Stems>", "<Deriv_Stems>", "<Suff_Stems>", "<Pref_Stems>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+    self.__morpheme_types = pynini.string_map(["<Stem>", "<Prefix>", "<Suffix>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
     self.__prefix_suffix_marker = pynini.string_map(["<VPART>", "<VPREF>", "<PREF>", "<SUFF>", "<CONV>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
-    self.__stem_type_features = pynini.string_map(["<base>", "<deriv>", "<kompos>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+    self.__stem_types = pynini.string_map(["<base>", "<deriv>", "<kompos>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
     self.__complexity_agreement_features = pynini.string_map(["<simplex>", "<komposit>", "<suffderiv>", "<prefderiv>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
@@ -282,13 +329,6 @@ class Symbols:
     return self.__disjunctive_categories
 
   @property
-  def base_stem_types(self):
-    '''
-    Union over the different free morpheme stem types
-    '''
-    return self.__base_stem_types
-
-  @property
   def stem_types(self):
     '''
     Union over the different stem types
@@ -303,11 +343,11 @@ class Symbols:
     return self.__prefix_suffix_marker
 
   @property
-  def stem_type_features(self):
+  def morpheme_types(self):
     '''
-    Union over the different word stem types markers
+    Union over the different morpheme types
     '''
-    return self.__stem_type_features
+    return self.__morpheme_types
 
   @property
   def complexity_agreement_features(self):

@@ -106,7 +106,32 @@ class Symbols:
     # deko trigger
     self.__deko_trigger = pynini.string_map(["<Initial>", "<NoHy>", "<ge>", "<no-ge>", "<NoPref>", "<NoDef>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
+    #
+    # categories
     self.__categories = pynini.string_map(["<ABK>", "<ADJ>", "<ADV>", "<CARD>", "<DIGCARD>", "<NE>", "<NN>", "<PRO>", "<V>", "<ORD>", "<OTHER>", "<KSF>", "<FT>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
+    #
+    # part of speech
+    self.__pos = pynini.string_map(["<+ADJ>", "<+ADV>", "<+ART>", "<+CARD>", "<+CHAR>", "<+CIRCP>", "<+DEM>", "<+INDEF>", "<+INTJ>", "<+PUNCT>", "<+CONJ>", "<+NPROP>", "<+NN>", "<+ORD>", "<+POSS>", "<+POSTP>", "<+PPRO>", "<+PREPART>", "<+PREP>", "<+PROADV>", "<+PTCL>", "<+REL>", "<+SYMBOL>", "<+TRUNC>", "<+V>", "<+VPART>", "<+WADV>", "<+WPRO>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
+    #
+    # gender
+    self.__gender = pynini.string_map(["<Masc>", "<Fem>", "<Neut>", "<NoGend>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
+    #
+    # case
+    self.__case = pynini.string_map(["<Nom>", "<Gen>", "<Dat>", "<Acc>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+
+    #
+    # all features
+    self.__features = pynini.union(
+      self.__case,
+      self.__gender,
+      self.__categories,
+      self.__pos,
+      self.__orth_trigger,
+      pynini.string_map(["<1>", "<2>", "<3>", "<Sg>", "<Pl>", "<Def>", "<Indef>", "<St>", "<Wk>", "<Pos>", "<Comp>", "<Sup>", "<Pred>", "<Attr>", "<Subst>", "<Pro>", "<PPres>", "<PPast>", "<Pres>", "<Past>", "<Imp>", "<Ind>", "<Inf>", "<Subj>", "<Pers>", "<Prfl>", "<Refl>", "<Rec>", "<Right>", "<Left>", "<Sub>", "<Coord>", "<Compar>", "<^ABBR>", "<^VPRES>", "<^VPAST>", "<Norm>", "<Comma>", "<Neg>", "<Adj>", "<Ans>", "<Adv>", "<Ge-Nom>", "<ProAdv>", "<Simp>", "<WeakGen>", "<Invar>", "<SUFF>", "<zu>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
+      )
 
     self.__disjunctive_categories = pynini.string_map(["<CARD,DIGCARD,NE>", "<ADJ,CARD>", "<ADJ,NN>", "<CARD,NN>", "<CARD,NE>", "<ABK,ADJ,NE,NN>", "<ADJ,NE,NN>", "<ABK,NE,NN>", "<NE,NN>", "<ABK,CARD,NN>", "<ABK,NN>", "<ADJ,CARD,NN,V>", "<ADJ,NN,V>", "<ABK,ADJ,NE,NN,V>", "<ADJ,NE,NN,V>", "<ADV,NE,NN,V>", "<ABK,NE,NN,V>", "<NE,NN,V>", "<ABK,NN,V>", "<NN,V>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
@@ -240,8 +265,6 @@ class Symbols:
       "<VVPres1>", "<VVPres2+Imp0>", "<VVPres2+Imp>", "<VVPres2>",
       "<VVPres2t>", "<VVPres>", "<VVPresPl>", "<VVPresSg>",
       "<VVReg-el/er>", "<VVReg>", "<WAdv>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
-
-    self.__gender = pynini.string_map(["<Masc>", "<Fem>", "<Neut>", "<NoGend>"], input_token_type=alphabet, output_token_type=alphabet).project().optimize()
 
   #
   # access to the alphabet (pynini.SymbolTable)

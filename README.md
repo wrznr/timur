@@ -12,7 +12,7 @@ This package started as a migration of a set of finite-state grammars for the mo
 
 The underlying FST toolkit `Pynini` is itself based on [`OpenFST`](http://www.openfst.org/twiki/bin/view/FST/WebHome), a C++ library for constructing, combining, optimizing, and searching weighted FSTs. [Get](http://www.openfst.org/twiki/bin/view/FST/FstDownload) the latest version of OpenFST, unpack the archive, build and install via
 ```console
-$ configure --enable-grm
+$ ./configure --enable-grm
 $ make
 $ [sudo] make install && [sudo ldconfig]
 ```

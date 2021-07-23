@@ -349,7 +349,7 @@ class DekoFst:
     Case-dependent deletion of the ge marker
     '''
 
-    # delete <ge> at certain suffixes like 'ver'
+    # delete <ge> at certain prefixes like 'ver'
     return pynini.concat(
         pynini.transducer("<no-ge>", "", input_token_type=self.__syms.alphabet),
         pynini.concat(

@@ -106,7 +106,7 @@ class TimurFst:
     mappings = fsts.MapFst(self.__syms)
 
     # delete certain symbols on the upper and lower level
-    lex = mappings.map1 * lex * mappings.map2
+    lex = mappings.map1 @ lex @ mappings.map2
     lex.draw("lex_map.dot", portrait=True)
 
     #

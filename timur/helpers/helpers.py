@@ -23,9 +23,11 @@ def load_lexicon(source, symbol_table):
       tmp.set_final(start)
       for token in tokenizer.findall(line):
         if token[1]:
-          tmp = pynini.concat(tmp, pynini.transducer(token[0], token[1], input_token_type=symbol_table, output_token_type=symbol_table))
+          tmp1 = pynini.concat(tmp, pynini.accep(token[0], token_type=symbol_table))
+          tmp2 = pynini.concat(tmp, pynini.accep(token[1], token_type=symbol_table))
+          tmp = pynini.concat(tmp, pynini.cross(tmp1, tmp2))
         else:
-          tmp = pynini.concat(tmp, pynini.acceptor(token[0], token_type=symbol_table))
+          tmp = pynini.concat(tmp, pynini.accep(token[0], token_type=symbol_table))
       lex = pynini.union(lex, tmp)
   return lex
 

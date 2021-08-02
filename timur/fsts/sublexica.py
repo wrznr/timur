@@ -127,11 +127,9 @@ class Sublexica:
     with pynini.default_token_type(self.__syms.alphabet):
       return pynini.compose(
           self.__lex,
-          pynini.concat(
-            self.__syms.initial_features.closure(),
-            pynini.string_map(["<Base_Stems>", "<Deriv_Stems>", "<Kompos_Stems>"]).project("input"),
-            self.__sigma_star
-            )
+          self.__syms.initial_features.closure() +
+          pynini.string_map(["<Base_Stems>", "<Deriv_Stems>", "<Kompos_Stems>"]).project("input") +
+          self.__sigma_star
           ).optimize()
 
   def __construct_base_stems(self):
@@ -141,11 +139,9 @@ class Sublexica:
     with pynini.default_token_type(self.__syms.alphabet):
       return pynini.compose(
           self.__bdk_stems,
-          pynini.concat(
-            self.__syms.initial_features.closure(),
-            pynini.accep("<Base_Stems>"),
-            self.__sigma_star
-            )
+          self.__syms.initial_features.closure() +
+          pynini.accep("<Base_Stems>") +
+          self.__sigma_star
           ).optimize()
 
   def __construct_pref_stems(self):
@@ -155,11 +151,9 @@ class Sublexica:
     with pynini.default_token_type(self.__syms.alphabet):
       return pynini.compose(
           self.__lex,
-          pynini.concat(
-            self.__syms.initial_features.closure(),
-            pynini.accep("<Pref_Stems>"),
-            self.__sigma_star
-            )
+          self.__syms.initial_features.closure() +
+          pynini.accep("<Pref_Stems>") +
+          self.__sigma_star
           ).optimize()
 
   def __construct_verbal_pref_stems(self):
@@ -169,13 +163,11 @@ class Sublexica:
     with pynini.default_token_type(self.__syms.alphabet):
       return pynini.compose(
           self.__pref_stems,
-          pynini.concat(
-            self.__syms.initial_features.closure(),
-            pynini.accep("<Pref_Stems>"),
-            self.__sigma_star,
-            pynini.accep("<V>", token_type=self.__syms.alphabet),
-            self.__sigma_star
-            )
+          self.__syms.initial_features.closure() +
+          pynini.accep("<Pref_Stems>") +
+          self.__sigma_star +
+          pynini.accep("<V>", token_type=self.__syms.alphabet) +
+          self.__sigma_star
           ).optimize()
 
   def __construct_simplex_suff_stems(self):
@@ -185,12 +177,10 @@ class Sublexica:
     with pynini.default_token_type(self.__syms.alphabet):
       return pynini.compose(
           self.__lex,
-          pynini.concat(
-            self.__syms.initial_features.closure(),
-            pynini.accep("<Suff_Stems>"),
-            pynini.cross("<simplex>", ""),
-            self.__sigma_star
-            )
+          self.__syms.initial_features.closure() +
+          pynini.accep("<Suff_Stems>") +
+          pynini.cross("<simplex>", "") +
+          self.__sigma_star
           ).optimize()
 
   def __construct_suff_deriv_suff_stems(self):
@@ -200,12 +190,10 @@ class Sublexica:
     with pynini.default_token_type(self.__syms.alphabet):
       return pynini.compose(
           self.__lex,
-          pynini.concat(
-            self.__syms.initial_features.closure(),
-            pynini.accep("<Suff_Stems>"),
-            pynini.cross("<suffderiv>", ""),
-            self.__sigma_star
-            )
+          self.__syms.initial_features.closure() +
+          pynini.accep("<Suff_Stems>") +
+          pynini.cross("<suffderiv>", "") +
+          self.__sigma_star
           ).optimize()
 
   def __construct_pref_deriv_suff_stems(self):
@@ -215,12 +203,10 @@ class Sublexica:
     with pynini.default_token_type(self.__syms.alphabet):
       return pynini.compose(
           self.__lex,
-          pynini.concat(
-            self.__syms.initial_features.closure(),
-            pynini.accep("<Suff_Stems>"),
-            pynini.cross("<prefderiv>", ""),
-            self.__sigma_star
-            )
+          self.__syms.initial_features.closure() +
+          pynini.accep("<Suff_Stems>") +
+          pynini.cross("<prefderiv>", "") +
+          self.__sigma_star
           ).optimize()
 
   def __construct_quant_suff_stems(self):
@@ -230,11 +216,9 @@ class Sublexica:
     with pynini.default_token_type(self.__syms.alphabet):
       return pynini.compose(
           self.__lex,
-          pynini.concat(
-            pynini.cross("<QUANT>", ""),
-            self.__syms.initial_features.closure(),
-            pynini.accep("<Suff_Stems>"),
-            pynini.cross("<simplex>", ""),
-            self.__sigma_star
-            )
+          pynini.cross("<QUANT>", "") +
+          self.__syms.initial_features.closure() +
+          pynini.accep("<Suff_Stems>") +
+          pynini.cross("<simplex>", "") +
+          self.__sigma_star
           ).optimize()

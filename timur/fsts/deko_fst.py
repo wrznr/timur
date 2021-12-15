@@ -73,7 +73,7 @@ class DekoFst:
     # imperative filter
     self.__imperative_filter = self.__construct_imperative_filter()
 
-    self.__infix_filter = (self.__insert_ge * self.__insert_zu * self.__imperative_filter).optimize()
+    self.__infix_filter = (self.__insert_ge @ self.__insert_zu @ self.__imperative_filter).optimize()
 
     #
     # uplow
@@ -378,90 +378,77 @@ class DekoFst:
               pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>"]).project("input")
               ).closure(),
             pynini.union(
-              pynini.concat(
-                pynini.cross("<ADJ> <nativ>", ""),
-                self.__prefix_filter_helper,
-                pynini.accep("<ADJ>"),
-                self.__syms.stem_type_features,
-                pynini.accep("<nativ>")
-                ),
-              pynini.concat(
-                pynini.cross("<ABK> <nativ>", ""),
-                self.__prefix_filter_helper,
-                pynini.accep("<ABK>"),
-                self.__syms.stem_type_features,
-                pynini.accep("<nativ>")
-                ),
-              pynini.concat(
-                pynini.cross("<NN> <nativ>", ""),
-                self.__prefix_filter_helper,
-                pynini.accep("<NN>"),
-                self.__syms.stem_type_features,
-                pynini.accep("<nativ>")
-                ),
-              pynini.concat(
-                pynini.cross("<NN> <fremd>", ""),
-                self.__prefix_filter_helper,
-                pynini.accep("<NN>"),
-                self.__syms.stem_type_features,
-                pynini.accep("<fremd>")
-                ),
-              pynini.concat(
-                pynini.cross("<NE> <nativ>", ""),
-                self.__prefix_filter_helper,
-                pynini.accep("<NE>"),
-                self.__syms.stem_type_features,
-                pynini.accep("<nativ>")
-                ),
-              pynini.concat(
-                pynini.cross("<NE> <fremd>", ""),
-                self.__prefix_filter_helper,
-                pynini.accep("<NE>"),
-                self.__syms.stem_type_features,
-                pynini.accep("<fremd>")
-                ),
-              pynini.concat(
-                pynini.cross("<ADJ> <fremd>", ""),
-                self.__prefix_filter_helper,
-                pynini.accep("<ADJ>"),
-                self.__syms.stem_type_features,
-                pynini.accep("<fremd>")
-                ),
-              pynini.concat(
-                pynini.cross("<V> <nativ>", ""),
-                self.__prefix_filter_helper,
-                pynini.accep("<V>"),
-                self.__syms.stem_type_features,
-                pynini.accep("<nativ>")
-                ),
-              pynini.concat(
-                pynini.cross("<V> <nativ>", ""),
-                self.__prefix_filter_helper,
-                pynini.accep("<V>"),
-                self.__syms.stem_type_features,
-                self.__syms.ns_features
-                ),
-              pynini.concat(
-                pynini.cross("<ADJ> <klassisch>", ""),
-                self.__prefix_filter_helper,
-                pynini.accep("<ADJ>"),
-                self.__syms.stem_type_features,
-                pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"]).project("input")
-                ),
-              pynini.concat(
-                pynini.cross("<NN> <klassisch>", ""),
-                self.__prefix_filter_helper,
-                pynini.accep("<NN>"),
-                self.__syms.stem_type_features,
-                pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"]).project("input")
-                ),
-              pynini.concat(
-                pynini.cross("<V> <klassisch>", ""),
-                self.__prefix_filter_helper,
-                pynini.accep("<V>"),
-                self.__syms.stem_type_features,
-                pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"]).project("input")
-                )
+              pynini.cross("<ADJ> <nativ>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<ADJ>")
+              + self.__syms.stem_type_features
+              + pynini.accep("<nativ>")
+              ,
+              pynini.cross("<ABK> <nativ>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<ABK>")
+              + self.__syms.stem_type_features
+              + pynini.accep("<nativ>")
+              ,
+              pynini.cross("<NN> <nativ>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<NN>")
+              + self.__syms.stem_type_features
+              + pynini.accep("<nativ>")
+              ,
+              pynini.cross("<NN> <fremd>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<NN>")
+              + self.__syms.stem_type_features
+              + pynini.accep("<fremd>")
+              ,
+              pynini.cross("<NE> <nativ>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<NE>")
+              + self.__syms.stem_type_features
+              + pynini.accep("<nativ>")
+              ,
+              pynini.cross("<NE> <fremd>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<NE>")
+              + self.__syms.stem_type_features
+              + pynini.accep("<fremd>")
+              ,
+              pynini.cross("<ADJ> <fremd>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<ADJ>")
+              + self.__syms.stem_type_features
+              + pynini.accep("<fremd>")
+              ,
+              pynini.cross("<V> <nativ>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<V>")
+              + self.__syms.stem_type_features
+              + pynini.accep("<nativ>")
+              ,
+              pynini.cross("<V> <nativ>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<V>")
+              + self.__syms.stem_type_features
+              + self.__syms.ns_features
+              ,
+              pynini.cross("<ADJ> <klassisch>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<ADJ>")
+              + self.__syms.stem_type_features
+              + pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"]).project("input")
+              ,
+              pynini.cross("<NN> <klassisch>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<NN>")
+              + self.__syms.stem_type_features
+              + pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"]).project("input")
+              ,
+              pynini.cross("<V> <klassisch>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<V>")
+              + self.__syms.stem_type_features
+              + pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"]).project("input")
               )
             )
           ).optimize()
@@ -495,13 +482,19 @@ class DekoFst:
                 ),
               pynini.concat(
                 pynini.cross("", "<VADJ>"),
-                pynini.union(
-                  alphabet,
-                  pynini.cross("<kompos>", "")
-                  ).closure(),
-                pynini.cross("<kompos>", ""),
-                alphabet.closure(),
-                pynini.cross("<V>", "")
+                pynini.concat(
+                  pynini.union(
+                    alphabet,
+                    pynini.cross("<kompos>", "")
+                    ).closure(),
+                  pynini.concat(
+                    pynini.cross("<kompos>", ""),
+                    pynini.concat(
+                      alphabet.closure(),
+                      pynini.cross("<V>", "")
+                      )
+                    )
+                  )
                 ),
               pynini.concat(
                 pynini.union(
@@ -513,8 +506,10 @@ class DekoFst:
               ),
             pynini.concat(
               pynini.cross("<base>", ""),
-              pynini.cross(self.__syms.origin_features, ""),
-              self.__syms.inflection_classes
+              pynini.concat(
+                pynini.cross(self.__syms.origin_features, ""),
+                self.__syms.inflection_classes
+                )
               )
             )
           ).optimize()
@@ -541,38 +536,29 @@ class DekoFst:
       # in complex lexicon entries as for "haushalten" <ge> is not followed
       # by <Base_Stems>
       return pynini.union(
-          c2,
-          pynini.concat(
-            c2,
-            pynini.cross("<ge>", ""),
-            pynini.accep("<Base_Stems>").closure(0, 1),
-            pynini.cross("", "g e"),
-            alphabet.closure(),
-            pynini.cross("<^pp>", ""),
-            alphabet.closure()
-            ),
-          pynini.concat(
-            c2,
-            pynini.accep("<Deriv_Stems>").closure(0, 1),
-            alphabet.closure(),
-            pynini.cross("<Ge>", ""),
-            alphabet.closure(),
-            pynini.cross("<Suff_Stems> <Ge-Nom>", "e"),
-            alphabet.closure()
-            ),
-          pynini.concat(
-            c2,
-            pynini.cross("<ge>", ""),
-            pynini.accep("<Base_Stems>").closure(0, 1),
-            alphabet.closure()
-            ),
-          pynini.concat(
-            c2,
-            pynini.accep("<Base_Stems>").closure(0, 1),
-            alphabet.closure(),
-            pynini.cross("<^pp>", ""),
-            alphabet.closure()
-            )
+          c2
+          ,
+          c2 + pynini.cross("<ge>", "")
+          + pynini.accep("<Base_Stems>").closure(0, 1)
+          + pynini.cross("", "g e") + alphabet.closure()
+          + pynini.cross("<^pp>", "") + alphabet.closure()
+          ,
+          c2 + pynini.cross("<ge>", "")
+          + pynini.accep("<Base_Stems>").closure(0, 1)
+          + alphabet.closure()
+          ,
+          c2
+          + pynini.accep("<Base_Stems>").closure(0, 1)
+          + alphabet.closure()
+          + pynini.cross("<^pp>", "") + alphabet.closure()
+          ,
+          c2
+          + pynini.accep("<Deriv_Stems>").closure(0, 1)
+          + alphabet.closure()
+          + pynini.cross("<Ge>", "")
+          + alphabet.closure()
+          + pynini.cross("<Suff_Stems> <Ge-Nom>", "e")
+          + alphabet.closure()
           ).optimize()
 
   def __construct_insert_zu(self):
@@ -601,16 +587,14 @@ class DekoFst:
           #  pynini.cross("<^zz>", ""),
           #  alphabet.closure()
           #  ),
-          pynini.concat(
-            c2,
-            pynini.accep("<Pref_Stems>"),
-            alphabet.closure(),
-            pynini.accep("<Base_Stems>"),
-            pynini.cross("", "z u"),
-            alphabet.closure(),
-            pynini.cross("<^zz>", ""),
-            alphabet.closure()
-            )
+          c2
+          + pynini.accep("<Pref_Stems>")
+          + alphabet.closure()
+          + pynini.accep("<Base_Stems>")
+          + pynini.cross("", "z u")
+          + alphabet.closure()
+          + pynini.cross("<^zz>", "")
+          + alphabet.closure()
           ).optimize()
 
   def __construct_imperative_filter(self):
@@ -631,12 +615,10 @@ class DekoFst:
 
       return pynini.union(
           c2,
-          pynini.concat(
-            pynini.cross("<Base_Stems>", "<CB>"),
-            alphabet.closure(),
-            pynini.cross("<^imp>", ""),
-            alphabet.closure()
-            )
+          pynini.cross("<Base_Stems>", "<CB>")
+          + alphabet.closure()
+          + pynini.cross("<^imp>", "")
+          + alphabet.closure()
           ).optimize()
 
   def __construct_uplow(self):
@@ -674,29 +656,41 @@ class DekoFst:
 
       return pynini.union(
           pynini.concat(
-              pynini.cross("<^UC>", ""),
+            pynini.cross("<^UC>", ""),
+            pynini.concat(
               pynini.string_map(["<NoDef>", "<NoHy>"]).project("input").closure(0, 1),
-              pynini.cross("", "<^UC>"),
-              s2,
-              pynini.cross("<Low#>", "")
+              pynini.concat(
+                pynini.cross("", "<^UC>"),
+                pynini.concat(
+                  s2,
+                  pynini.cross("<Low#>", "")
+                  )
+                )
+              )
             ),
           pynini.concat(
             pynini.accep("<NoHy>").closure(0, 1),
             pynini.union(
               pynini.concat(
                 pynini.cross("<CB>", ""),
-                s,
-                pynini.cross("<Fix#>", "")
+                pynini.concat(
+                  s,
+                  pynini.cross("<Fix#>", "")
+                  )
                 ),
               pynini.concat(
                 pynini.cross(pynini.string_map(["<CB>", "<epsilon>"]).project("input"), "<^UC>"),
-                s,
-                pynini.cross("<Up#>", "")
+                pynini.concat(
+                  s,
+                  pynini.cross("<Up#>", "")
+                  )
                 ),
               pynini.concat(
                 pynini.cross(pynini.string_map(["<CB>", "<epsilon>"]).project("input"), "<CB>"),
-                s,
-                pynini.cross("<Low#>", "")
+                pynini.concat(
+                  s,
+                  pynini.cross("<Low#>", "")
+                  )
                 )
               )
             )

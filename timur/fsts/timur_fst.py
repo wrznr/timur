@@ -40,8 +40,8 @@ class TimurFst:
     '''
     result = []
     if self.__verify():
-      string_acceptor = pynini.acceptor(" ".join(c for c in string), token_type=self.__syms.alphabet)
-      intermediate = pynini.compose(self.__timur, string_acceptor)
+      string_accep = pynini.accep(" ".join(c for c in string), token_type=self.__syms.alphabet)
+      intermediate = pynini.compose(self.__timur, string_accep)
       paths = intermediate.paths(input_token_type=intermediate.input_symbols(),output_token_type=intermediate.output_symbols())
       result = list(paths.items())
     return result
@@ -57,9 +57,10 @@ class TimurFst:
     '''
     Print a previously built morphology
     '''
-    if self.__verify():
-      return self.__timur.text()
-    return ""
+    with pynini.default_token_type(self.__syms.alphabet):
+      if self.__verify():
+        print(self.__timur)
+      return ""
 
   def dump_fst(self, out_file):
     '''
@@ -106,7 +107,7 @@ class TimurFst:
     mappings = fsts.MapFst(self.__syms)
 
     # delete certain symbols on the upper and lower level
-    lex = mappings.map1 * lex * mappings.map2
+    lex = mappings.map1 @ lex @ mappings.map2
     lex.draw("lex_map.dot", portrait=True)
 
     #
@@ -164,15 +165,15 @@ class TimurFst:
     intermediate = pynini.concat(bdk_stems, suffs1).optimize()
     intermediate.draw("intermediate.dot", portrait=True)
     deko_filter.suff_filter.draw("suff_filter.dot", portrait=True)
-    s0 = intermediate * deko_filter.suff_filter
+    s0 = intermediate @ deko_filter.suff_filter
     s0.draw("s0.dot", portrait=True)
-    p1 = (sublexica.pref_stems + s0) * deko_filter.pref_filter
+    p1 = (sublexica.pref_stems + s0) @ deko_filter.pref_filter
     p1.draw("p1.dot", portrait=True)
-    s1 = (p1 + suffs2) * deko_filter.suff_filter
+    s1 = (p1 + suffs2) @ deko_filter.suff_filter
     s1.draw("s1.dot", portrait=True)
     tmp = s0 | s1
     tmp.draw("tmp.dot", portrait=True)
-    tmp = tmp.closure(1) * deko_filter.compound_filter
+    tmp = tmp.closure(1) @ deko_filter.compound_filter
     tmp.draw("tmp2.dot", portrait=True)
 
     #
@@ -181,36 +182,30 @@ class TimurFst:
     #
 
     # ANY TODO: Move to symbols!
-    alphabet = pynini.union(
-        self.__syms.characters,
-        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<Ge>", "<no-ge>", "<CB>", "<NoHy>", "<VADJ>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
-        self.__syms.stem_types,
-        ).project().closure().optimize()
+    with pynini.default_token_type(self.__syms.alphabet):
+      alphabet = pynini.union(
+          self.__syms.characters,
+          pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<Ge>", "<no-ge>", "<CB>", "<NoHy>", "<VADJ>"]).project("input"),
+          self.__syms.stem_types,
+          ).project("input").closure().optimize()
 
-    base = (tmp + inflection.inflection)
-    base.optimize().draw("base.dot", portrait=True)
-    base = base * (alphabet + inflection.inflection_filter)
-    base.optimize().draw("base1.dot", portrait=True)
-    base = base * deko_filter.infix_filter 
-    deko_filter.infix_filter.optimize().draw("infix_filter.dot", portrait=True)
-    base.optimize().draw("base2.dot", portrait=True)
-    base = base * deko_filter.uplow
-    base.optimize().draw("base3.dot", portrait=True)
+      base = (tmp + inflection.inflection)
+      base.optimize().draw("base.dot", portrait=True)
+      base = base @ (alphabet + inflection.inflection_filter)
+      base.optimize().draw("base1.dot", portrait=True)
+      base = base @ deko_filter.infix_filter 
+      deko_filter.infix_filter.optimize().draw("infix_filter.dot", portrait=True)
+      base.optimize().draw("base2.dot", portrait=True)
+      base = base @ deko_filter.uplow
+      base.optimize().draw("base3.dot", portrait=True)
 
-    #
-    #  application of phonological rules
-    phon.phon.draw("phon.dot", portrait=True)
-    base = pynini.compose(
-        pynini.concat(
-          pynini.transducer("", "<WB>", output_token_type=self.__syms.alphabet),
-          base,
-          pynini.transducer("", "<WB>", output_token_type=self.__syms.alphabet),
-          ),
-        phon.phon
-        ).optimize()
-    base.draw("base3.dot", portrait=True)
+      #
+      #  application of phonological rules
+      phon.phon.draw("phon.dot", portrait=True)
+      base = ((pynini.cross("", "<WB>") + base + pynini.cross("", "<WB>")) @ phon.phon).optimize()
+      base.draw("base3.dot", portrait=True)
 
-    #
-    # result
-    self.__timur = base
-    return self.__verify()
+      #
+      # result
+      self.__timur = base
+      return self.__verify()

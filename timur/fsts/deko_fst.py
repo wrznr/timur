@@ -38,7 +38,7 @@ class DekoFst:
     self.__suff_phon = self.__construct_suff_phon()
 
     # putting it all together
-    self.__suff_filter = (self.__origin_filter * self.__stem_type_filter * self.__category_filter * self.__umlautung * self.__suff_phon).optimize()
+    self.__suff_filter = (self.__origin_filter @ self.__stem_type_filter @ self.__category_filter @ self.__umlautung @ self.__suff_phon).optimize()
 
     #
     # prefix filter
@@ -73,7 +73,7 @@ class DekoFst:
     # imperative filter
     self.__imperative_filter = self.__construct_imperative_filter()
 
-    self.__infix_filter = (self.__insert_ge * self.__insert_zu * self.__imperative_filter).optimize()
+    self.__infix_filter = (self.__insert_ge @ self.__insert_zu @ self.__imperative_filter).optimize()
 
     #
     # uplow
@@ -118,587 +118,580 @@ class DekoFst:
     '''
     Define possible final sequences of a derivation
     '''
+    with pynini.default_token_type(self.__syms.alphabet):
 
-    # C1
-    initial_stuff = pynini.union(
-      self.__syms.characters,
-      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<Ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>", "<Pref_Stems>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
-      ).closure()
-    # C2
-    intermediate_stuff = pynini.union(
-      self.__syms.characters,
-      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<Suff_Stems>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
-      ).closure()
+      # C1
+      initial_stuff = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<Ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>", "<Pref_Stems>"]).project("input")
+        ).closure()
+      # C2
+      intermediate_stuff = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<Suff_Stems>"]).project("input")
+        ).closure()
 
-    # C3
-    final_stuff = pynini.union(
-      self.__syms.characters,
-      pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
-      self.__syms.categories,
-      self.__syms.stem_type_features,
-      self.__syms.origin_features,
-      pynini.string_map(["<NSNeut_es_e>", "<NSFem_0_n>", "<NSFem_0_en>", "<NSMasc_es_e>", "<NSMasc_es_$e>", "<NSMasc-s/$sse>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
-      ).closure()
+      # C3
+      final_stuff = pynini.union(
+        self.__syms.characters,
+        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>"]).project("input"),
+        self.__syms.categories,
+        self.__syms.stem_type_features,
+        self.__syms.origin_features,
+        pynini.string_map(["<NSNeut_es_e>", "<NSFem_0_n>", "<NSFem_0_en>", "<NSMasc_es_e>", "<NSMasc_es_$e>", "<NSMasc-s/$sse>"]).project("input")
+        ).closure()
 
-    # TAIL
-    return pynini.concat(
-      pynini.concat(
-        initial_stuff,
-        self.__syms.base_stem_types,
-        intermediate_stuff
-        ).closure(0,1),
-      final_stuff,
-      self.__syms.inflection_classes.closure(0,1)
-      ).optimize()
+      # TAIL
+      tail1 = initial_stuff + self.__syms.base_stem_types + intermediate_stuff
+      return pynini.concat(tail1.closure(0,1) + final_stuff, self.__syms.inflection_classes.closure(0,1)).optimize()
 
   def __construct_origin_filter(self):
     '''
     Filter-out non-matching origin feature sequences
     '''
+    with pynini.default_token_type(self.__syms.alphabet):
 
-    alphabet = pynini.union(
-        self.__syms.characters,
-        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<Ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
-        self.__syms.stem_types,
-        self.__syms.categories,
-        self.__syms.stem_type_features
-        ).closure().optimize()
+      alphabet = pynini.union(
+          self.__syms.characters,
+          pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<UL>", "<SS>", "<FB>", "<ge>", "<Ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"]).project("input"),
+          self.__syms.stem_types,
+          self.__syms.categories,
+          self.__syms.stem_type_features
+          ).closure().optimize()
 
-    filtering = self.__suff_stems_filter(["<nativ>", "<prefnativ>", "<frei>", "<gebunden>", "<kurz>", "<lang>", "<fremd>", "<klassisch>", "<NSNeut_es_e>", "<NSFem_0_n>", "<NSFem_0_en>", "<NSMasc_es_e>", "<NSMasc_es_$e>", "<NSMasc-s/$sse>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$er-Adj0-Up>", "<NGeo-$isch-Adj+>", "<NGeo-0-Name-Fem_0>", "<NGeo-0-Name-Masc_s>", "<NGeo-0-Name-Neut_s>", "<NGeo-a-Name-Fem_s>", "<NGeo-a-Name-Neut_s>", "<NGeo-aner-NMasc_s_0>", "<NGeo-aner-Adj0-Up>", "<NGeo-anisch-Adj+>", "<NGeo-e-NMasc_n_n>", "<NGeo-e-Name-Fem_0>", "<NGeo-e-Name-Neut_s>", "<NGeo-ei-Name-Fem_0>", "<NGeo-en-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-er-Adj0-Up>", "<NGeo-0-NMasc_s_0>", "<NGeo-0-Adj0-Up>", "<NGeo-erisch-Adj+>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>", "<NGeo-ianer-NMasc_s_0>", "<NGeo-ianisch-Adj+>", "<NGeo-ien-Name-Neut_s>", "<NGeo-ier-NMasc_s_0>", "<NGeo-isch-Adj+>", "<NGeo-istan-Name-Neut_s>", "<NGeo-land-Name-Neut_s>", "<NGeo-ner-NMasc_s_0>", "<NGeo-ner-Adj0-Up>", "<NGeo-nisch-Adj+>"])
+      filtering = self.__suff_stems_filter(["<nativ>", "<prefnativ>", "<frei>", "<gebunden>", "<kurz>", "<lang>", "<fremd>", "<klassisch>", "<NSNeut_es_e>", "<NSFem_0_n>", "<NSFem_0_en>", "<NSMasc_es_e>", "<NSMasc_es_$e>", "<NSMasc-s/$sse>", "<NGeo-$er-NMasc_s_0>", "<NGeo-$er-Adj0-Up>", "<NGeo-$isch-Adj+>", "<NGeo-0-Name-Fem_0>", "<NGeo-0-Name-Masc_s>", "<NGeo-0-Name-Neut_s>", "<NGeo-a-Name-Fem_s>", "<NGeo-a-Name-Neut_s>", "<NGeo-aner-NMasc_s_0>", "<NGeo-aner-Adj0-Up>", "<NGeo-anisch-Adj+>", "<NGeo-e-NMasc_n_n>", "<NGeo-e-Name-Fem_0>", "<NGeo-e-Name-Neut_s>", "<NGeo-ei-Name-Fem_0>", "<NGeo-en-Name-Neut_s>", "<NGeo-er-NMasc_s_0>", "<NGeo-er-Adj0-Up>", "<NGeo-0-NMasc_s_0>", "<NGeo-0-Adj0-Up>", "<NGeo-erisch-Adj+>", "<NGeo-ese-NMasc_n_n>", "<NGeo-esisch-Adj+>", "<NGeo-ianer-NMasc_s_0>", "<NGeo-ianisch-Adj+>", "<NGeo-ien-Name-Neut_s>", "<NGeo-ier-NMasc_s_0>", "<NGeo-isch-Adj+>", "<NGeo-istan-Name-Neut_s>", "<NGeo-land-Name-Neut_s>", "<NGeo-ner-NMasc_s_0>", "<NGeo-ner-Adj0-Up>", "<NGeo-nisch-Adj+>"])
 
-    return pynini.concat(
-        pynini.concat(
-          alphabet,
-          filtering
-          ).closure(),
-        self.__tail
-        ).optimize()
+      return pynini.concat(
+          pynini.concat(
+            alphabet,
+            filtering
+            ).closure(),
+          self.__tail
+          ).optimize()
 
   def __suff_stems_filter(self, features):
     '''
     Return a union over filters for each feature given
     '''
-    filtering = pynini.Fst()
-    filtering.set_input_symbols(self.__syms.alphabet)
-    filtering.set_output_symbols(self.__syms.alphabet)
-    suff_stems = pynini.acceptor("<Suff_Stems>", token_type=self.__syms.alphabet)
-    for feature in features:
-      to_eps = pynini.transducer(feature, "", input_token_type=self.__syms.alphabet)
-      filtering = pynini.union(
-          filtering,
-          pynini.concat(
-            to_eps,
-            suff_stems,
-            to_eps
+    with pynini.default_token_type(self.__syms.alphabet):
+      filtering = pynini.Fst()
+      filtering.set_input_symbols(self.__syms.alphabet)
+      filtering.set_output_symbols(self.__syms.alphabet)
+      suff_stems = pynini.accep("<Suff_Stems>")
+      for feature in features:
+        to_eps = pynini.cross(feature, "")
+        filtering = pynini.union(
+            filtering,
+            to_eps + suff_stems + to_eps
             )
-          )
-    return filtering.optimize()
+      return filtering.optimize()
 
   def __construct_stem_type_filter(self):
     '''
     Filter-out non-matching stem type sequences
     '''
+    with pynini.default_token_type(self.__syms.alphabet):
 
-    alphabet = pynini.union(
-        self.__syms.characters,
-        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<Ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
-        self.__syms.stem_types,
-        self.__syms.categories,
-        ).closure()
+      alphabet = pynini.union(
+          self.__syms.characters,
+          pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<Ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"]).project("input"),
+          self.__syms.stem_types,
+          self.__syms.categories,
+          ).closure()
 
-    filtering = self.__suff_stems_filter(["<deriv>", "<kompos>"])
+      filtering = self.__suff_stems_filter(["<deriv>", "<kompos>"])
 
-    return pynini.concat(
-        pynini.concat(
-          alphabet,
-          filtering
-          ).closure(),
-        self.__tail
-        ).optimize()
+      return pynini.concat(
+          pynini.concat(
+            alphabet,
+            filtering
+            ).closure(),
+          self.__tail
+          ).optimize()
 
   def __construct_category_filter(self):
     '''
     Filter-out non-matching category sequences
     '''
+    with pynini.default_token_type(self.__syms.alphabet):
 
-    alphabet = pynini.union(
-        self.__syms.characters,
-        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<Ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
-        self.__syms.stem_types,
-        self.__syms.categories,
-        ).closure()
+      alphabet = pynini.union(
+          self.__syms.characters,
+          pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<Ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"]).project("input"),
+          self.__syms.stem_types,
+          self.__syms.categories,
+          ).closure()
 
-    filtering = self.__suff_stems_filter(["<ABK>", "<ADJ>", "<ADV>", "<CARD>", "<DIGCARD>", "<NE>", "<NN>", "<PRO>", "<V>", "<ORD>"])
+      filtering = self.__suff_stems_filter(["<ABK>", "<ADJ>", "<ADV>", "<CARD>", "<DIGCARD>", "<NE>", "<NN>", "<PRO>", "<V>", "<ORD>"])
 
-    return pynini.concat(
-        pynini.concat(
-          alphabet,
-          filtering
-          ).closure(),
-        self.__tail
-        ).optimize()
+      return pynini.concat(
+          pynini.concat(
+            alphabet,
+            filtering
+            ).closure(),
+          self.__tail
+          ).optimize()
 
   def __construct_umlautung(self):
     '''
     Map "a", "o" and "u" onto "ä", "ö" and "ü", corresp., if the umlaut marker "<UL>" is present.
     '''
+    with pynini.default_token_type(self.__syms.alphabet):
 
-    alphabet = pynini.union(
-        self.__syms.characters,
-        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<Ge>", "<no-ge>", "<Ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
-        self.__syms.stem_types,
-        self.__syms.categories,
-        ).closure()
+      alphabet = pynini.union(
+          self.__syms.characters,
+          pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<Ge>", "<no-ge>", "<Ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"]).project("input"),
+          self.__syms.stem_types,
+          self.__syms.categories,
+          ).closure()
 
-    return pynini.concat(
-        pynini.concat(
-          alphabet,
+      return pynini.concat(
           pynini.concat(
-            self.__syms.consonants,
+            alphabet,
             pynini.concat(
-              pynini.union(
+              self.__syms.consonants,
+              pynini.concat(
                 pynini.union(
-                  pynini.transducer("a", "ä", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
-                  pynini.transducer("o", "ö", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
-                  pynini.transducer("u", "ü", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet)
+                  pynini.union(
+                    pynini.cross("a", "ä"),
+                    pynini.cross("o", "ö"),
+                    pynini.cross("u", "ü")
+                    ),
+                  pynini.concat(
+                    pynini.cross("a", "ä"),
+                    pynini.union(
+                      pynini.cross("a", ""),
+                      pynini.accep("u")
+                      )
+                    )
                   ),
                 pynini.concat(
-                  pynini.transducer("a", "ä", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
-                  pynini.union(
-                    pynini.transducer("a", "", input_token_type=self.__syms.alphabet),
-                    pynini.acceptor("u", token_type=self.__syms.alphabet)
-                    )
-                  )
-                ),
-              pynini.concat(
-                self.__syms.consonants.closure(),
-                pynini.concat(
+                  self.__syms.consonants.closure(),
                   pynini.concat(
-                    pynini.acceptor("e", token_type=self.__syms.alphabet),
-                    pynini.string_map(["l", "r"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
-                    ).closure(0, 1),
-                  pynini.concat(
-                    pynini.acceptor("<Suff_Stems>", token_type=self.__syms.alphabet),
-                    pynini.transducer("<UL>", "", input_token_type=self.__syms.alphabet)
+                    pynini.concat(
+                      pynini.accep("e"),
+                      pynini.string_map(["l", "r"]).project("input")
+                      ).closure(0, 1),
+                    pynini.concat(
+                      pynini.accep("<Suff_Stems>"),
+                      pynini.cross("<UL>", "")
+                      )
                     )
                   )
                 )
-              )
-            ).closure(0, 1)
-          ),
-        self.__tail
-        ).optimize()
+              ).closure(0, 1)
+            ),
+          self.__tail
+          ).optimize()
 
   def __construct_suff_phon(self):
     '''
     '''
+    with pynini.default_token_type(self.__syms.alphabet):
 
-    alphabet = pynini.union(
-        self.__syms.characters,
-        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<Ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>", "<NN>", "<ADJ>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
-        self.__syms.stem_types,
-        ).closure()
+      alphabet = pynini.union(
+          self.__syms.characters,
+          pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<Ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>", "<NN>", "<ADJ>"]).project("input"),
+          self.__syms.stem_types,
+          ).closure()
 
-    Tau = pynini.transducer("i", "", input_token_type=self.__syms.alphabet)
-    Lambda = pynini.concat(
-        pynini.union(
-          pynini.acceptor("i", token_type=self.__syms.alphabet),
-          pynini.concat(
-            self.__syms.consonants.project(),
-            pynini.acceptor("y", token_type=self.__syms.alphabet)
-            )
-          ),
-        pynini.acceptor("<Suff_Stems>", token_type=self.__syms.alphabet)
-        )
+      Tau = pynini.cross("i", "")
+      Lambda = pynini.concat(
+          pynini.union(
+            pynini.accep("i"),
+            pynini.concat(
+              self.__syms.consonants.project("input"),
+              pynini.accep("y")
+              )
+            ),
+          pynini.accep("<Suff_Stems>")
+          )
 
-    return pynini.concat(
-        pynini.cdrewrite(
-          Tau,
-          Lambda,
-          "",
-          alphabet.project()
-          ),
-        self.__tail
-        ).optimize()
+      return pynini.concat(
+          pynini.cdrewrite(
+            Tau,
+            Lambda,
+            "",
+            alphabet.project("input")
+            ),
+          self.__tail
+          ).optimize()
 
   def __construct_prefix_filter_helper(self):
     '''
     Alphabet for the prefix filter
     '''
+    with pynini.default_token_type(self.__syms.alphabet):
 
-    return pynini.union(
-        self.__syms.characters,
-        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<Ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
-        self.__syms.stem_types,
-        self.__syms.categories,
-        ).closure().optimize()
+      return pynini.union(
+          self.__syms.characters,
+          pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<Ge>", "<no-ge>", "<Initial>", "<NoHy>", "<NoPref>", "<NoDef>"]).project("input"),
+          self.__syms.stem_types,
+          self.__syms.categories,
+          ).closure().optimize()
 
   def __construct_rep_pref(self):
     '''
     Replace the marker of manually prefixed stems
     '''
-    return pynini.cdrewrite(
-        pynini.transducer("<prefnativ>", "<nativ>"),
-        "",
-        "",
-        self.__prefix_filter_helper
-        ).optimize()
+    with pynini.default_token_type(self.__syms.alphabet):
+
+      return pynini.cdrewrite(
+          pynini.cross("<prefnativ>", "<nativ>"),
+          "",
+          "",
+          self.__prefix_filter_helper
+          ).optimize()
 
   def __construct_del_ge(self):
     '''
     Case-dependent deletion of the ge marker
     '''
+    with pynini.default_token_type(self.__syms.alphabet):
 
-    # delete <ge> at certain suffixes like 'ver'
-    return pynini.concat(
-        pynini.transducer("<no-ge>", "", input_token_type=self.__syms.alphabet),
-        pynini.concat(
-          pynini.acceptor("<Pref_Stems>", token_type=self.__syms.alphabet),
+      # delete <ge> at certain prefixes like 'ver'
+      return pynini.concat(
+          pynini.cross("<no-ge>", ""),
           pynini.concat(
-            pynini.union(
-              self.__syms.characters,
-              pynini.string_map(["<n>", "<e>", "<d>", "<~n>"]).project()
-              ).closure(),
+            pynini.accep("<Pref_Stems>"),
             pynini.concat(
-              pynini.transducer("<V> <nativ>", "", input_token_type=self.__syms.alphabet),
-              pynini.acceptor("<NoDef>", token_type=self.__syms.alphabet).closure(0, 1),
-              pynini.transducer("<ge>", "", input_token_type=self.__syms.alphabet),
-              self.__prefix_filter_helper,
-              self.__syms.stem_type_features,
-              pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
+              pynini.union(
+                self.__syms.characters,
+                pynini.string_map(["<n>", "<e>", "<d>", "<~n>"]).project("input")
+                ).closure(),
+              pynini.cross("<V> <nativ>", "") + pynini.accep("<NoDef>").closure(0, 1) + pynini.cross("<ge>", "") + self.__prefix_filter_helper + self.__syms.stem_type_features + pynini.accep("<nativ>")
               )
             )
-          )
-        ).optimize()
+          ).optimize()
 
   def __construct_prefix_origin_filter(self):
     '''
     Match origin of prefix and stem
     '''
+    with pynini.default_token_type(self.__syms.alphabet):
 
-    return pynini.concat(
-        pynini.acceptor("<Pref_Stems>", token_type=self.__syms.alphabet),
-        pynini.concat(
-          pynini.union(
-            self.__syms.characters,
-            pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
-            ).closure(),
-          pynini.union(
-            pynini.concat(
-              pynini.transducer("<ADJ> <nativ>", "", input_token_type=self.__syms.alphabet),
-              self.__prefix_filter_helper,
-              pynini.acceptor("<ADJ>", token_type=self.__syms.alphabet),
-              self.__syms.stem_type_features,
-              pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
-              ),
-            pynini.concat(
-              pynini.transducer("<ABK> <nativ>", "", input_token_type=self.__syms.alphabet),
-              self.__prefix_filter_helper,
-              pynini.acceptor("<ABK>", token_type=self.__syms.alphabet),
-              self.__syms.stem_type_features,
-              pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
-              ),
-            pynini.concat(
-              pynini.transducer("<NN> <nativ>", "", input_token_type=self.__syms.alphabet),
-              self.__prefix_filter_helper,
-              pynini.acceptor("<NN>", token_type=self.__syms.alphabet),
-              self.__syms.stem_type_features,
-              pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
-              ),
-            pynini.concat(
-              pynini.transducer("<NN> <fremd>", "", input_token_type=self.__syms.alphabet),
-              self.__prefix_filter_helper,
-              pynini.acceptor("<NN>", token_type=self.__syms.alphabet),
-              self.__syms.stem_type_features,
-              pynini.acceptor("<fremd>", token_type=self.__syms.alphabet)
-              ),
-            pynini.concat(
-              pynini.transducer("<NE> <nativ>", "", input_token_type=self.__syms.alphabet),
-              self.__prefix_filter_helper,
-              pynini.acceptor("<NE>", token_type=self.__syms.alphabet),
-              self.__syms.stem_type_features,
-              pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
-              ),
-            pynini.concat(
-              pynini.transducer("<NE> <fremd>", "", input_token_type=self.__syms.alphabet),
-              self.__prefix_filter_helper,
-              pynini.acceptor("<NE>", token_type=self.__syms.alphabet),
-              self.__syms.stem_type_features,
-              pynini.acceptor("<fremd>", token_type=self.__syms.alphabet)
-              ),
-            pynini.concat(
-              pynini.transducer("<ADJ> <fremd>", "", input_token_type=self.__syms.alphabet),
-              self.__prefix_filter_helper,
-              pynini.acceptor("<ADJ>", token_type=self.__syms.alphabet),
-              self.__syms.stem_type_features,
-              pynini.acceptor("<fremd>", token_type=self.__syms.alphabet)
-              ),
-            pynini.concat(
-              pynini.transducer("<V> <nativ>", "", input_token_type=self.__syms.alphabet),
-              self.__prefix_filter_helper,
-              pynini.acceptor("<V>", token_type=self.__syms.alphabet),
-              self.__syms.stem_type_features,
-              pynini.acceptor("<nativ>", token_type=self.__syms.alphabet)
-              ),
-            pynini.concat(
-              pynini.transducer("<V> <nativ>", "", input_token_type=self.__syms.alphabet),
-              self.__prefix_filter_helper,
-              pynini.acceptor("<V>", token_type=self.__syms.alphabet),
-              self.__syms.stem_type_features,
-              self.__syms.ns_features
-              ),
-            pynini.concat(
-              pynini.transducer("<ADJ> <klassisch>", "", input_token_type=self.__syms.alphabet),
-              self.__prefix_filter_helper,
-              pynini.acceptor("<ADJ>", token_type=self.__syms.alphabet),
-              self.__syms.stem_type_features,
-              pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
-              ),
-            pynini.concat(
-              pynini.transducer("<NN> <klassisch>", "", input_token_type=self.__syms.alphabet),
-              self.__prefix_filter_helper,
-              pynini.acceptor("<NN>", token_type=self.__syms.alphabet),
-              self.__syms.stem_type_features,
-              pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
-              ),
-            pynini.concat(
-              pynini.transducer("<V> <klassisch>", "", input_token_type=self.__syms.alphabet),
-              self.__prefix_filter_helper,
-              pynini.acceptor("<V>", token_type=self.__syms.alphabet),
-              self.__syms.stem_type_features,
-              pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
+      return pynini.concat(
+          pynini.accep("<Pref_Stems>"),
+          pynini.concat(
+            pynini.union(
+              self.__syms.characters,
+              pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>"]).project("input")
+              ).closure(),
+            pynini.union(
+              pynini.cross("<ADJ> <nativ>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<ADJ>")
+              + self.__syms.stem_type_features
+              + pynini.accep("<nativ>")
+              ,
+              pynini.cross("<ABK> <nativ>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<ABK>")
+              + self.__syms.stem_type_features
+              + pynini.accep("<nativ>")
+              ,
+              pynini.cross("<NN> <nativ>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<NN>")
+              + self.__syms.stem_type_features
+              + pynini.accep("<nativ>")
+              ,
+              pynini.cross("<NN> <fremd>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<NN>")
+              + self.__syms.stem_type_features
+              + pynini.accep("<fremd>")
+              ,
+              pynini.cross("<NE> <nativ>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<NE>")
+              + self.__syms.stem_type_features
+              + pynini.accep("<nativ>")
+              ,
+              pynini.cross("<NE> <fremd>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<NE>")
+              + self.__syms.stem_type_features
+              + pynini.accep("<fremd>")
+              ,
+              pynini.cross("<ADJ> <fremd>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<ADJ>")
+              + self.__syms.stem_type_features
+              + pynini.accep("<fremd>")
+              ,
+              pynini.cross("<V> <nativ>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<V>")
+              + self.__syms.stem_type_features
+              + pynini.accep("<nativ>")
+              ,
+              pynini.cross("<V> <nativ>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<V>")
+              + self.__syms.stem_type_features
+              + self.__syms.ns_features
+              ,
+              pynini.cross("<ADJ> <klassisch>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<ADJ>")
+              + self.__syms.stem_type_features
+              + pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"]).project("input")
+              ,
+              pynini.cross("<NN> <klassisch>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<NN>")
+              + self.__syms.stem_type_features
+              + pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"]).project("input")
+              ,
+              pynini.cross("<V> <klassisch>", "")
+              + self.__prefix_filter_helper
+              + pynini.accep("<V>")
+              + self.__syms.stem_type_features
+              + pynini.string_map(["<frei>", "<gebunden>", "<kurz>", "<lang>"]).project("input")
               )
             )
-          )
-        ).optimize()
+          ).optimize()
 
   def __construct_compound_filter(self):
     '''
     Construct the compound filter
     '''
+    with pynini.default_token_type(self.__syms.alphabet):
 
-    alphabet = pynini.union(
-        self.__syms.characters,
-        pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<Ge>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(),
-        self.__syms.stem_types,
-        pynini.transducer(self.__syms.categories, ""),
-        pynini.transducer(self.__syms.origin_features, ""),
-        pynini.transducer("<NoPref>", "", input_token_type=self.__syms.alphabet)
-        )
-
-    return pynini.concat(
-        pynini.union(
-          pynini.transducer("<Initial>", "", input_token_type=self.__syms.alphabet),
-          pynini.acceptor("<NoHy>", token_type=self.__syms.alphabet),
-          pynini.acceptor("<NoDef>", token_type=self.__syms.alphabet)
-          ).closure(0,1),
-        pynini.concat(
-          pynini.union(
-            pynini.concat(
-              alphabet.closure(),
-              pynini.transducer(pynini.string_map(["<ABK>", "<ADV>", "<CARD>", "<NE>", "<PRO>", "<V>", "<ORD>", "<OTHER>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(), "")
-              ),
-            pynini.concat(
-              pynini.transducer("", "<VADJ>", output_token_type=self.__syms.alphabet),
-              pynini.union(
-                alphabet,
-                pynini.transducer("<kompos>", "", input_token_type=self.__syms.alphabet)
-                ).closure(),
-              pynini.transducer("<kompos>", "", input_token_type=self.__syms.alphabet),
-              alphabet.closure(),
-              pynini.transducer("<V>", "", input_token_type=self.__syms.alphabet)
-              ),
-            pynini.concat(
-              pynini.union(
-                alphabet,
-                pynini.transducer("<kompos>", "", input_token_type=self.__syms.alphabet)
-                ).closure(),
-              pynini.transducer(pynini.string_map(["<ADJ>", "<NN>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(), "")
-              )
-            ),
-          pynini.concat(
-            pynini.transducer("<base>", "", input_token_type=self.__syms.alphabet),
-            pynini.transducer(self.__syms.origin_features, ""),
-            self.__syms.inflection_classes
-            )
+      alphabet = pynini.union(
+          self.__syms.characters,
+          pynini.string_map(["<n>", "<e>", "<d>", "<~n>", "<Ge-Nom>", "<SS>", "<FB>", "<ge>", "<Ge>"]).project("input"),
+          self.__syms.stem_types,
+          pynini.cross(self.__syms.categories, ""),
+          pynini.cross(self.__syms.origin_features, ""),
+          pynini.cross("<NoPref>", "")
           )
-        ).optimize()
+
+      return pynini.concat(
+          pynini.union(
+            pynini.cross("<Initial>", ""),
+            pynini.accep("<NoHy>"),
+            pynini.accep("<NoDef>")
+            ).closure(0,1),
+          pynini.concat(
+            pynini.union(
+              pynini.concat(
+                alphabet.closure(),
+                pynini.cross(pynini.string_map(["<ABK>", "<ADV>", "<CARD>", "<NE>", "<PRO>", "<V>", "<ORD>", "<OTHER>"]).project("input"), "")
+                ),
+              pynini.concat(
+                pynini.cross("", "<VADJ>"),
+                pynini.concat(
+                  pynini.union(
+                    alphabet,
+                    pynini.cross("<kompos>", "")
+                    ).closure(),
+                  pynini.concat(
+                    pynini.cross("<kompos>", ""),
+                    pynini.concat(
+                      alphabet.closure(),
+                      pynini.cross("<V>", "")
+                      )
+                    )
+                  )
+                ),
+              pynini.concat(
+                pynini.union(
+                  alphabet,
+                  pynini.cross("<kompos>", "")
+                  ).closure(),
+                pynini.cross(pynini.string_map(["<ADJ>", "<NN>"]).project("input"), "")
+                )
+              ),
+            pynini.concat(
+              pynini.cross("<base>", ""),
+              pynini.concat(
+                pynini.cross(self.__syms.origin_features, ""),
+                self.__syms.inflection_classes
+                )
+              )
+            )
+          ).optimize()
 
   def __construct_insert_ge(self):
     '''
     Inserts the prefix "ge" controlled by the symbol "<ge>"
     '''
+    with pynini.default_token_type(self.__syms.alphabet):
 
-    alphabet = pynini.union(
-        self.__syms.characters,
-        pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^zz>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
-        ).optimize()
+      alphabet = pynini.union(
+          self.__syms.characters,
+          pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^zz>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"]).project("input")
+          ).optimize()
 
-    c2 = pynini.union(
-        alphabet,
-        self.__syms.stem_types
-        ).closure().optimize()
-    
-    # From deko.fst:
-    # replace <ge> with "ge" if followed by perfect participle marker
-    # or ge-nominalisation otherwise delete <ge>
-    # in complex lexicon entries as for "haushalten" <ge> is not followed
-    # by <Base_Stems>
-    return pynini.union(
-        c2,
-        pynini.concat(
-          c2,
-          pynini.transducer("<ge>", "", input_token_type=self.__syms.alphabet),
-          pynini.acceptor("<Base_Stems>", token_type=self.__syms.alphabet).closure(0, 1),
-          pynini.transducer("", "g e", output_token_type=self.__syms.alphabet),
-          alphabet.closure(),
-          pynini.transducer("<^pp>", "", input_token_type=self.__syms.alphabet),
-          alphabet.closure()
-          ),
-        pynini.concat(
-          c2,
-          pynini.acceptor("<Deriv_Stems>", token_type=self.__syms.alphabet).closure(0, 1),
-          alphabet.closure(),
-          pynini.transducer("<Ge>", "", input_token_type=self.__syms.alphabet),
-          alphabet.closure(),
-          pynini.transducer("<Suff_Stems> <Ge-Nom>", "e", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
-          alphabet.closure()
-          ),
-        pynini.concat(
-          c2,
-          pynini.transducer("<ge>", "", input_token_type=self.__syms.alphabet),
-          pynini.acceptor("<Base_Stems>", token_type=self.__syms.alphabet).closure(0, 1),
-          alphabet.closure()
-          ),
-        pynini.concat(
-          c2,
-          pynini.acceptor("<Base_Stems>", token_type=self.__syms.alphabet).closure(0, 1),
-          alphabet.closure(),
-          pynini.transducer("<^pp>", "", input_token_type=self.__syms.alphabet),
-          alphabet.closure()
-          )
-        ).optimize()
+      c2 = pynini.union(
+          alphabet,
+          self.__syms.stem_types
+          ).closure().optimize()
+      
+      # From deko.fst:
+      # replace <ge> with "ge" if followed by perfect participle marker
+      # or ge-nominalisation otherwise delete <ge>
+      # in complex lexicon entries as for "haushalten" <ge> is not followed
+      # by <Base_Stems>
+      return pynini.union(
+          c2
+          ,
+          c2 + pynini.cross("<ge>", "")
+          + pynini.accep("<Base_Stems>").closure(0, 1)
+          + pynini.cross("", "g e") + alphabet.closure()
+          + pynini.cross("<^pp>", "") + alphabet.closure()
+          ,
+          c2 + pynini.cross("<ge>", "")
+          + pynini.accep("<Base_Stems>").closure(0, 1)
+          + alphabet.closure()
+          ,
+          c2
+          + pynini.accep("<Base_Stems>").closure(0, 1)
+          + alphabet.closure()
+          + pynini.cross("<^pp>", "") + alphabet.closure()
+          ,
+          c2
+          + pynini.accep("<Deriv_Stems>").closure(0, 1)
+          + alphabet.closure()
+          + pynini.cross("<Ge>", "")
+          + alphabet.closure()
+          + pynini.cross("<Suff_Stems> <Ge-Nom>", "e")
+          + alphabet.closure()
+          ).optimize()
 
   def __construct_insert_zu(self):
     '''
     Inserts "zu" into infinitives with separable prefixes
     '''
+    with pynini.default_token_type(self.__syms.alphabet):
 
-    alphabet = pynini.union(
-        self.__syms.characters,
-        pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
-        ).optimize()
+      alphabet = pynini.union(
+          self.__syms.characters,
+          pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^imp>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"]).project("input")
+          ).optimize()
 
-    c2 = pynini.union(
-        alphabet,
-        self.__syms.stem_types
-        ).closure().optimize()
-    
-    # From deko.fst:
-    # insert "zu" after verbal prefixes if followed by infinitive marker
-    return pynini.union(
-        c2,
-        #pynini.concat(
-        #  pynini.acceptor("<Base_Stems>", token_type=self.__syms.alphabet),
-        #  alphabet.closure(),
-        #  pynini.transducer("<^zz>", "", input_token_type=self.__syms.alphabet),
-        #  alphabet.closure()
-        #  ),
-        pynini.concat(
+      c2 = pynini.union(
+          alphabet,
+          self.__syms.stem_types
+          ).closure().optimize()
+      
+      # From deko.fst:
+      # insert "zu" after verbal prefixes if followed by infinitive marker
+      return pynini.union(
           c2,
-          pynini.acceptor("<Pref_Stems>", token_type=self.__syms.alphabet),
-          alphabet.closure(),
-          pynini.acceptor("<Base_Stems>", token_type=self.__syms.alphabet),
-          pynini.transducer("", "z u", output_token_type=self.__syms.alphabet),
-          alphabet.closure(),
-          pynini.transducer("<^zz>", "", input_token_type=self.__syms.alphabet),
-          alphabet.closure()
-          )
-        ).optimize()
+          #pynini.concat(
+          #  pynini.accep("<Base_Stems>"),
+          #  alphabet.closure(),
+          #  pynini.cross("<^zz>", ""),
+          #  alphabet.closure()
+          #  ),
+          c2
+          + pynini.accep("<Pref_Stems>")
+          + alphabet.closure()
+          + pynini.accep("<Base_Stems>")
+          + pynini.cross("", "z u")
+          + alphabet.closure()
+          + pynini.cross("<^zz>", "")
+          + alphabet.closure()
+          ).optimize()
 
   def __construct_imperative_filter(self):
     '''
     Imperatives have no separable prefixes
     '''
+    with pynini.default_token_type(self.__syms.alphabet):
 
-    alphabet = pynini.union(
-        self.__syms.characters,
-        pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
-        ).optimize()
+      alphabet = pynini.union(
+          self.__syms.characters,
+          pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoHy>", "<NoDef>", "<VADJ>", "<CB>", "<FB>", "<UL>", "<SS>", "<DEL-S>", "<Low#>", "<Up#>", "<Fix#>", "<^UC>", "<^Ax>", "<^pl>", "<^Gen>", "<^Del>"]).project("input")
+          ).optimize()
 
-    c2 = pynini.union(
-        alphabet,
-        pynini.transducer(self.__syms.stem_types, "<CB>", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet)
-        ).closure().optimize()
+      c2 = pynini.union(
+          alphabet,
+          pynini.cross(self.__syms.stem_types, "<CB>")
+          ).closure().optimize()
 
-    return pynini.union(
-        c2,
-        pynini.concat(
-          pynini.transducer("<Base_Stems>", "<CB>", input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet),
-          alphabet.closure(),
-          pynini.transducer("<^imp>", "", input_token_type=self.__syms.alphabet),
-          alphabet.closure()
-          )
-        ).optimize()
+      return pynini.union(
+          c2,
+          pynini.cross("<Base_Stems>", "<CB>")
+          + alphabet.closure()
+          + pynini.cross("<^imp>", "")
+          + alphabet.closure()
+          ).optimize()
 
   def __construct_uplow(self):
     '''
     Upper/Lower case markers
     '''
+    with pynini.default_token_type(self.__syms.alphabet):
 
-    alphabet = pynini.union(
-        self.__syms.characters,
-        pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoDef>", "<FB>", "<UL>", "<SS>", "<DEL-S>",  "<^Ax>", "<^pl>", "<^Gen>", "<^Del>", "<^imp>", "<ge>", "<^zz>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project()
-        ).optimize()
-    
-    s = pynini.concat(
-        alphabet,
-        pynini.union(
+      alphabet = pynini.union(
+          self.__syms.characters,
+          pynini.string_map(["<n>", "<~n>", "<e>", "<d>", "<NoDef>", "<FB>", "<UL>", "<SS>", "<DEL-S>",  "<^Ax>", "<^pl>", "<^Gen>", "<^Del>", "<^imp>", "<ge>", "<^zz>"]).project("input")
+          ).optimize()
+      
+      s = pynini.concat(
           alphabet,
-          pynini.acceptor("<CB>", token_type=self.__syms.alphabet)
-          ).closure()
-        ).optimize()
+          pynini.union(
+            alphabet,
+            pynini.accep("<CB>")
+            ).closure()
+          ).optimize()
 
-    s2 = pynini.concat(
-        pynini.union(
-          pynini.concat(
-            pynini.transducer("<CB>", "", input_token_type=self.__syms.alphabet),
-            self.__syms.characters_upper
-            ),
-          pynini.concat(
-            pynini.transducer("<CB>", "", input_token_type=self.__syms.alphabet).closure(0, 1),
-            self.__syms.characters_lower
-            )
-          ),
-        s
-        ).optimize()
-
-    return pynini.union(
-        pynini.concat(
-            pynini.transducer("<^UC>", "", input_token_type=self.__syms.alphabet),
-            pynini.string_map(["<NoDef>", "<NoHy>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project().closure(0, 1),
-            pynini.transducer("", "<^UC>", output_token_type=self.__syms.alphabet),
-            s2,
-            pynini.transducer("<Low#>", "", input_token_type=self.__syms.alphabet)
-          ),
-        pynini.concat(
-          pynini.acceptor("<NoHy>", token_type=self.__syms.alphabet).closure(0, 1),
+      s2 = pynini.concat(
           pynini.union(
             pynini.concat(
-              pynini.transducer("<CB>", "", input_token_type=self.__syms.alphabet),
-              s,
-              pynini.transducer("<Fix#>", "", input_token_type=self.__syms.alphabet)
+              pynini.cross("<CB>", ""),
+              self.__syms.characters_upper
               ),
             pynini.concat(
-              pynini.transducer(pynini.string_map(["<CB>", "<epsilon>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(), "<^UC>", output_token_type=self.__syms.alphabet),
-              s,
-              pynini.transducer("<Up#>", "", input_token_type=self.__syms.alphabet)
-              ),
+              pynini.cross("<CB>", "").closure(0, 1),
+              self.__syms.characters_lower
+              )
+            ),
+          s
+          ).optimize()
+
+      return pynini.union(
+          pynini.concat(
+            pynini.cross("<^UC>", ""),
             pynini.concat(
-              pynini.transducer(pynini.string_map(["<CB>", "<epsilon>"], input_token_type=self.__syms.alphabet, output_token_type=self.__syms.alphabet).project(), "<CB>", output_token_type=self.__syms.alphabet),
-              s,
-              pynini.transducer("<Low#>", "", input_token_type=self.__syms.alphabet)
+              pynini.string_map(["<NoDef>", "<NoHy>"]).project("input").closure(0, 1),
+              pynini.concat(
+                pynini.cross("", "<^UC>"),
+                pynini.concat(
+                  s2,
+                  pynini.cross("<Low#>", "")
+                  )
+                )
+              )
+            ),
+          pynini.concat(
+            pynini.accep("<NoHy>").closure(0, 1),
+            pynini.union(
+              pynini.concat(
+                pynini.cross("<CB>", ""),
+                pynini.concat(
+                  s,
+                  pynini.cross("<Fix#>", "")
+                  )
+                ),
+              pynini.concat(
+                pynini.cross(pynini.string_map(["<CB>", "<epsilon>"]).project("input"), "<^UC>"),
+                pynini.concat(
+                  s,
+                  pynini.cross("<Up#>", "")
+                  )
+                ),
+              pynini.concat(
+                pynini.cross(pynini.string_map(["<CB>", "<epsilon>"]).project("input"), "<CB>"),
+                pynini.concat(
+                  s,
+                  pynini.cross("<Low#>", "")
+                  )
+                )
               )
             )
-          )
-        ).optimize()
+          ).optimize()

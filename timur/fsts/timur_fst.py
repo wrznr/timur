@@ -38,13 +38,14 @@ class TimurFst:
     '''
     Analyse a string
     '''
-    result = []
-    if self.__verify():
-      string_accep = pynini.accep(" ".join(c for c in string), token_type=self.__syms.alphabet)
-      intermediate = pynini.compose(self.__timur, string_accep)
-      paths = intermediate.paths(input_token_type=intermediate.input_symbols(),output_token_type=intermediate.output_symbols())
-      result = list(paths.items())
-    return result
+    with pynini.default_token_type(self.__syms.alphabet):
+        result = []
+        if self.__verify():
+          string_accep = pynini.accep(" ".join(c for c in string))
+          intermediate = pynini.compose(self.__timur, string_accep)
+          paths = intermediate.paths()
+          result = list(paths.items())
+        return result
 
   def load(self, fst):
     '''
